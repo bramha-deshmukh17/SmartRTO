@@ -31,3 +31,47 @@ const Icon kBackArrow =  Icon(
   size: 20.0,
 );
 
+const kBox = SizedBox(
+  height: 15.0,
+);
+
+InputDecoration kDropdown =  InputDecoration(
+  labelText: 'Select Fine',
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10.0), // Customize border radius
+    borderSide: const BorderSide(color: kSecondaryColor, width: 2.0), // Customize border color and width
+  ),
+  enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10.0),
+    borderSide: const BorderSide(color: kSecondaryColor, width: 1.0),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10.0),
+    borderSide: const BorderSide(color: kSecondaryColor, width: 2.0),
+  ),
+  hintText: 'Select a fine',
+);
+
+const kListHeaders = SizedBox(
+  width: 280.0,
+  child: ListTile(
+    leading: Text(
+      'Fine',
+      style: TextStyle(
+        color: kBlack,
+        fontSize: 15.0,
+        wordSpacing: 0.01,
+        fontFamily: 'InriaSans',
+      ),
+    ),
+    trailing: Text(
+      'Penalty',
+      style: TextStyle(
+        color: kBlack,
+        fontSize: 15.0,
+        wordSpacing: 0.01,
+        fontFamily: 'InriaSans',
+      ),
+    ),
+  ),
+);

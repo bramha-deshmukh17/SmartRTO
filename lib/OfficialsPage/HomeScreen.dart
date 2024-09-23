@@ -25,12 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: const SizedBox(width: 10.0,),
+          leading: const SizedBox(
+            width: 10.0,
+          ),
           backgroundColor: kPrimaryColor,
           title: kAppBarTitle,
           actions: [
             IconButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pushNamed(context, Profile.id);
               },
               icon: const Padding(
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(
                       color: kSecondaryColor,
                       fontSize: 18,
+                      fontFamily: 'InriaSans',
                     ),
                   ),
                 ),
@@ -65,26 +68,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 cardDescription: '',
               ),
             ),
-            /* Align(
+            Align(
               alignment: Alignment.center,
               child: CustomCard(
-                icon: FontAwesomeIcons.ticket,
-                button1:  TextButton(
+                icon: FontAwesomeIcons.car,
+                button1: TextButton(
                   onPressed: () {
-                    //Navigator.pushNamed(context, '');
+                    Navigator.pushNamed(context, GenerateFines.id);
                   },
                   child: const Text(
-                    'Generate',
+                    'View',
                     style: TextStyle(
                       color: kSecondaryColor,
                       fontSize: 18,
+                      fontFamily: 'InriaSans',
                     ),
                   ),
                 ),
-                cardTitle: 'Generate Fine',
+                cardTitle: 'View Details',
                 cardDescription: '',
               ),
-            ),*/
+            ),
           ],
         ),
       ),

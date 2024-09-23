@@ -36,7 +36,7 @@ class CustomCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   cardTitle,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, ),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, fontFamily: 'InriaSans',),
                 ),
               ),
             ),
@@ -56,7 +56,7 @@ class CustomCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   cardDescription,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'InriaSans',),
                 ),
               ),
             ),

@@ -15,14 +15,20 @@ class UserInput  extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FocusNode _focusNode = FocusNode();
+
     return SizedBox(
       width: 250.0,
       child: TextField(
+        enabled: true,
+        readOnly: false,
+        focusNode: _focusNode,
         textAlign: TextAlign.center,
         controller: controller,
         keyboardType: keyboardType,
         obscureText: obscureText,
         maxLength: maxLength,
+        style: const TextStyle(fontFamily: 'InriaSans',),
         decoration: InputDecoration(
           labelText: hint,
           errorText: errorText,

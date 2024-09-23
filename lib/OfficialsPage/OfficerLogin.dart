@@ -113,7 +113,7 @@ class _OfficerLoginState extends State<OfficerLogin> {
 
       // Email validation
       String emailPattern =
-          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+          r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
       RegExp emailRegExp = RegExp(emailPattern);
       if (email.isEmpty) {
         errorEmail = 'Email cannot be empty';

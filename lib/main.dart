@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:smart_rto/OfficialsPage/ConfirmFine.dart';
 import 'package:smart_rto/OfficialsPage/OfficerProfile.dart';
 import 'package:smart_rto/UserPages/UserRegister.dart';
 import 'package:smart_rto/Utility/Constants.dart';
@@ -36,19 +37,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        '/': (context)=> Authenticate(),
+        '/': (context)=> const Authenticate(),
         Welcome.id: (context)=> const Welcome(),
 
         UserRegister.id: (context)=> const UserRegister(),
         HomePage.id : (context)=> const HomePage(),
         ChatBot.id: (context)=> const ChatBot(),
 
-
         OfficerLogin.id: (context)=> const OfficerLogin(),
         HomeScreen.id: (context)=> const HomeScreen(),
         Profile.id:  (context)=> const Profile(),
         GenerateFines.id: (context)=> const GenerateFines(),
-
+        Confirmfine.id: (context)=> const Confirmfine(),
 
       },
       initialRoute: '/',

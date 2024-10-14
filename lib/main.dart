@@ -8,9 +8,10 @@ import 'Authentication/Authenticate.dart';
 import 'OfficialsPage/GenerateFine.dart';
 import 'OfficialsPage/OfficerLogin.dart';
 import 'OfficialsPage/HomeScreen.dart';
+import 'OfficialsPage/ViewDetails.dart';
+import 'UserPages/Chatbot/chatbot.dart';
 import 'Welcome.dart';
 import 'UserPages/HomePage.dart';
-import 'Chatbot/chatbot.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         Profile.id:  (context)=> const Profile(),
         GenerateFines.id: (context)=> const GenerateFines(),
         Confirmfine.id: (context)=> const Confirmfine(),
+        ViewDetails.id: (context)=> const ViewDetails(),
 
       },
       initialRoute: '/',

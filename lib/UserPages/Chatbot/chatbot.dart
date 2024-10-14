@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import "package:image_picker/image_picker.dart";
-import '../Utility/Constants.dart';
+import '../../Utility/Constants.dart';
 import 'ChatModel.dart';
 import 'package:http/http.dart' as http;
 

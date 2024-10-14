@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Utility/Constants.dart';
+import '../../Utility/Constants.dart';
 
 class ChatBox extends StatelessWidget {
   final VoidCallback filePressed;

@@ -15,7 +15,8 @@ const Color kGrey = Colors.grey;
 const String kFamily = 'InriaSans';
 
 //app bar text
-const Text kAppBarTitle = Text('Smart RTO',
+const Text kAppBarTitle = Text(
+  'Smart RTO',
   style: TextStyle(
     fontFamily: 'InriaSans',
     fontWeight: FontWeight.w500,
@@ -25,7 +26,7 @@ const Text kAppBarTitle = Text('Smart RTO',
 );
 
 // app bar back icon
-const Icon kBackArrow =  Icon(
+const Icon kBackArrow = Icon(
   FontAwesomeIcons.arrowLeft,
   color: kWhite,
   size: 20.0,
@@ -35,11 +36,12 @@ const kBox = SizedBox(
   height: 15.0,
 );
 
-InputDecoration kDropdown =  InputDecoration(
+InputDecoration kDropdown = InputDecoration(
   labelText: 'Select Fine',
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(10.0), // Customize border radius
-    borderSide: const BorderSide(color: kSecondaryColor, width: 2.0), // Customize border color and width
+    borderSide: const BorderSide(
+        color: kSecondaryColor, width: 2.0), // Customize border color and width
   ),
   enabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(10.0),

@@ -27,7 +27,6 @@ class _CaptureImageState extends State<CaptureImage> {
     if (image != null) {
       String filePath = 'fines/${DateTime.now().millisecondsSinceEpoch}.jpg';
       File file = File(image.path);
-      print('image inserted');
 
       try {
         await FirebaseStorage.instance.ref(filePath).putFile(file);
@@ -66,7 +65,7 @@ class _CaptureImageState extends State<CaptureImage> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 80.0),
             child: LinearProgressIndicator(
-              color: kPrimaryColor,
+              valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),
               minHeight: 5.0,
             ),
           ),

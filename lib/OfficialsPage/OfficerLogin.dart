@@ -39,6 +39,9 @@ class _OfficerLoginState extends State<OfficerLogin> {
         ),
         body: ModalProgressHUD(
           inAsyncCall: loading,
+          progressIndicator: const CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor), // Set custom color
+          ),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

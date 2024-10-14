@@ -1,16 +1,1 @@
-# smart_rto
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+echo -e "# SmartRTO\n\n## Project Overview\nSmartRTO is a mobile application designed to simplify the process of managing RTO-related tasks.\n\n## Features\n- User Authentication\n- Officer Profile Management\n- Data Retrieval from Firebase\n- Progress Indicators\n\n## Installation\n1. Clone the repository: `git clone <repository-url>`\n2. Navigate to the project directory: `cd SmartRTO`\n3. Install dependencies: `flutter pub get`\n\n## Usage\nRun the app using: `flutter run`\n\n## Contributing\nContributions are welcome! Please open an issue or submit a pull request.\n\n## License\nThis project is licensed under the MIT License." > README.md

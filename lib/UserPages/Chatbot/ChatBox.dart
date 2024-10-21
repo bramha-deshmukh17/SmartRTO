@@ -31,7 +31,7 @@ class ChatBox extends StatelessWidget {
             color: kSecondaryColor, // Set the border color when the TextField is focused
             width: 2.0, // Set the border width
           ),
-          borderRadius: BorderRadius.circular(30), // Optional: Rounded corners
+          borderRadius: BorderRadius.circular(30), //Rounded corners
         ),
       ),
     );

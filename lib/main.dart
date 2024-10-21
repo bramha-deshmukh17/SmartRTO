@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_rto/OfficialsPage/ConfirmFine.dart';
 import 'package:smart_rto/OfficialsPage/OfficerProfile.dart';
+import 'package:smart_rto/UserPages/EditProfile.dart';
+import 'package:smart_rto/UserPages/UserProfile.dart';
 import 'package:smart_rto/UserPages/UserRegister.dart';
 import 'package:smart_rto/Utility/Constants.dart';
 import 'Authentication/Authenticate.dart';
@@ -10,6 +12,8 @@ import 'OfficialsPage/OfficerLogin.dart';
 import 'OfficialsPage/HomeScreen.dart';
 import 'OfficialsPage/ViewDetails.dart';
 import 'UserPages/Chatbot/chatbot.dart';
+import 'UserPages/LicenseInfoPage.dart';
+import 'UserPages/Vehicles.dart';
 import 'Welcome.dart';
 import 'UserPages/HomePage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,6 +21,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 // ...
 void main() async{
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(statusBarColor: kPrimaryColor), // Set globally
+  );
   await dotenv.load(fileName: ".env");
 
   await Firebase.initializeApp(
@@ -24,9 +31,6 @@ void main() async{
   );
 
   runApp(const MyApp());
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: kPrimaryColor,
-  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -37,14 +41,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {
+      routes: <String, WidgetBuilder>{
         '/': (context)=> const Authenticate(),
         Welcome.id: (context)=> const Welcome(),
 
+        //User pages
         UserRegister.id: (context)=> const UserRegister(),
         HomePage.id : (context)=> const HomePage(),
+        UserProfile.id : (context)=> const UserProfile(),
+        EditUserProfile.id: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return EditUserProfile(
+            userName: args['userName'],
+            userEmail: args['userEmail'],
+            userImg: args['userImg'],
+            userMobile: args['userMobile'],
+          );
+        },
+        ViewVehicle.id: (context)=> const ViewVehicle(),
         ChatBot.id: (context)=> const ChatBot(),
+        LicenseInfoPage.id: (context)=> const LicenseInfoPage(),
 
+        //officer pages
         OfficerLogin.id: (context)=> const OfficerLogin(),
         HomeScreen.id: (context)=> const HomeScreen(),
         Profile.id:  (context)=> const Profile(),

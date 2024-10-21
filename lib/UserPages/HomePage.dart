@@ -1,54 +1,123 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:smart_rto/Welcome.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:smart_rto/UserPages/LicenseInfoPage.dart';
+import 'package:smart_rto/UserPages/UserProfile.dart';
+import 'package:smart_rto/UserPages/Vehicles.dart';
+import 'package:smart_rto/Utility/MyCard.dart';
 import './Chatbot/chatbot.dart';
 import '../Utility/Constants.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const String id = 'Homepage';
+
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    late String apiKey = dotenv.env['CHATGPT_API'] ?? 'No API Key';
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            leading: const SizedBox(width: 10.0,),
-            backgroundColor: kPrimaryColor,
-            title: kAppBarTitle,
-            actions: [
-              IconButton(
-                onPressed: () async{
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, Welcome.id);
-                },
-                icon: Icon(Icons.logout),
-              ),
-            ],
-          ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
+  State<HomePage> createState() => _HomePageState();
+}
 
-              Align(
-                alignment: Alignment.bottomRight, // Align the button to the bottom-right
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, ChatBot.id);
-                  },
-                  child: const Text('Assistant'),
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState(){
+    super.initState();
+
+    Future.microtask(() {
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: kPrimaryColor),
+      );
+    });
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reset the status bar color every time dependencies change
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: kPrimaryColor),
+    );
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: kSecondaryColor,
+          shape: const CircleBorder(),
+          padding: const EdgeInsets.all(20),
+        ),
+        onPressed: () {
+          Navigator.pushNamed(context, ChatBot.id);
+        },
+        child: const Icon(FontAwesomeIcons.robot, color: kWhite,),
+      ),
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        leading: const SizedBox(
+          width: 5.0,
+        ),
+        title: kAppBarTitle,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, UserProfile.id);
+            },
+            icon: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(
+                FontAwesomeIcons.userLarge,
+                color: kWhite,
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: CustomCard(
+              icon: FontAwesomeIcons.driversLicense,
+              cardTitle: 'My License',
+              button1: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, LicenseInfoPage.id);
+                },
+                child: const Text(
+                  'View',
+                  style: TextStyle(
+                    color: kSecondaryColor,
+                    fontSize: 18,
+                    fontFamily: 'InriaSans',
+                  ),
                 ),
               ),
-              const SizedBox(height: 10.0,)
-            ],
+            ),
           ),
-        ),
+          Align(
+            alignment: Alignment.center,
+            child: CustomCard(
+              icon: FontAwesomeIcons.car,
+              cardTitle: 'My Vehicles',
+              button1: TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, ViewVehicle.id);
+                  },
+                  child: const Text(
+                    'View',
+                    style: TextStyle(
+                      color: kSecondaryColor,
+                      fontSize: 18,
+                      fontFamily: 'InriaSans',
+                    ),
+                  )),
+            ),
+          )
+        ],
       ),
     );
   }

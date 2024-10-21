@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import "package:image_picker/image_picker.dart";
 import '../../Utility/Constants.dart';
@@ -26,7 +27,10 @@ class _ChatBotState extends State<ChatBot> {
   @override
   void initState() {
     super.initState();
-    apiKey = dotenv.env['GEMINI_API'] ?? 'No API Key';
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: kPrimaryColor), // Change to your desired color
+    );
+    apiKey = dotenv.env['GEMINI_API'] ?? 'No API Key found';
   }
 
   void onSendMessage() async {
@@ -128,69 +132,72 @@ class _ChatBotState extends State<ChatBot> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        title: kAppBarTitle,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: kBackArrow,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: kPrimaryColor,
+          title: kAppBarTitle,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: kBackArrow,
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 10,
-            child: ListView.builder(
-              reverse: true,
-              itemCount: chatList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(chatList[index].isMe ? "Me" : "Assistant"),
-                  subtitle: chatList[index].base64EncodedImage != null
-                      ? Column(
-                          children: [
-                            Image.memory(
-                              base64Decode(chatList[index].base64EncodedImage!),
-                              height: 300,
-                              width: double.infinity,
-                            ),
-                            Text(chatList[index].message),
-                          ],
-                        )
-                      : Text(chatList[index].message),
-                );
-              },
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: ChatBox(
-                  controller: controller,
-                  filePressed: selectImage,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  onSendMessage();
+        body: Column(
+          children: [
+            Expanded(
+              flex: 10,
+              child: ListView.builder(
+                reverse: true,
+                itemCount: chatList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(chatList[index].isMe ? "Me" : "Assistant", style: TextStyle(fontWeight: FontWeight.bold),),
+                    subtitle: chatList[index].base64EncodedImage != null
+                        ? Column(
+                            children: [
+                              Image.memory(
+                                base64Decode(chatList[index].base64EncodedImage!),
+                                height: 300,
+                                width: double.infinity,
+                              ),
+                              Text(chatList[index].message),
+                            ],
+                          )
+                        : Text(chatList[index].message),
+                  );
                 },
-                icon: const Icon(
-                  Icons.send,
-                  color: kSecondaryColor,
-                ),
               ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          )
-        ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: ChatBox(
+                    controller: controller,
+                    filePressed: selectImage,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    onSendMessage();
+                  },
+                  icon: const Icon(
+                    Icons.send,
+                    color: kSecondaryColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            )
+          ],
+        ),
       ),
     );
   }

@@ -77,3 +77,5 @@ const kListHeaders = SizedBox(
     ),
   ),
 );
+
+const kTextStyle = TextStyle(color: kWhite, fontSize: 16.0,);

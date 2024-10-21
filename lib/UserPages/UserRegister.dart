@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -19,7 +20,7 @@ class _UserRegisterState extends State<UserRegister> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   late PhoneAuthCredential credential;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String _verificationId = '',
       buttonText = 'Register';
   bool otpEnable = false,
@@ -43,59 +44,58 @@ class _UserRegisterState extends State<UserRegister> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: kPrimaryColor,
-          title: kAppBarTitle,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: kBackArrow,
+    return Scaffold(
+          appBar: AppBar(
+            backgroundColor: kPrimaryColor,
+            title: kAppBarTitle,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: kBackArrow,
+            ),
           ),
-        ),
-        body: ModalProgressHUD(
-          inAsyncCall: loading,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: UserInput(
-                  controller: _phoneController,
-                  hint: 'Enter Mobile No.',
-                  keyboardType: TextInputType.number,
-                  maxLength: 10,
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              if (otpEnable)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80.0),
-                  child: OTPField(
-                    controller: _otpController,
+          body: ModalProgressHUD(
+            inAsyncCall: loading,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: UserInput(
+                    controller: _phoneController,
+                    hint: 'Enter Mobile No.',
+                    keyboardType: TextInputType.number,
+                    maxLength: 10,
                   ),
                 ),
-              if(mobileError)
-                const Text(
-                  'Enter valid mobile number', style: TextStyle(color: kRed,),),
-              const SizedBox(height: 10.0,),
-              RoundButton(
-                onPressed: () {
-                  if (_validateMobile(_phoneController.text)) {
-                    otpEnable ? _verifyOTP() : _sendOTP();
-                  }
-                },
-                text: buttonText,
-              ),
-            ],
+                const SizedBox(
+                  height: 10.0,
+                ),
+                if (otpEnable)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                    child: OTPField(
+                      controller: _otpController,
+                    ),
+                  ),
+                if(mobileError)
+                  const Text(
+                    'Enter valid mobile number', style: TextStyle(color: kRed,),),
+                const SizedBox(height: 10.0,),
+                RoundButton(
+                  onPressed: () {
+                    if (_validateMobile(_phoneController.text)) {
+                      otpEnable ? _verifyOTP() : _sendOTP();
+                    }
+                  },
+                  text: buttonText,
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+
     );
   }
 
@@ -137,6 +137,18 @@ class _UserRegisterState extends State<UserRegister> {
       );
       try {
         await _auth.signInWithCredential(credential);
+        try {
+          // Reference to Firestore instance
+          final firestore = FirebaseFirestore.instance;
+
+          // Create a document with the mobile number as the ID
+          String phoneNumber = '+91${_phoneController.text.trim()}';
+          await firestore.collection('users').doc(phoneNumber).set({'mobile':phoneNumber, 'name':null, 'email':null, 'img':null});
+
+          print('Document created successfully!');
+        } catch (e) {
+          print('Error creating document: $e');
+        }
         Navigator.pushNamedAndRemoveUntil(
           context,
           HomePage.id, // Navigate to HomeScreen

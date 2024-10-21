@@ -50,17 +50,6 @@ class CustomCard extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  cardDescription,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'InriaSans',),
-                ),
-              ),
-            ),
-            // Optional OverflowBar for other widgets
             OverflowBar(
               children: <Widget>[
                 button1,

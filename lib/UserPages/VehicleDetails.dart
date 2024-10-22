@@ -149,7 +149,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                         fit: BoxFit.cover,
                       )
                     : const Icon(Icons.image_not_supported),
-                title: Text('Total Fine: ₹${fineData['total_fine']}'),
+                title: Text('Total Fine: ₹${fineData['total']}'),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

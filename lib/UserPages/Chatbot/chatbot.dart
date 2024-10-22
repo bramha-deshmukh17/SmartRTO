@@ -154,7 +154,7 @@ class _ChatBotState extends State<ChatBot> {
                 itemCount: chatList.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(chatList[index].isMe ? "Me" : "Assistant", style: TextStyle(fontWeight: FontWeight.bold),),
+                    title: Text(chatList[index].isMe ? "Me" : "Assistant", style: const TextStyle(fontWeight: FontWeight.bold),),
                     subtitle: chatList[index].base64EncodedImage != null
                         ? Column(
                             children: [

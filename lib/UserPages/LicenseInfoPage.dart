@@ -18,10 +18,10 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
   String? mobileNumber;
 
   Future<void> _fetchMobileNumber() async {
-    User? user = FirebaseAuth.instance.currentUser; // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       setState(() {
-        mobileNumber = user.phoneNumber; // Fetch the phone number
+        mobileNumber = user.phoneNumber;
       });
     }
   }
@@ -29,28 +29,31 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
   @override
   void initState() {
     super.initState();
-    _fetchMobileNumber();
-    fetchLicenseData();
+    _fetchMobileNumber().then((_) {
+      if (mobileNumber != null) {
+        fetchLicenseData();
+      }
+    });
   }
 
   Future<void> fetchLicenseData() async {
-    // Dummy data for demonstration
-    licenseData = {
-      "license_holder_name": "Rahul Sharma",
-      "license_number": "DL1234567890123",
-      "date_of_birth": DateTime.parse("1990-05-15"),
-      "gender": "Male",
-      "issue_date": DateTime.parse("2020-06-01"),
-      "expiration_date": DateTime.parse("2030-05-31"),
-      "address": "456, Green Street, New Delhi, Delhi, 110001",
-      "mobile": "+919876543210",
-      "class": "Class B",
-      "photo_url": "http://example.com/photo.jpg",
-      "signature_url": "http://example.com/signature.jpg",
-      "restrictions": ["None"],
-      "endorsements": ["None"]
-    };
-    setState(() {}); // Update the state to reflect the fetched data
+    try {
+      // Query Firestore for license data using the mobile number
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('license')
+          .where('mobile', isEqualTo: mobileNumber)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        setState(() {
+          licenseData = snapshot.docs.first.data() as Map<String, dynamic>;
+        });
+      } else {
+        print("No license data found for this mobile number.");
+      }
+    } catch (e) {
+      print("Error fetching license data: $e");
+    }
   }
 
   String _formatDate(DateTime dateTime) {
@@ -81,6 +84,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   Text(
                     "License Holder Name: ${licenseData!['license_holder_name']}",
                     style: const TextStyle(
@@ -89,11 +93,41 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
                   const SizedBox(height: 8),
                   Text(
                     "DL Number: ${licenseData!['license_number']}",
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Photo:",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Image.network(
+                    licenseData!['photo_url'],
+                    height: 150,
+                    width: 150,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Text("Failed to load photo.");
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Signature:",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Image.network(
+                    licenseData!['signature_url'],
+                    height: 50,
+                    width: 150,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Text("Failed to load signature.");
+                    },
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Date of Birth: ${_formatDate(licenseData!['date_of_birth'])}",
+                    "Date of Birth: ${_formatDate(licenseData!['date_of_birth'].toDate())}",
                     style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 8),
@@ -103,12 +137,12 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Issue Date: ${_formatDate(licenseData!['issue_date'])}",
+                    "Issue Date: ${_formatDate(licenseData!['issue_date'].toDate())}",
                     style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Expiration Date: ${_formatDate(licenseData!['expiration_date'])}",
+                    "Expiration Date: ${_formatDate(licenseData!['expiration_date'].toDate())}",
                     style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 8),
@@ -131,6 +165,8 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
                     "Endorsements: ${licenseData!['endorsements']?.join(', ') ?? 'None'}",
                     style: const TextStyle(fontSize: 18),
                   ),
+                  const SizedBox(height: 16),
+
                 ],
               ),
             ),

@@ -3,6 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../Utility/Constants.dart';
+
 class PaymentPage extends StatefulWidget {
   final String licensePlate; // License plate for querying
 
@@ -132,7 +134,14 @@ class _PaymentPageState extends State<PaymentPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Make Payment"),
+        backgroundColor: kPrimaryColor,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: kBackArrow,
+        ),
+        title: kAppBarTitle,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -167,7 +176,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
             // Display total fine amount
             Text(
-              'Total Fine: ₹${finesData!['total_fine']}',
+              'Total Fine: ₹${finesData!['total']}',
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -191,7 +200,7 @@ class _PaymentPageState extends State<PaymentPage> {
             if (finesData!['transaction_id'] != null)
               Text(
                 'Transaction ID: ${finesData!["transaction_id"]}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
@@ -232,7 +241,8 @@ class _PaymentPageState extends State<PaymentPage> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    double totalFine = double.tryParse(finesData!['total_fine'].toString()) ?? 0.0;
+                    double totalFine = double.tryParse(finesData!['total'].toString()) ?? 0.0;
+                    print(totalFine);
                     openCheckout(totalFine); // Open Razorpay checkout
                   },
                   child: const Text("Pay Now"),

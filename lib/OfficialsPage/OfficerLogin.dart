@@ -25,56 +25,54 @@ class _OfficerLoginState extends State<OfficerLogin> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: kBackArrow,
-          ),
-          backgroundColor: kPrimaryColor,
-          title: kAppBarTitle,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: kBackArrow,
         ),
-        body: ModalProgressHUD(
-          inAsyncCall: loading,
-          progressIndicator: const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor), // Set custom color
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                UserInput(
-                  controller: emailController,
-                  hint: 'Enter Email',
-                  keyboardType: TextInputType.emailAddress,
-                  errorText: errorEmail,
-                ),
-                const SizedBox(height: 25.0),
-                UserInput(
-                  controller: passController,
-                  hint: 'Enter Password',
-                  obscureText: true,
-                  keyboardType: TextInputType.emailAddress,
-                  errorText: errorPass,
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                RoundButton(
-                  onPressed: () {
-                    if (validateEmailAndPassword(
-                        emailController.text, passController.text)) {
-                      signInWithEmailAndPassword();
-                    }
-                  },
-                  text: 'Login',
-                ),
-              ],
-            ),
+        backgroundColor: kPrimaryColor,
+        title: kAppBarTitle,
+      ),
+      body: ModalProgressHUD(
+        inAsyncCall: loading,
+        progressIndicator: const CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor), // Set custom color
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              UserInput(
+                controller: emailController,
+                hint: 'Enter Email',
+                keyboardType: TextInputType.emailAddress,
+                errorText: errorEmail,
+              ),
+              const SizedBox(height: 25.0),
+              UserInput(
+                controller: passController,
+                hint: 'Enter Password',
+                obscureText: true,
+                keyboardType: TextInputType.emailAddress,
+                errorText: errorPass,
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              RoundButton(
+                onPressed: () {
+                  if (validateEmailAndPassword(
+                      emailController.text, passController.text)) {
+                    signInWithEmailAndPassword();
+                  }
+                },
+                text: 'Login',
+              ),
+            ],
           ),
         ),
       ),

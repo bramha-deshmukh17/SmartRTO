@@ -77,82 +77,80 @@ class _ConfirmfineState extends State<Confirmfine> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: kAppBarTitle,
-          backgroundColor: kPrimaryColor,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: kBackArrow),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Profile.id);
-              },
-              icon: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Icon(
-                  Icons.person,
-                  color: kWhite,
-                ),),
-            ),
-          ],
-        ),
-        body: Scrollbar(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                kBox,
-                Text(
-                  number!,
-                  style: const TextStyle(
-                    color: kRed,
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),//Car number
-                if (imgUrl != null)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.network(imgUrl!), // Display the captured image
-                  ),//show img if any
-                kListHeaders,
-                SizedBox(
-                  height: 300.0,
-                  child: ListView(
-                    padding: EdgeInsets.symmetric(horizontal: 65.0),
-                    children: fines.entries.map((entry) {
-                      return ListTile(
-                        leading: Text(
-                          entry.key,
-                          style: const TextStyle(
-                              color: kBlack, fontSize: 15.0, wordSpacing: 0.01),
-                        ), // Display the fine description
-                        trailing: Text(
-                          '₹${entry.value}',
-                          style: const TextStyle(
-                            color: kRed,
-                            fontSize: 16.0,
-                          ),
-                        ), // Display the penalty amount
-                      );
-                    }).toList(), // Convert the iterable to a list
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: kAppBarTitle,
+        backgroundColor: kPrimaryColor,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: kBackArrow),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, Profile.id);
+            },
+            icon: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(
+                Icons.person,
+                color: kWhite,
+              ),),
+          ),
+        ],
+      ),
+      body: Scrollbar(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              kBox,
+              Text(
+                number!,
+                style: const TextStyle(
+                  color: kRed,
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                RoundButton(
-                  onPressed: () {
-                    _firestore.collection('fines').add({'by': officerId, 'date':FieldValue.serverTimestamp(), 'fines':fines, 'photo':imgUrl, 'to':number, 'status': 'pending',});
-                    int count = 0;
-                    Navigator.popUntil(context, (route) => count++ == 2);
-                  },
-                  text:'Confirm',
-                  ),
-              ],
-            ),
+              ),//Car number
+              if (imgUrl != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.network(imgUrl!), // Display the captured image
+                ),//show img if any
+              kListHeaders,
+              SizedBox(
+                height: 300.0,
+                child: ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 65.0),
+                  children: fines.entries.map((entry) {
+                    return ListTile(
+                      leading: Text(
+                        entry.key,
+                        style: const TextStyle(
+                            color: kBlack, fontSize: 15.0, wordSpacing: 0.01),
+                      ), // Display the fine description
+                      trailing: Text(
+                        '₹${entry.value}',
+                        style: const TextStyle(
+                          color: kRed,
+                          fontSize: 16.0,
+                        ),
+                      ), // Display the penalty amount
+                    );
+                  }).toList(), // Convert the iterable to a list
+                ),
+              ),
+              RoundButton(
+                onPressed: () {
+                  _firestore.collection('fines').add({'by': officerId, 'date':FieldValue.serverTimestamp(), 'fines':fines, 'total': total, 'photo':imgUrl, 'to':number, 'status': 'Pending',});
+                  int count = 0;
+                  Navigator.popUntil(context, (route) => count++ == 2);
+                },
+                text:'Confirm',
+                ),
+            ],
           ),
         ),
       ),

@@ -71,98 +71,96 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: kAppBarTitle,
-          backgroundColor: kPrimaryColor,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: kBackArrow,
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: kAppBarTitle,
+        backgroundColor: kPrimaryColor,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: kBackArrow,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: officerName.isEmpty
-              ? const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),))
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    Center(
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(profileImageUrl),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: officerName.isEmpty
+            ? const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),))
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Center(
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(profileImageUrl),
+                    ),
+                  ),
+                  kBox,
+                  Center(
+                    child: Text(
+                      officerName,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    kBox,
-                    Center(
-                      child: Text(
-                        officerName,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  ),
+                  kBox,
+                  Center(
+                    child: Text(
+                      officerDesignation,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey,
                       ),
                     ),
-                    kBox,
-                    Center(
-                      child: Text(
-                        officerDesignation,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
-                        ),
-                      ),
+                  ),
+                  const Divider(height: 40, thickness: 1),
+                  kBox,
+                  ListTile(
+                    leading: const Icon(Icons.badge, color: kSecondaryColor),
+                    title: const Text(
+                      'ID',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    const Divider(height: 40, thickness: 1),
-                    kBox,
-                    ListTile(
-                      leading: const Icon(Icons.badge, color: kSecondaryColor),
-                      title: const Text(
-                        'ID',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(officerId),
+                    subtitle: Text(officerId),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.email, color: kSecondaryColor),
+                    title: const Text(
+                      'Email',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.email, color: kSecondaryColor),
-                      title: const Text(
-                        'Email',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(officerEmail),
+                    subtitle: Text(officerEmail),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.phone, color: kSecondaryColor),
+                    title: const Text(
+                      'Phone',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.phone, color: kSecondaryColor),
-                      title: const Text(
-                        'Phone',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(officerPhone),
+                    subtitle: Text(officerPhone),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.calendar_today, color: kSecondaryColor),
+                    title: const Text(
+                      'Joined on',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.calendar_today, color: kSecondaryColor),
-                      title: const Text(
-                        'Joined on',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(_formatDate(joiningDate)),
+                    subtitle: Text(_formatDate(joiningDate)),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kSecondaryColor,
+                      minimumSize: const Size(double.infinity, 50),
                     ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kSecondaryColor,
-                        minimumSize: const Size(double.infinity, 50),
-                      ),
-                      onPressed:logout,
-                      child: const Text('Log Out', style: TextStyle(color: kWhite),),
-                    ),
-                  ],
-                ),
-        ),
+                    onPressed:logout,
+                    child: const Text('Log Out', style: TextStyle(color: kWhite),),
+                  ),
+                ],
+              ),
       ),
     );
   }

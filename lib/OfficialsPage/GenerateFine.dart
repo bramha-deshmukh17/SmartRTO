@@ -66,123 +66,121 @@ class _GenerateFinesState extends State<GenerateFines> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: kAppBarTitle,
-          backgroundColor: kPrimaryColor,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: kBackArrow,
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Profile.id);
-              },
-              icon: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Icon(
-                  Icons.person,
-                  color: kWhite,
-                ),),
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: kAppBarTitle,
+        backgroundColor: kPrimaryColor,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: kBackArrow,
         ),
-        body: Scrollbar(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(top: 70.0),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    UserInput(
-                      controller: _numberController,
-                      hint: 'Enter Vehicle No.',
-                      keyboardType: TextInputType.text,
-                      errorText: numberError,
-                      maxLength: 10,
-                    ), //Vehicle number
-                    kBox,
-                    SearchDropDown(
-                      dropdownSearchFieldController:
-                          _dropdownSearchFieldController,
-                      suggestionBoxController: _suggestionBoxController,
-                      finesAndPenalties: finesAndPenalties,
-                      onSelectedFine: (String fine, int amount) {
-                        setState(() {
-                          selectedFines[fine] = amount;
-                        });
-                      },
-                      onTotalChanged: (int amount) {
-                        setState(() {
-                          total += amount;
-                        });
-                      },
-                    ),//Search dropdown for fine list
-                    kBox,
-                    if (listError)
-                      const SizedBox(
-                        height: 15.0,
-                        child: Text(
-                          'Select at least one fine',
-                          style: TextStyle(color: kRed),
-                        ),
-                      ),//Show fine not selected error
-                    kListHeaders,
-                    FineList(selectedFines: selectedFines),//selected fines list
-                    kBox,
-                    SizedBox(
-                      width: 250.0,
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          'Total: ₹${total.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontFamily: 'InriaSans',
-                          ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, Profile.id);
+            },
+            icon: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(
+                Icons.person,
+                color: kWhite,
+              ),),
+          ),
+        ],
+      ),
+      body: Scrollbar(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(top: 70.0),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  UserInput(
+                    controller: _numberController,
+                    hint: 'Enter Vehicle No.',
+                    keyboardType: TextInputType.text,
+                    errorText: numberError,
+                    maxLength: 10,
+                  ), //Vehicle number
+                  kBox,
+                  SearchDropDown(
+                    dropdownSearchFieldController:
+                        _dropdownSearchFieldController,
+                    suggestionBoxController: _suggestionBoxController,
+                    finesAndPenalties: finesAndPenalties,
+                    onSelectedFine: (String fine, int amount) {
+                      setState(() {
+                        selectedFines[fine] = amount;
+                      });
+                    },
+                    onTotalChanged: (int amount) {
+                      setState(() {
+                        total += amount;
+                      });
+                    },
+                  ),//Search dropdown for fine list
+                  kBox,
+                  if (listError)
+                    const SizedBox(
+                      height: 15.0,
+                      child: Text(
+                        'Select at least one fine',
+                        style: TextStyle(color: kRed),
+                      ),
+                    ),//Show fine not selected error
+                  kListHeaders,
+                  FineList(selectedFines: selectedFines),//selected fines list
+                  kBox,
+                  SizedBox(
+                    width: 250.0,
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        'Total: ₹${total.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontFamily: 'InriaSans',
                         ),
                       ),
-                    ),//SHow total fine
-                    kBox,
-                    CaptureImage(
-                      captureImage: (String imageUrl) {
-                        setState(() {
-                          imgUrl = imageUrl;
-                        });
-                      },
                     ),
-                    kBox,
-                    RoundButton(
-                      text: 'Generate',
-                      onPressed: () {
-                        if (verifyNumber(_numberController.text.toUpperCase()) &&
-                            selectedFines.isNotEmpty) {
-                          numberError = null;
-                          listError = false;
+                  ),//SHow total fine
+                  kBox,
+                  CaptureImage(
+                    captureImage: (String imageUrl) {
+                      setState(() {
+                        imgUrl = imageUrl;
+                      });
+                    },
+                  ),
+                  kBox,
+                  RoundButton(
+                    text: 'Generate',
+                    onPressed: () {
+                      if (verifyNumber(_numberController.text.toUpperCase()) &&
+                          selectedFines.isNotEmpty) {
+                        numberError = null;
+                        listError = false;
 
-                          Navigator.pushNamed(context, Confirmfine.id,
-                              arguments: {
-                                'total': total,
-                                'fines': selectedFines,
-                                'number': numberPlate,
-                                'imgUrl': imgUrl,
-                              });
-                        } else {
-                          setState(() {
-                            listError = selectedFines.isEmpty;
-                            numberError = _numberController.text.isEmpty
-                                ? 'Enter valid number'
-                                : 'Please fill this field';
-                          });
-                        }
-                      },
-                    ),//Generate fine button
-                  ],
-                ),
+                        Navigator.pushNamed(context, Confirmfine.id,
+                            arguments: {
+                              'total': total,
+                              'fines': selectedFines,
+                              'number': numberPlate,
+                              'imgUrl': imgUrl,
+                            });
+                      } else {
+                        setState(() {
+                          listError = selectedFines.isEmpty;
+                          numberError = _numberController.text.isEmpty
+                              ? 'Enter valid number'
+                              : 'Please fill this field';
+                        });
+                      }
+                    },
+                  ),//Generate fine button
+                ],
               ),
             ),
           ),

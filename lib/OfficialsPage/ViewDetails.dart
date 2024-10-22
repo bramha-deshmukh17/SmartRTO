@@ -28,125 +28,123 @@ class _ViewDetailsState extends State<ViewDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: kPrimaryColor,
-          title: kAppBarTitle,
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: kBackArrow,
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Profile.id);
-              },
-              icon: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Icon(
-                  Icons.person,
-                  color: kWhite,
-                ),),
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        title: kAppBarTitle,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: kBackArrow,
         ),
-        body: Scrollbar(
-          child: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  kBox,
-                  UserInput(
-                    controller: carController,
-                    hint: 'Enter car number',
-                    keyboardType: TextInputType.text,
-                    errorText: carNoError,
-                  ),
-                  kBox,
-                  ElevatedButton(
-                    onPressed: () async {
-                      await fetchCarDetails(
-                          carController.text.trim().toUpperCase());
-                    },
-                    child: const Text('Get Car Details'),
-                  ),
-                  kBox,
-                  if(loading)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 80.0),
-                      child: LinearProgressIndicator(
-                        color: kPrimaryColor,
-                        minHeight: 5.0,
-                      ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, Profile.id);
+            },
+            icon: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(
+                Icons.person,
+                color: kWhite,
+              ),),
+          ),
+        ],
+      ),
+      body: Scrollbar(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                kBox,
+                UserInput(
+                  controller: carController,
+                  hint: 'Enter car number',
+                  keyboardType: TextInputType.text,
+                  errorText: carNoError,
+                ),
+                kBox,
+                ElevatedButton(
+                  onPressed: () async {
+                    await fetchCarDetails(
+                        carController.text.trim().toUpperCase());
+                  },
+                  child: const Text('Get Car Details'),
+                ),
+                kBox,
+                if(loading)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 80.0),
+                    child: LinearProgressIndicator(
+                      color: kPrimaryColor,
+                      minHeight: 5.0,
                     ),
-                  kBox,
-                  if (_visible)
-                    carDetails != null
-                        ? Column(
-                            children: [
-                              Text('Owner Name: ${carDetails!['owner_name']}'),
-                              Text('Contact: ${carDetails!['contact']}'),
-                              Text(
-                                  'Insurance No.: ${carDetails!['insurance_no']}'),
-                              Text(
-                                  'Insurance Company: ${carDetails!['insurance_company']}'),
-                              Text(
-                                  'Insurance Expiry: ${_formatDate(carDetails!['insurance_expiry'].toDate())}'),
-                              kBox,
-                              const Text(
-                                'Fine History:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
+                  ),
+                kBox,
+                if (_visible)
+                  carDetails != null
+                      ? Column(
+                          children: [
+                            Text('Owner Name: ${carDetails!['owner_name']}'),
+                            Text('Contact: ${carDetails!['contact']}'),
+                            Text(
+                                'Insurance No.: ${carDetails!['insurance_no']}'),
+                            Text(
+                                'Insurance Company: ${carDetails!['insurance_company']}'),
+                            Text(
+                                'Insurance Expiry: ${_formatDate(carDetails!['insurance_expiry'].toDate())}'),
+                            kBox,
+                            const Text(
+                              'Fine History:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: fineHistory.length,
-                                itemBuilder: (context, index) {
-                                  final fine = fineHistory[index];
-                                  return Card(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 8.0, horizontal: 10.0),
-                                    child: ListTile(
-                                      leading: fine['photo'] != null
-                                          ? Image.network(
-                                              fine['photo'],
-                                              width: 50,
-                                              height: 50,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : const Icon(
-                                              Icons.image_not_supported,
-                                              size: 50,
-                                            ),
-                                      title: Text(
-                                        '${fine['date'].toDate().toString()}',
-                                        style: TextStyle(fontSize: 16.0),
-                                      ),
-                                      subtitle: Text(
-                                        'Status: ${fine['status']}',
-                                        style: TextStyle(
-                                            color: fine['status'] == "Paid"
-                                                ? kGreen
-                                                : kRed,
-                                            fontSize: 18.0),
-                                      ),
-                                      trailing: Text(
-                                        'By: ${fine['by']}',
-                                        style: TextStyle(fontSize: 12.0),
-                                      ),
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: fineHistory.length,
+                              itemBuilder: (context, index) {
+                                final fine = fineHistory[index];
+                                return Card(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 10.0),
+                                  child: ListTile(
+                                    leading: fine['photo'] != null
+                                        ? Image.network(
+                                            fine['photo'],
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : const Icon(
+                                            Icons.image_not_supported,
+                                            size: 50,
+                                          ),
+                                    title: Text(
+                                      '${fine['date'].toDate().toString()}',
+                                      style: TextStyle(fontSize: 16.0),
                                     ),
-                                  );
-                                },
-                              ),
-                            ],
-                          )
-                        : const Text('No car details found'),
-                ],
-              ),
+                                    subtitle: Text(
+                                      'Status: ${fine['status']}',
+                                      style: TextStyle(
+                                          color: fine['status'] == "Completed"
+                                              ? kGreen
+                                              : kRed,
+                                          fontSize: 18.0),
+                                    ),
+                                    trailing: Text(
+                                      'By: ${fine['by']}',
+                                      style: TextStyle(fontSize: 12.0),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        )
+                      : const Text('No car details found'),
+              ],
             ),
           ),
         ),

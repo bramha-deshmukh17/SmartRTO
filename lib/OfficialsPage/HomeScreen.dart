@@ -22,75 +22,73 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: const SizedBox(
-            width: 10.0,
+    return Scaffold(
+      appBar: AppBar(
+        leading: const SizedBox(
+          width: 10.0,
+        ),
+        backgroundColor: kPrimaryColor,
+        title: kAppBarTitle,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, Profile.id);
+            },
+            icon: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                child: Icon(
+                  Icons.person,
+                  color: kWhite,
+                ),),
           ),
-          backgroundColor: kPrimaryColor,
-          title: kAppBarTitle,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Profile.id);
-              },
-              icon: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Icon(
-                    Icons.person,
-                    color: kWhite,
-                  ),),
-            ),
-          ],
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: CustomCard(
-                icon: FontAwesomeIcons.ticket,
-                button1: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, GenerateFines.id);
-                  },
-                  child: const Text(
-                    'Generate',
-                    style: TextStyle(
-                      color: kSecondaryColor,
-                      fontSize: 18,
-                      fontFamily: 'InriaSans',
-                    ),
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: CustomCard(
+              icon: FontAwesomeIcons.ticket,
+              button1: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, GenerateFines.id);
+                },
+                child: const Text(
+                  'Generate',
+                  style: TextStyle(
+                    color: kSecondaryColor,
+                    fontSize: 18,
+                    fontFamily: 'InriaSans',
                   ),
                 ),
-                cardTitle: 'Generate Fine',
-                cardDescription: '',
               ),
+              cardTitle: 'Generate Fine',
+              cardDescription: '',
             ),
-            Align(
-              alignment: Alignment.center,
-              child: CustomCard(
-                icon: FontAwesomeIcons.car,
-                button1: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, ViewDetails.id);
-                  },
-                  child: const Text(
-                    'View',
-                    style: TextStyle(
-                      color: kSecondaryColor,
-                      fontSize: 18,
-                      fontFamily: 'InriaSans',
-                    ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: CustomCard(
+              icon: FontAwesomeIcons.car,
+              button1: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, ViewDetails.id);
+                },
+                child: const Text(
+                  'View',
+                  style: TextStyle(
+                    color: kSecondaryColor,
+                    fontSize: 18,
+                    fontFamily: 'InriaSans',
                   ),
                 ),
-                cardTitle: 'View Details',
-                cardDescription: '',
               ),
+              cardTitle: 'View Details',
+              cardDescription: '',
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

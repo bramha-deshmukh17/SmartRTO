@@ -111,9 +111,9 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text(
                     "Signature:",
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),

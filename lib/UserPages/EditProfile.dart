@@ -72,7 +72,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
                     onPressed: () async {
                       Navigator.pop(context); // Close the modal
                       final pickedFile =
-                      await _picker.pickImage(source: ImageSource.camera);
+                          await _picker.pickImage(source: ImageSource.camera);
                       if (pickedFile != null) {
                         setState(() {
                           _imageFile = File(pickedFile.path);
@@ -93,7 +93,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
                     onPressed: () async {
                       Navigator.pop(context); // Close the modal
                       final pickedFile =
-                      await _picker.pickImage(source: ImageSource.gallery);
+                          await _picker.pickImage(source: ImageSource.gallery);
                       if (pickedFile != null) {
                         setState(() {
                           _imageFile = File(pickedFile.path);
@@ -141,7 +141,8 @@ class _EditUserProfileState extends State<EditUserProfile> {
         // Fetch the document where the mobile matches
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection('users')
-            .where('mobile', isEqualTo: widget.userMobile) // Query by mobile number
+            .where('mobile',
+                isEqualTo: widget.userMobile) // Query by mobile number
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
@@ -200,7 +201,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
                       : NetworkImage(widget.userImg),
                   child: _imageFile == null
                       ? const Icon(FontAwesomeIcons.camera,
-                      size: 30, color: Colors.white)
+                          size: 30, color: Colors.white)
                       : null,
                 ),
               ),
@@ -224,7 +225,10 @@ class _EditUserProfileState extends State<EditUserProfile> {
               ),
               kBox,
               isUploading
-                  ? const CircularProgressIndicator()
+                  ? const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          kSecondaryColor), // Set custom color
+                    )
                   : RoundButton(onPressed: _saveProfile, text: 'Save')
             ],
           ),

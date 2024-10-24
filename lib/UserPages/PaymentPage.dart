@@ -69,12 +69,12 @@ class _PaymentPageState extends State<PaymentPage> {
     if (finesData != null) {
       String documentId = finesData!['documentId']; // Document ID
       await _firestore.collection('fines').doc(documentId).update({
-        'status': 'Completed',  // Update payment status to Completed
+        'status': 'Paid',  // Update payment status to Completed
         'transaction_id': response.paymentId,  // Store payment ID in transaction_id
       }).then((_) {
         print("Document updated successfully");
         setState(() {
-          finesData!['status'] = 'Completed'; // Update local status for UI refresh
+          finesData!['status'] = 'Paid'; // Update local status for UI refresh
           transactionId = response.paymentId; // Store the transaction ID for display
         });
       }).catchError((error) {

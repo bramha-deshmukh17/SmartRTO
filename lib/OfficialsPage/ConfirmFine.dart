@@ -121,7 +121,7 @@ class _ConfirmfineState extends State<Confirmfine> {
                 ),//show img if any
               kListHeaders,
               SizedBox(
-                height: 300.0,
+                height: 150.0,
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 65.0),
                   children: fines.entries.map((entry) {

@@ -67,7 +67,7 @@ class _ViewVehicleState extends State<ViewVehicle> {
             stream: _getUserVehicles(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),));
               }
               if (snapshot.hasError) {
                 return const Center(child: Text('Error loading vehicles.'));

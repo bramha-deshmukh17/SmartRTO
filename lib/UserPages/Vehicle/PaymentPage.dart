@@ -118,7 +118,7 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator()); // Show loading indicator
+      return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),)); // Show loading indicator
     }
 
     if (finesData == null) {

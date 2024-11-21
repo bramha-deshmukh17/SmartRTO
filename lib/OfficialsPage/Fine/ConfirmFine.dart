@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_rto/Utility/Constants.dart';
 import 'package:smart_rto/Utility/RoundButton.dart';
 
-import 'OfficerProfile.dart';
+import '../OfficerProfile.dart';
 
 
 class Confirmfine extends StatefulWidget {

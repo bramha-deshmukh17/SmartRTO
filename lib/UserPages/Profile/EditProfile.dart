@@ -34,6 +34,9 @@ class _EditUserProfileState extends State<EditUserProfile> {
   final ImagePicker _picker = ImagePicker();
   bool isUploading = false;
 
+  final _nodeEmail = FocusNode();
+  final _nodePassword = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -136,7 +139,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
   Future<void> _saveProfile() async {
     String? imageUrl = await _uploadImage();
 
-    if (imageUrl != null) {
+    if (imageUrl != null && nameController.text.isNotEmpty && emailController.text.isNotEmpty) {
       try {
         // Fetch the document where the mobile matches
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -210,18 +213,32 @@ class _EditUserProfileState extends State<EditUserProfile> {
                 controller: nameController,
                 hint: 'Name',
                 keyboardType: TextInputType.text,
+                submit: (_) {
+                  // Move focus to the second TextField
+                  FocusScope.of(context).requestFocus(_nodeEmail);
+                },
               ),
               kBox,
               UserInput(
                 controller: emailController,
                 hint: 'Email',
                 keyboardType: TextInputType.emailAddress,
+                focusNode: _nodeEmail,
+                submit: (_) {
+                  // Move focus to the second TextField
+                  FocusScope.of(context).requestFocus(_nodePassword);
+                },
               ),
               kBox,
               UserInput(
                 controller: mobileController,
+                readonly: true,
                 hint: 'Mobile',
                 keyboardType: TextInputType.phone,
+                focusNode: _nodePassword,
+                submit: (value) {
+                  FocusScope.of(context).unfocus(); // Dismiss the keyboard
+                },
               ),
               kBox,
               isUploading

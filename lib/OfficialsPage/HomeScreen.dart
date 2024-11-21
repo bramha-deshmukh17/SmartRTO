@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:smart_rto/OfficialsPage/Grievance/OfficerGrievanceList.dart';
 import 'package:smart_rto/Utility/MyCard.dart';
 import '../Utility/Constants.dart';
 import '../Welcome.dart';
-import 'GenerateFine.dart';
+import 'Fine/GenerateFine.dart';
 import 'OfficerProfile.dart';
-import 'ViewDetails.dart';
+import 'Fine/ViewDetails.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'HomeScreen';
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              cardTitle: 'Generate Fine',
+              cardTitle: 'Fine',
               cardDescription: '',
             ),
           ),
@@ -84,7 +85,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              cardTitle: 'View Details',
+              cardTitle: 'Details',
+              cardDescription: '',
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: CustomCard(
+              icon: Icons.message,
+              button1: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, OfficerGrievanceList.id);
+                },
+                child: const Text(
+                  'View',
+                  style: TextStyle(
+                    color: kSecondaryColor,
+                    fontSize: 18,
+                    fontFamily: 'InriaSans',
+                  ),
+                ),
+              ),
+              cardTitle: 'Grievances',
               cardDescription: '',
             ),
           ),

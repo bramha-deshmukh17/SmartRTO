@@ -24,19 +24,19 @@ class _UserRegisterState extends State<UserRegister> {
   String _verificationId = '',
       buttonText = 'Register';
   bool otpEnable = false,
-      loading = false,
-      mobileError = false;
+      loading = false;
+      String? mobileError;
 
   bool _validateMobile(String number) {
     if (!number.isEmpty && number.length >= 10) {
       setState(() {
-        mobileError = false;
+        mobileError = null;
       });
       return true;
     }
     else {
       setState(() {
-        mobileError = true;
+        mobileError = "Enter valid Mobile number";
       });
     }
     return false;
@@ -68,6 +68,7 @@ class _UserRegisterState extends State<UserRegister> {
                     hint: 'Enter Mobile No.',
                     keyboardType: TextInputType.number,
                     maxLength: 10,
+                    errorText: mobileError,
                   ),
                 ),
                 const SizedBox(
@@ -80,13 +81,11 @@ class _UserRegisterState extends State<UserRegister> {
                       controller: _otpController,
                     ),
                   ),
-                if(mobileError)
-                  const Text(
-                    'Enter valid mobile number', style: TextStyle(color: kRed,),),
                 const SizedBox(height: 10.0,),
                 RoundButton(
                   onPressed: () {
                     if (_validateMobile(_phoneController.text)) {
+                      FocusScope.of(context).unfocus();
                       otpEnable ? _verifyOTP() : _sendOTP();
                     }
                   },

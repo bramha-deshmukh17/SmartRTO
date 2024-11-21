@@ -74,7 +74,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
         title: kAppBarTitle,
       ),
       body: licenseData == null
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),))
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

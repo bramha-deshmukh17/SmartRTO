@@ -7,7 +7,6 @@ class UserInput  extends StatelessWidget {
   final dynamic maxLength;
   final dynamic keyboardType;
   final dynamic controller;
-  final dynamic obscureText;
   final dynamic errorText;
   final dynamic submit;
   final dynamic focusNode;
@@ -15,7 +14,7 @@ class UserInput  extends StatelessWidget {
   final dynamic readonly;
 
 
-  const UserInput({super.key, required this.controller, required this.hint, this.focusNode, this.submit, required this.keyboardType, this.maxLength, this.obscureText = false, this.errorText, this.maxlines, this.readonly=false});
+  const UserInput({super.key, required this.controller, required this.hint, this.focusNode, this.submit, required this.keyboardType, this.maxLength, this.errorText, this.maxlines, this.readonly=false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +28,9 @@ class UserInput  extends StatelessWidget {
         textAlign: TextAlign.center,
         controller: controller,
         keyboardType: keyboardType,
-        obscureText: obscureText,
         maxLength: maxLength,
         maxLines: maxlines,
-        style: const TextStyle(fontFamily: 'InriaSans',),
+        style: const TextStyle(fontFamily: 'InriaSans',fontSize: 20.0),
 
         onSubmitted: submit,
 

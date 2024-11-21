@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smart_rto/OfficialsPage/Utility/FinesList.dart';
 
-import '../Utility/Constants.dart';
-import '../Utility/RoundButton.dart';
-import '../Utility/UserInput.dart';
-import 'OfficerProfile.dart';
-import 'Utility/CapturePhoto.dart';
+import '../../Utility/Constants.dart';
+import '../../Utility/RoundButton.dart';
+import '../../Utility/UserInput.dart';
+import '../OfficerProfile.dart';
+import '../Utility/CapturePhoto.dart';
 import 'ConfirmFine.dart';
-import 'Utility/SearchDropDown.dart';
+import '../Utility/SearchDropDown.dart';
 
 class GenerateFines extends StatefulWidget {
   static const String id = 'generateFines';
@@ -27,7 +27,7 @@ class _GenerateFinesState extends State<GenerateFines> {
 
   final TextEditingController _dropdownSearchFieldController =
       TextEditingController();
-  SuggestionsBoxController _suggestionBoxController =
+  final SuggestionsBoxController _suggestionBoxController =
       SuggestionsBoxController();
 
   String? vehicleNumber;
@@ -76,24 +76,11 @@ class _GenerateFinesState extends State<GenerateFines> {
           },
           icon: kBackArrow,
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Profile.id);
-            },
-            icon: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Icon(
-                Icons.person,
-                color: kWhite,
-              ),),
-          ),
-        ],
       ),
       body: Scrollbar(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.only(top: 70.0),
+            padding: const EdgeInsets.only(top: 70.0),
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

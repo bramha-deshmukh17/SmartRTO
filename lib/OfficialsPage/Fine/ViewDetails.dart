@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smart_rto/Utility/RoundButton.dart';
 import 'package:smart_rto/Welcome.dart';
 
-import '../Utility/Constants.dart';
-import '../Utility/UserInput.dart';
-import 'OfficerProfile.dart';
+import '../../Utility/Constants.dart';
+import '../../Utility/UserInput.dart';
+import '../OfficerProfile.dart';
 
 class ViewDetails extends StatefulWidget {
   static const String id = "ViewDetails";
@@ -22,7 +23,6 @@ class _ViewDetailsState extends State<ViewDetails> {
   Map<String, dynamic>? carDetails;
   List<Map<String, dynamic>> fineHistory = [];
 
-  final _auth = FirebaseAuth.instance;
   final TextEditingController carController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -36,19 +36,6 @@ class _ViewDetailsState extends State<ViewDetails> {
           onPressed: () => Navigator.pop(context),
           icon: kBackArrow,
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Profile.id);
-            },
-            icon: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Icon(
-                Icons.person,
-                color: kWhite,
-              ),),
-          ),
-        ],
       ),
       body: Scrollbar(
         child: SingleChildScrollView(
@@ -64,15 +51,18 @@ class _ViewDetailsState extends State<ViewDetails> {
                   errorText: carNoError,
                 ),
                 kBox,
-                ElevatedButton(
-                  onPressed: () async {
-                    await fetchCarDetails(
-                        carController.text.trim().toUpperCase());
-                  },
-                  child: const Text('Get Car Details'),
-                ),
+                RoundButton(
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
+                      await fetchCarDetails(
+                          carController.text.trim().toUpperCase());
+                      setState(() {
+                        loading = false;
+                      });
+                    },
+                    text: 'Get Car Details'),
                 kBox,
-                if(loading)
+                if (loading)
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 80.0),
                     child: LinearProgressIndicator(
@@ -128,7 +118,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                     subtitle: Text(
                                       'Status: ${fine['status']}',
                                       style: TextStyle(
-                                          color: fine['status'] == "Completed"
+                                          color: fine['status'] == "Paid"
                                               ? kGreen
                                               : kRed,
                                           fontSize: 18.0),
@@ -202,35 +192,31 @@ class _ViewDetailsState extends State<ViewDetails> {
   }
 
   bool verifyNumber(String number) {
-    final regExp = RegExp(r'([A-Z]{2})(\d{1,2})([A-Z]{2})(\d{1,4})');
-    final match = regExp.firstMatch(number);
+    // Correct regex for Indian number plates
+    final regExp = RegExp(r'^[A-Z]{2}\d{1,2}[A-Z]{1,2}\d{4}$');
 
-    if (match != null) {
-      final stateCode = match.group(1)!;
-      final districtCode = match.group(2)!.padLeft(2, '0');
-      final letterCode = match.group(3)!;
-      final numericCode = match.group(4)!.padLeft(4, '0');
+    if (regExp.hasMatch(number)) {
+      // Extract components of the number plate and format it
+      final stateCode = number.substring(0, 2);
+      final districtCode = number.substring(2, 4).padLeft(2, '0');
+      final letterCode = number.length > 8 ? number.substring(4, 6) : number.substring(4, 5);
+      final numericCode = number.substring(number.length - 4).padLeft(4, '0');
+
       final formattedPlate = '$stateCode$districtCode$letterCode$numericCode';
 
-      if (regExp.hasMatch(formattedPlate)) {
-        setState(() {
-          formatedNumberPlate = formattedPlate;
-          carNoError = null;
-        });
-        return true;
-      } else {
-        setState(() {
-          carNoError = "Enter Valid car number";
-        });
-        return false;
-      }
+      // Update formatted number and reset the error
+      setState(() {
+        formatedNumberPlate = formattedPlate;
+        carNoError = null;
+      });
+      return true;
+    } else {
+      // If regex doesn't match, show error
+      setState(() {
+        carNoError = "Enter a valid car number";
+      });
+      return false;
     }
-    return false;
   }
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
 }

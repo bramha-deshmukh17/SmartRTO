@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:smart_rto/OfficialsPage/ConfirmFine.dart';
+import 'package:smart_rto/OfficialsPage/Fine/ConfirmFine.dart';
+import 'package:smart_rto/OfficialsPage/Grievance/OfficerGrievanceList.dart';
 import 'package:smart_rto/OfficialsPage/OfficerProfile.dart';
 import 'package:smart_rto/UserPages/Grievance/GrievanceList.dart';
 import 'package:smart_rto/UserPages/Profile/EditProfile.dart';
@@ -8,12 +9,11 @@ import 'package:smart_rto/UserPages/Profile/UserProfile.dart';
 import 'package:smart_rto/UserPages/UserRegister.dart';
 import 'package:smart_rto/Utility/Constants.dart';
 import 'Authentication/Authenticate.dart';
-import 'OfficialsPage/GenerateFine.dart';
+import 'OfficialsPage/Fine/GenerateFine.dart';
 import 'OfficialsPage/OfficerLogin.dart';
 import 'OfficialsPage/HomeScreen.dart';
-import 'OfficialsPage/ViewDetails.dart';
+import 'OfficialsPage/Fine/ViewDetails.dart';
 import 'UserPages/Chatbot/chatbot.dart';
-import 'UserPages/Grievance/GenerateGrievance.dart';
 import 'UserPages/LicenseInfoPage.dart';
 import 'UserPages/Vehicle/Vehicles.dart';
 import 'Welcome.dart';
@@ -72,6 +72,7 @@ class MyApp extends StatelessWidget {
         GenerateFines.id: (context)=> const GenerateFines(),
         Confirmfine.id: (context)=> const Confirmfine(),
         ViewDetails.id: (context)=> const ViewDetails(),
+        OfficerGrievanceList.id: (context)=> const OfficerGrievanceList(),
 
       },
       initialRoute: '/',

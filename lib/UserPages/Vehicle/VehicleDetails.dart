@@ -83,7 +83,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                   future: _finesData,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),));
                     }
                     if (snapshot.hasError) {
                       return const Text('Error fetching fines data.');

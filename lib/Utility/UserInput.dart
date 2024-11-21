@@ -9,26 +9,33 @@ class UserInput  extends StatelessWidget {
   final dynamic controller;
   final dynamic obscureText;
   final dynamic errorText;
+  final dynamic submit;
+  final dynamic focusNode;
+  final dynamic maxlines;
+  final dynamic readonly;
 
 
-  const UserInput({super.key, required this.controller, required this.hint, required this.keyboardType, this.maxLength, this.obscureText = false, this.errorText});
+  const UserInput({super.key, required this.controller, required this.hint, this.focusNode, this.submit, required this.keyboardType, this.maxLength, this.obscureText = false, this.errorText, this.maxlines, this.readonly=false});
 
   @override
   Widget build(BuildContext context) {
-    FocusNode _focusNode = FocusNode();
 
     return SizedBox(
       width: 250.0,
       child: TextField(
         enabled: true,
-        readOnly: false,
-        focusNode: _focusNode,
+        readOnly: readonly,
+        focusNode: focusNode,
         textAlign: TextAlign.center,
         controller: controller,
         keyboardType: keyboardType,
         obscureText: obscureText,
         maxLength: maxLength,
+        maxLines: maxlines,
         style: const TextStyle(fontFamily: 'InriaSans',),
+
+        onSubmitted: submit,
+
         decoration: InputDecoration(
           labelText: hint,
           errorText: errorText,

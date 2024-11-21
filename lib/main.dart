@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_rto/OfficialsPage/ConfirmFine.dart';
 import 'package:smart_rto/OfficialsPage/OfficerProfile.dart';
-import 'package:smart_rto/UserPages/EditProfile.dart';
-import 'package:smart_rto/UserPages/UserProfile.dart';
+import 'package:smart_rto/UserPages/Grievance/GrievanceList.dart';
+import 'package:smart_rto/UserPages/Profile/EditProfile.dart';
+import 'package:smart_rto/UserPages/Profile/UserProfile.dart';
 import 'package:smart_rto/UserPages/UserRegister.dart';
 import 'package:smart_rto/Utility/Constants.dart';
 import 'Authentication/Authenticate.dart';
@@ -12,8 +13,9 @@ import 'OfficialsPage/OfficerLogin.dart';
 import 'OfficialsPage/HomeScreen.dart';
 import 'OfficialsPage/ViewDetails.dart';
 import 'UserPages/Chatbot/chatbot.dart';
+import 'UserPages/Grievance/GenerateGrievance.dart';
 import 'UserPages/LicenseInfoPage.dart';
-import 'UserPages/Vehicles.dart';
+import 'UserPages/Vehicle/Vehicles.dart';
 import 'Welcome.dart';
 import 'UserPages/HomePage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -61,6 +63,7 @@ class MyApp extends StatelessWidget {
         ViewVehicle.id: (context)=> const ViewVehicle(),
         ChatBot.id: (context)=> const ChatBot(),
         LicenseInfoPage.id: (context)=> const LicenseInfoPage(),
+        Grievancelist.id: (context)=> const Grievancelist(),
 
         //officer pages
         OfficerLogin.id: (context)=> const OfficerLogin(),

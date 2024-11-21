@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../Utility/Constants.dart';
+import '../../Utility/Constants.dart';
 import 'PaymentPage.dart';
 
 class VehicleDetails extends StatefulWidget {
@@ -136,27 +136,29 @@ class _VehicleDetailsState extends State<VehicleDetails> {
         ),
         kBox,
         ...fines.map((fine) {
-          final fineData = fine.data();
+          final fineData = fine.data();  // This is the Map<String, dynamic> data
+          final fineId = fine.id;  // This is the document ID
+
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Card(
               child: ListTile(
                 leading: fineData['photo'] != null
                     ? Image.network(
-                        fineData['photo'],
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      )
+                  fineData['photo'],
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                )
                     : const Icon(Icons.image_not_supported),
                 title: Text('Total Fine: ₹${fineData['total']}'),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ...fineData['fines'].entries.map((entry) => Text(
-                          '${entry.key}: ₹${entry.value}',
-                          style: const TextStyle(fontSize: 16),
-                        )),
+                      '${entry.key}: ₹${entry.value}',
+                      style: const TextStyle(fontSize: 16),
+                    )),
                     Text(
                       'Status: ${fineData['status']}',
                       style: TextStyle(
@@ -165,16 +167,16 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                             : Colors.green,
                       ),
                     ),
-                    Text(
-                        'Issued on: ${_formatDate(fineData['date'].toDate())}'),
+                    Text('Issued on: ${_formatDate(fineData['date'].toDate())}'),
                     Text('By: ${fineData['by']}'),
                   ],
                 ),
                 onTap: () {
+                  // Pass the fineId to the PaymentPage constructor
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PaymentPage(licensePlate: widget.number),
+                      builder: (context) => PaymentPage(fineid: fineId),
                     ),
                   );
                 },
@@ -185,6 +187,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
       ],
     );
   }
+
 
   String _formatDate(DateTime dateTime) {
     return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';

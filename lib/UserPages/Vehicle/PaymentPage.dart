@@ -3,12 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../Utility/Constants.dart';
+import '../../Utility/Constants.dart';
+import '../Grievance/GenerateGrievance.dart';
 
 class PaymentPage extends StatefulWidget {
-  final String licensePlate; // License plate for querying
+  final String fineid; // License plate for querying
 
-  const PaymentPage({super.key, required this.licensePlate});
+  const PaymentPage({super.key, required this.fineid});
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -40,15 +41,14 @@ class _PaymentPageState extends State<PaymentPage> {
   Future<void> fetchFineData() async {
     try {
       // Fetch fine data from Firestore using the 'where' method
-      QuerySnapshot snapshot = await _firestore
-          .collection('fines') // Replace 'fines' with your collection name
-          .where('to', isEqualTo: widget.licensePlate) // Filter by license plate
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
+          .collection('fines')
+          .doc(widget.fineid)    // Filter by license plate
           .get();
 
-      if (snapshot.docs.isNotEmpty) {
+      if (snapshot.exists) {
         // Get the first document and its data
-        finesData = snapshot.docs.first.data() as Map<String, dynamic>;
-        finesData!['documentId'] = snapshot.docs.first.id; // Store document ID for future updates
+        finesData = snapshot.data() as Map<String, dynamic>;
       } else {
         finesData = null; // No fine data found
       }
@@ -133,6 +133,7 @@ class _PaymentPageState extends State<PaymentPage> {
     final fines = finesData!['fines'] as Map<String, dynamic>;
 
     return Scaffold(
+      floatingActionButton: GenerateGrievance(fineid: widget.fineid,),
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
         leading: IconButton(

@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:smart_rto/UserPages/Grievance/GenerateGrievance.dart';
+import 'package:smart_rto/UserPages/Grievance/GrievanceList.dart';
 import 'package:smart_rto/UserPages/LicenseInfoPage.dart';
-import 'package:smart_rto/UserPages/UserProfile.dart';
-import 'package:smart_rto/UserPages/Vehicles.dart';
+import 'package:smart_rto/UserPages/Profile/UserProfile.dart';
+import 'package:smart_rto/UserPages/Vehicle/Vehicles.dart';
 import 'package:smart_rto/Utility/MyCard.dart';
 import './Chatbot/chatbot.dart';
 import '../Utility/Constants.dart';
@@ -78,6 +80,19 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, Grievancelist.id);
+            },
+            child: const Text(
+              'Grievance',
+              style: TextStyle(
+                color: kSecondaryColor,
+                fontSize: 18,
+                fontFamily: 'InriaSans',
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.center,
             child: CustomCard(

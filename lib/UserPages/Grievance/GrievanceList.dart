@@ -16,7 +16,6 @@ class Grievancelist extends StatefulWidget {
 }
 
 class _GrievancelistState extends State<Grievancelist> {
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late String userPhone;
@@ -24,15 +23,18 @@ class _GrievancelistState extends State<Grievancelist> {
   @override
   void initState() {
     super.initState();
-    userPhone = _auth.currentUser!.phoneNumber ?? ''; // Get the current user's phone
+    userPhone =
+        _auth.currentUser!.phoneNumber ?? ''; // Get the current user's phone
   }
 
   Stream<QuerySnapshot> _getGrievance() {
     return _firestore
         .collection('grievance')
-        .where('by', isEqualTo: userPhone) // Assuming 'contact' stores user phone
+        .where('by',
+            isEqualTo: userPhone) // Assuming 'contact' stores user phone
         .snapshots();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,13 +74,23 @@ class _GrievancelistState extends State<Grievancelist> {
                   margin: const EdgeInsets.all(10),
                   child: Column(
                     children: [
-                        ListTile(
-                          leading: const Icon(FontAwesomeIcons.ticket),
-                          title: Text(grievance['fineno']),
-                        ),
-                      Text(grievance['grievance']),
                       kBox,
-                      grievance['reply']!= null ? Text(grievance['reply']) : const Text('No Reply')
+                      ListTile(
+                        leading: const Icon(FontAwesomeIcons.ticket),
+                        title: Center(child: Text(grievance['fineno'])),
+                      ),
+                      ListTile(
+                        leading: const Icon(FontAwesomeIcons.comment),
+                        title: Center(child: Text(grievance['grievance'])),
+                      ),
+                      kBox,
+                      ListTile(
+                        leading: const Icon(FontAwesomeIcons.reply),
+                        title: Center(child: grievance['reply'] != null
+                            ? Text(grievance['reply'])
+                            : const Text('No Reply'),),
+                      ),
+                      kBox,
                     ],
                   ),
                 );
@@ -87,7 +99,6 @@ class _GrievancelistState extends State<Grievancelist> {
           },
         ),
       ),
-
     );
   }
 }

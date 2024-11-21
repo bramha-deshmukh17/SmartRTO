@@ -80,19 +80,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Grievancelist.id);
-            },
-            child: const Text(
-              'Grievance',
-              style: TextStyle(
-                color: kSecondaryColor,
-                fontSize: 18,
-                fontFamily: 'InriaSans',
-              ),
-            ),
-          ),
+
           Align(
             alignment: Alignment.center,
             child: CustomCard(
@@ -131,7 +119,27 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )),
             ),
-          )
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: CustomCard(
+              icon: Icons.comment,
+              cardTitle: 'Grievance',
+              button1: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, Grievancelist.id);
+                },
+                child: const Text(
+                  'View',
+                  style: TextStyle(
+                    color: kSecondaryColor,
+                    fontSize: 18,
+                    fontFamily: 'InriaSans',
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

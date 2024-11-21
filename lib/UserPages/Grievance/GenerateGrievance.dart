@@ -59,7 +59,7 @@ class _GenerateGrievanceState extends State<GenerateGrievance> {
                   onPressed: () {
                     _fireStore.collection('grievance').add({
                       'fineno': _fineNoController.text,
-                      'description': _grievance.text,
+                      'grievance': _grievance.text,
                       'data': FieldValue.serverTimestamp(),
                       'reply': null,
                       'by': userPhone

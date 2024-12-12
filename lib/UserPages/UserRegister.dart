@@ -128,26 +128,46 @@ class _UserRegisterState extends State<UserRegister> {
     setState(() {
       loading = true;
     });
+
     String smsCode = _otpController.text.trim();
+
     try {
       credential = PhoneAuthProvider.credential(
         verificationId: _verificationId,
         smsCode: smsCode,
       );
+
       try {
         await _auth.signInWithCredential(credential);
-        try {
-          // Reference to Firestore instance
-          final firestore = FirebaseFirestore.instance;
 
-          // Create a document with the mobile number as the ID
-          String phoneNumber = '+91${_phoneController.text.trim()}';
-          await firestore.collection('users').doc(phoneNumber).set({'mobile':phoneNumber, 'name':null, 'email':null, 'img':null});
+        // Reference to Firestore instance
+        final firestore = FirebaseFirestore.instance;
 
-          print('Document created successfully!');
-        } catch (e) {
-          print('Error creating document: $e');
+        String phoneNumber = '+91${_phoneController.text.trim()}';
+
+        // Check if user is already registered in the 'users' collection
+        DocumentSnapshot userDoc = await firestore.collection('users').doc(phoneNumber).get();
+
+        if (!userDoc.exists) {
+          // If the document doesn't exist, create a new document for the user
+          try {
+            await firestore.collection('users').doc(phoneNumber).set({
+              'mobile': phoneNumber,
+              'name': null,
+              'email': null,
+              'img': null,
+            });
+
+            print('Document created successfully!');
+          } catch (e) {
+            print('Error creating document: $e');
+          }
+        } else {
+          // If the user is already registered, you can log this or handle accordingly
+          print('User is already registered.');
         }
+
+        // Navigate to HomePage after successful login or registration
         Navigator.pushNamedAndRemoveUntil(
           context,
           HomePage.id, // Navigate to HomeScreen
@@ -155,18 +175,17 @@ class _UserRegisterState extends State<UserRegister> {
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Failed to verify. Try after some time.')),
+          const SnackBar(content: Text('Failed to verify. Try after some time.')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Failed to verify OTP. Try after some time')),
+        const SnackBar(content: Text('Failed to verify OTP. Try after some time')),
       );
       setState(() {
         loading = false;
       });
     }
   }
+
 }

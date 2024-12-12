@@ -144,8 +144,9 @@ class _GenerateFinesState extends State<GenerateFines> {
                   kBox,
                   RoundButton(
                     text: 'Generate',
-                    onPressed: () {
-                      if (verifyNumber(_numberController.text.toUpperCase()) &&
+                    onPressed: () async {
+                      bool isValidNumber = await verifyNumber(_numberController.text.toUpperCase());
+                      if (isValidNumber &&
                           selectedFines.isNotEmpty) {
                         numberError = null;
                         listError = false;
@@ -176,18 +177,18 @@ class _GenerateFinesState extends State<GenerateFines> {
     );
   }
 
-  bool verifyNumber(String number) {
+  Future<bool> verifyNumber(String number) async {
     RegExp regExp = RegExp(r'([A-Z]{2})(\d{1,2})([A-Z]{2})(\d{1,4})');
     Match? match = regExp.firstMatch(number);
 
     if (match != null) {
-      //divided in 4 group to easily format the number
+      // Divide into 4 groups for easier formatting
       String stateCode = match.group(1)!;
       String districtCode = match.group(2)!;
       String letterCode = match.group(3)!;
       String numericCode = match.group(4)!;
 
-      //add zeros from left to have full 10 digit number plate
+      // Add zeros from left to have full 10-digit number plate
       String formattedDistrictCode = districtCode.padLeft(2, '0');
       String formattedNumericCode = numericCode.padLeft(4, '0');
 
@@ -195,13 +196,37 @@ class _GenerateFinesState extends State<GenerateFines> {
           '$stateCode$formattedDistrictCode$letterCode$formattedNumericCode';
 
       if (regExp.hasMatch(formattedPlate)) {
-        setState(() {
-          numberPlate = formattedPlate;
-        });
-        return true;
+        // Check Firestore for the formatted plate
+        try {
+          DocumentSnapshot<Map<String, dynamic>> docSnapshot = await FirebaseFirestore
+              .instance
+              .collection('cars')
+              .doc(formattedPlate)
+              .get();
+
+          if (docSnapshot.exists) {
+            // Vehicle found
+            setState(() {
+              numberPlate = formattedPlate;
+            });
+            return true; // Plate exists in the database
+          } else {
+            // Show Snackbar for vehicle not found
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Vehicle not found in the database.'),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+        } catch (e) {
+          // Log error (do not show Snackbar for errors)
+          print('Error checking Firestore: $e');
+        }
       }
     }
-
-    return false;
+    return false; // Number plate not found or invalid format
   }
+
 }

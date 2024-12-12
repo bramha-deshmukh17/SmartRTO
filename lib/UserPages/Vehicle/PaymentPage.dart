@@ -47,10 +47,11 @@ class _PaymentPageState extends State<PaymentPage> {
           .get();
 
       if (snapshot.exists) {
-        // Get the first document and its data
         finesData = snapshot.data() as Map<String, dynamic>;
+        print("Fine data fetched: $finesData"); // Log fetched data
       } else {
         finesData = null; // No fine data found
+        print("No fine data found for this license plate.");
       }
     } catch (e) {
       print("Error fetching fine data: $e");
@@ -62,24 +63,27 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    // Handle successful payment
     print("Payment Successful: ${response.paymentId}");
 
-    // Update Firestore document if finesData is not null
-    if (finesData != null) {
-      String documentId = finesData!['documentId']; // Document ID
+    // Ensure finesData contains the required keys before updating Firestore
+    if (widget.fineid != null ) {
+      String documentId = widget.fineid; // Document ID
       await _firestore.collection('fines').doc(documentId).update({
         'status': 'Paid',  // Update payment status to Completed
-        'transaction_id': response.paymentId,  // Store payment ID in transaction_id
+        'transaction_id': response.paymentId,  // Store payment ID
       }).then((_) {
         print("Document updated successfully");
+
+        // Use setState to update the local UI state
         setState(() {
           finesData!['status'] = 'Paid'; // Update local status for UI refresh
-          transactionId = response.paymentId; // Store the transaction ID for display
+          transactionId = response.paymentId; // Store transaction ID
         });
       }).catchError((error) {
         print("Error updating document: $error");
       });
+    } else {
+      print("Fines data is null or documentId is missing");
     }
   }
 
@@ -133,7 +137,7 @@ class _PaymentPageState extends State<PaymentPage> {
     final fines = finesData!['fines'] as Map<String, dynamic>;
 
     return Scaffold(
-      floatingActionButton: GenerateGrievance(fineid: widget.fineid,),
+      floatingActionButton: GenerateGrievance(fineid: widget.fineid),
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
         leading: IconButton(

@@ -56,6 +56,10 @@ class _UserRegisterState extends State<UserRegister> {
             ),
           ),
           body: ModalProgressHUD(
+            progressIndicator: const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  kSecondaryColor), // Set custom color
+            ),
             inAsyncCall: loading,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

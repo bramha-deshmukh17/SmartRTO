@@ -13,6 +13,7 @@ import 'OfficialsPage/Fine/GenerateFine.dart';
 import 'OfficialsPage/OfficerLogin.dart';
 import 'OfficialsPage/HomeScreen.dart';
 import 'OfficialsPage/Fine/ViewDetails.dart';
+import 'SplashScreen.dart';
 import 'UserPages/Chatbot/chatbot.dart';
 import 'UserPages/LicenseInfoPage.dart';
 import 'UserPages/Vehicle/Vehicles.dart';
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        '/': (context)=> const Authenticate(),
+        '/': (context) => SplashScreen(),
+        '/authenticate': (context)=> const Authenticate(),
         Welcome.id: (context)=> const Welcome(),
 
         //User pages

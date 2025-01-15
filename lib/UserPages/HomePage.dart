@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:smart_rto/UserPages/Grievance/GenerateGrievance.dart';
-import 'package:smart_rto/UserPages/Grievance/GrievanceList.dart';
-import 'package:smart_rto/UserPages/LicenseInfoPage.dart';
-import 'package:smart_rto/UserPages/Profile/UserProfile.dart';
-import 'package:smart_rto/UserPages/Vehicle/Vehicles.dart';
-import 'package:smart_rto/Utility/MyCard.dart';
+import '/UserPages/Grievance/GenerateGrievance.dart';
+import '/UserPages/Grievance/GrievanceList.dart';
+import '/UserPages/LicenseInfoPage.dart';
+import '/UserPages/Profile/UserProfile.dart';
+import '/UserPages/Vehicle/Vehicles.dart';
+import '/Utility/MyCard.dart';
 import './Chatbot/chatbot.dart';
 import '../Utility/Constants.dart';
 

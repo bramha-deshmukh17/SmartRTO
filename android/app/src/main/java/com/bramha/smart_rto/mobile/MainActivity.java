@@ -1,4 +1,4 @@
-package com.bramha.smart_rto;
+package com.bramha.smart_rto.mobile;
 
 import io.flutter.embedding.android.FlutterActivity;
 

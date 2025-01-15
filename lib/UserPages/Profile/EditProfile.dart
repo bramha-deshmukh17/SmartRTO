@@ -5,9 +5,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smart_rto/Utility/Constants.dart';
-import 'package:smart_rto/Utility/RoundButton.dart';
-import 'package:smart_rto/Utility/UserInput.dart';
+import '/Utility/Constants.dart';
+import '/Utility/RoundButton.dart';
+import '/Utility/UserInput.dart';
 
 class EditUserProfile extends StatefulWidget {
   static const String id = "EditUserProfile";

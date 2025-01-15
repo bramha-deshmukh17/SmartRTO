@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:smart_rto/Utility/Constants.dart';
+import '/Utility/Constants.dart';
 
 import '../../Utility/RoundButton.dart';
 import '../../Utility/UserInput.dart';

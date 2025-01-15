@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:smart_rto/OfficialsPage/Grievance/OfficerGrievanceList.dart';
-import 'package:smart_rto/Utility/MyCard.dart';
+import '/OfficialsPage/Grievance/OfficerGrievanceList.dart';
+import '/Utility/MyCard.dart';
 import '../Utility/Constants.dart';
 import '../Welcome.dart';
 import 'Fine/GenerateFine.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smart_rto/Utility/Constants.dart';
+import '/Utility/Constants.dart';
 
 class CaptureImage extends StatefulWidget {
   final Function(String) captureImage;

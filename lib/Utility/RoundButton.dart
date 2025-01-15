@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_rto/Utility/Constants.dart';
+import '/Utility/Constants.dart';
 
 class RoundButton extends StatelessWidget {
   final dynamic onPressed;

@@ -3,7 +3,7 @@ import 'package:drop_down_search_field/drop_down_search_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:smart_rto/OfficialsPage/Utility/FinesList.dart';
+import '/OfficialsPage/Utility/FinesList.dart';
 
 import '../../Utility/Constants.dart';
 import '../../Utility/RoundButton.dart';

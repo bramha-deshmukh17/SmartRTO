@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_rto/Welcome.dart';
-import 'package:smart_rto/UserPages/HomePage.dart';
+import '/Welcome.dart';
+import '/UserPages/HomePage.dart';
 import '../OfficialsPage/HomeScreen.dart';
 
 class Authenticate extends StatelessWidget {

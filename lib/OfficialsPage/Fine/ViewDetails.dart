@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:smart_rto/Utility/RoundButton.dart';
-import 'package:smart_rto/Welcome.dart';
+import '/Utility/RoundButton.dart';
+import '/Welcome.dart';
 
 import '../../Utility/Constants.dart';
 import '../../Utility/UserInput.dart';

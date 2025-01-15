@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:smart_rto/Utility/RoundButton.dart';
-import 'package:smart_rto/Utility/UserInput.dart';
+import '/Utility/RoundButton.dart';
+import '/Utility/UserInput.dart';
 
 import 'HomeScreen.dart';
 import '../Utility/Constants.dart';

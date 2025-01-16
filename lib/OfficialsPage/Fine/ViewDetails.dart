@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/Utility/RoundButton.dart';
-import '/Welcome.dart';
 
 import '../../Utility/Constants.dart';
 import '../../Utility/UserInput.dart';
-import '../OfficerProfile.dart';
 
 class ViewDetails extends StatefulWidget {
   static const String id = "ViewDetails";

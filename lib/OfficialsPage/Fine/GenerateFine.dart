@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drop_down_search_field/drop_down_search_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '/OfficialsPage/Utility/FinesList.dart';
 
 import '../../Utility/Constants.dart';
 import '../../Utility/RoundButton.dart';
 import '../../Utility/UserInput.dart';
-import '../OfficerProfile.dart';
 import '../Utility/CapturePhoto.dart';
 import 'ConfirmFine.dart';
 import '../Utility/SearchDropDown.dart';

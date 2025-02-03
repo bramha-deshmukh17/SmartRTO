@@ -111,21 +111,29 @@ class _UserRegisterState extends State<UserRegister> {
     await _auth.verifyPhoneNumber(
       phoneNumber: '+91${_phoneController.text}',
       verificationCompleted: (PhoneAuthCredential credential) async {},
-      verificationFailed: (FirebaseAuthException e) {},
+      verificationFailed: (FirebaseAuthException e) {
+        setState(() => loading = false);
+        if (e.code == 'too-many-requests') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Too many attempts. Try again later.')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? 'OTP verification failed.')),
+          );
+        }
+      },
       codeSent: (String verificationId, int? resendToken) {
         setState(() {
           _verificationId = verificationId;
+          loading = false;
         });
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        setState(() {
-          _verificationId = verificationId;
-        });
+        setState(() => _verificationId = verificationId);
       },
     );
-    setState(() {
-      loading = false;
-    });
   }
 
   void _verifyOTP() async {

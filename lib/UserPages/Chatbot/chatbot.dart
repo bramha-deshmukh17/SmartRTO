@@ -7,8 +7,8 @@ import "package:image_picker/image_picker.dart";
 import '../../Utility/Constants.dart';
 import 'ChatModel.dart';
 import 'package:http/http.dart' as http;
-
 import 'ChatBox.dart';
+import 'TypingAnimation.dart';
 
 class ChatBot extends StatefulWidget {
   static const String id = 'Chatbot';
@@ -23,12 +23,13 @@ class _ChatBotState extends State<ChatBot> {
   List<ChatModel> chatList = [];
   final TextEditingController controller = TextEditingController();
   File? image;
+  bool isTyping = false;
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: kPrimaryColor), // Change to your desired color
+      const SystemUiOverlayStyle(statusBarColor: kPrimaryColor),
     );
     apiKey = dotenv.env['GEMINI_API'] ?? 'No API Key found';
   }
@@ -40,9 +41,7 @@ class _ChatBotState extends State<ChatBot> {
       model = ChatModel(isMe: true, message: controller.text);
     } else {
       final imageBytes = await image!.readAsBytes();
-
       String base64EncodedImage = base64Encode(imageBytes);
-
       model = ChatModel(
         isMe: true,
         message: controller.text,
@@ -51,83 +50,69 @@ class _ChatBotState extends State<ChatBot> {
     }
 
     chatList.insert(0, model);
-
     setState(() {});
+    controller.text = '';
+    image = null;
+
+    // Show typing animation
+    setState(() {
+      isTyping = true;
+    });
 
     final geminiModel = await sendRequestToGemini(model);
 
-    chatList.insert(0, geminiModel);
-    image = null;
-    controller.text = '';
-    setState(() {});
+    // Remove typing animation and add response
+    setState(() {
+      isTyping = false;
+      chatList.insert(0, geminiModel);
+    });
   }
 
   void selectImage() async {
     final picker = await ImagePicker.platform
         .getImageFromSource(source: ImageSource.gallery);
-
     if (picker != null) {
       image = File(picker.path);
     }
   }
 
   Future<ChatModel> sendRequestToGemini(ChatModel model) async {
-    String url = "";
-    Map<String, dynamic> body = {};
+    String url =
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}";
 
-    if (model.base64EncodedImage == null) {
-      url =
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}";
-
-      body = {
-        "contents": [
-          {
-            "parts": [
-              {"text": ChatModel.instructions + model.message},
-            ],
-          },
-        ],
-      };
-    } else {
-      url =
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}";
-
-      body = {
-        "contents": [
-          {
-            "parts": [
-              {"text": ChatModel.instructions + model.message},
+    Map<String, dynamic> body = {
+      "contents": [
+        {
+          "parts": [
+            {"text": ChatModel.instructions + model.message},
+            if (model.base64EncodedImage != null)
               {
                 "inline_data": {
                   "mime_type": "image/jpeg",
                   "data": model.base64EncodedImage,
                 }
               }
-            ],
-          },
-        ],
-      };
-    }
+          ],
+        },
+      ],
+    };
 
     Uri uri = Uri.parse(url);
-
     final result = await http.post(
       uri,
       headers: {"Content-Type": "application/json"},
       body: json.encode(body),
     );
 
-    print(result.statusCode);
-    print(result.body);
-
-    final decodedJson = json.decode(result.body);
-
-    String message =
-        decodedJson['candidates'][0]['content']['parts'][0]['text'];
-
-    ChatModel geminiModel = ChatModel(isMe: false, message: message);
-
-    return geminiModel;
+    if (result.statusCode >= 500 && result.statusCode <= 599) {
+      return ChatModel(
+          isMe: false, message: 'Currently Chatbot is down try again later...');
+    } else {
+      final decodedJson = json.decode(result.body);
+      String message =
+          decodedJson['candidates'][0]['content']['parts'][0]['text'];
+      return ChatModel(isMe: false, message: message);
+    }
   }
 
   @override
@@ -139,9 +124,7 @@ class _ChatBotState extends State<ChatBot> {
           backgroundColor: kPrimaryColor,
           title: kAppBarTitle,
           leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             icon: kBackArrow,
           ),
         ),
@@ -151,29 +134,38 @@ class _ChatBotState extends State<ChatBot> {
               flex: 10,
               child: ListView.builder(
                 reverse: true,
-                itemCount: chatList.length,
+                itemCount: chatList.length + (isTyping ? 1 : 0),
                 itemBuilder: (context, index) {
+                  if (isTyping && index == 0) {
+                    return ListTile(
+                      title: const Text("Assistant",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: const TypingAnimation(),
+                    );
+                  }
+
+                  final chatIndex = isTyping ? index - 1 : index;
                   return ListTile(
-                    title: Text(chatList[index].isMe ? "Me" : "Assistant", style: const TextStyle(fontWeight: FontWeight.bold),),
-                    subtitle: chatList[index].base64EncodedImage != null
+                    title: Text(chatList[chatIndex].isMe ? "Me" : "Assistant",
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: chatList[chatIndex].base64EncodedImage != null
                         ? Column(
                             children: [
                               Image.memory(
-                                base64Decode(chatList[index].base64EncodedImage!),
+                                base64Decode(
+                                    chatList[chatIndex].base64EncodedImage!),
                                 height: 300,
                                 width: double.infinity,
                               ),
-                              Text(chatList[index].message),
+                              Text(chatList[chatIndex].message),
                             ],
                           )
-                        : Text(chatList[index].message),
+                        : Text(chatList[chatIndex].message),
                   );
                 },
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
@@ -183,19 +175,12 @@ class _ChatBotState extends State<ChatBot> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    onSendMessage();
-                  },
-                  icon: const Icon(
-                    Icons.send,
-                    color: kSecondaryColor,
-                  ),
+                  onPressed: () => onSendMessage(),
+                  icon: const Icon(Icons.send, color: kSecondaryColor),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 10,
-            )
+            const SizedBox(height: 10),
           ],
         ),
       ),

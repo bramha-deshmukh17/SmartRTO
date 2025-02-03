@@ -76,5 +76,6 @@ Always verify with local RTO offices for the most accurate and up-to-date inform
 For queries related to the RTO system, such as license and PUC, respond with the information you have based on your knowledge. If you don't have accurate information, tell the user to visit the official website of the RTO.
 
 Note: Do not edit the response with bold, italic, colored, etc.; keep it in simple plain text.
- """;
+ 
+ User query: """;
 }

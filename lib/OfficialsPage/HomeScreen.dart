@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '/OfficialsPage/Grievance/OfficerGrievanceList.dart';
@@ -18,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {

@@ -66,7 +66,7 @@ class _PaymentPageState extends State<PaymentPage> {
     print("Payment Successful: ${response.paymentId}");
 
     // Ensure finesData contains the required keys before updating Firestore
-    if (widget.fineid != null ) {
+    if (widget.fineid.isNotEmpty) {
       String documentId = widget.fineid; // Document ID
       await _firestore.collection('fines').doc(documentId).update({
         'status': 'Paid',  // Update payment status to Completed

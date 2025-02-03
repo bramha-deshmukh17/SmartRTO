@@ -42,7 +42,6 @@ class _ConfirmfineState extends State<Confirmfine> {
 
         // Assuming that email is unique, we can take the first document
         DocumentSnapshot officerDoc = officerSnapshot.docs.first;
-        Map<String, dynamic> data = officerDoc.data() as Map<String, dynamic>;
 
         setState(() {
           officerId = officerDoc.id;

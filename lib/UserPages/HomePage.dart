@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../Utility/Appbar.dart';
 import '/UserPages/Grievance/GrievanceList.dart';
 import '/UserPages/LicenseInfoPage.dart';
 import '/UserPages/Profile/UserProfile.dart';
@@ -54,26 +55,9 @@ class _HomePageState extends State<HomePage> {
         },
         child: const Icon(FontAwesomeIcons.robot, color: kWhite,),
       ),
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        leading: const SizedBox(
-          width: 5.0,
-        ),
-        title: kAppBarTitle,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, UserProfile.id);
-            },
-            icon: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Icon(
-                FontAwesomeIcons.userLarge,
-                color: kWhite,
-              ),
-            ),
-          ),
-        ],
+      appBar: Appbar(
+        title: 'Home',
+        displayUserProfile: true,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

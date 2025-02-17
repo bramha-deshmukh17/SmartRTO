@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drop_down_search_field/drop_down_search_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../Utility/Appbar.dart';
 import '/OfficialsPage/Utility/FinesList.dart';
 
 import '../../Utility/Constants.dart';
@@ -65,16 +66,7 @@ class _GenerateFinesState extends State<GenerateFines> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: kAppBarTitle,
-        backgroundColor: kPrimaryColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: kBackArrow,
-        ),
-      ),
+      appBar: Appbar(title: 'Generate Fine', isBackButton: true, displayOfficerProfile: true),
       body: Scrollbar(
         child: SingleChildScrollView(
           child: Padding(

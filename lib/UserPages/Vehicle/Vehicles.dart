@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../Utility/Appbar.dart';
 import '../../Utility/Constants.dart';
 import 'VehicleDetails.dart'; // Import the new details screen
 
@@ -51,16 +52,11 @@ class _ViewVehicleState extends State<ViewVehicle> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-        appBar: AppBar(
-          backgroundColor: kPrimaryColor,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: kBackArrow,
-          ),
-          title: kAppBarTitle,
-        ),
+        appBar: Appbar(
+        title: 'Vehicles',
+        isBackButton: true,
+        displayUserProfile: true,
+      ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: StreamBuilder<QuerySnapshot>(

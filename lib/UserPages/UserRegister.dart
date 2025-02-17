@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import '../Utility/Appbar.dart';
 import '/Utility/Constants.dart';
 import '/Utility/RoundButton.dart';
 import '/Utility/UserInput.dart';
@@ -21,11 +22,9 @@ class _UserRegisterState extends State<UserRegister> {
   final TextEditingController _otpController = TextEditingController();
   late PhoneAuthCredential credential;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String _verificationId = '',
-      buttonText = 'Register';
-  bool otpEnable = false,
-      loading = false;
-      String? mobileError;
+  String _verificationId = '', buttonText = 'Register';
+  bool otpEnable = false, loading = false;
+  String? mobileError;
 
   bool _validateMobile(String number) {
     if (!number.isEmpty && number.length >= 10) {
@@ -33,8 +32,7 @@ class _UserRegisterState extends State<UserRegister> {
         mobileError = null;
       });
       return true;
-    }
-    else {
+    } else {
       setState(() {
         mobileError = "Enter valid Mobile number";
       });
@@ -45,60 +43,55 @@ class _UserRegisterState extends State<UserRegister> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(
-            backgroundColor: kPrimaryColor,
-            title: kAppBarTitle,
-            leading: IconButton(
+      appBar: Appbar(
+        title: 'Register',
+        isBackButton: true,
+      ),
+      body: ModalProgressHUD(
+        progressIndicator: const CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(
+              kSecondaryColor), // Set custom color
+        ),
+        inAsyncCall: loading,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: UserInput(
+                controller: _phoneController,
+                hint: 'Enter Mobile No.',
+                keyboardType: TextInputType.number,
+                maxLength: 10,
+                errorText: mobileError,
+              ),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            if (otpEnable)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                child: OTPField(
+                  controller: _otpController,
+                ),
+              ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            RoundButton(
               onPressed: () {
-                Navigator.pop(context);
+                if (_validateMobile(_phoneController.text)) {
+                  FocusScope.of(context).unfocus();
+                  otpEnable ? _verifyOTP() : _sendOTP();
+                }
               },
-              icon: kBackArrow,
+              text: buttonText,
             ),
-          ),
-          body: ModalProgressHUD(
-            progressIndicator: const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  kSecondaryColor), // Set custom color
-            ),
-            inAsyncCall: loading,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: UserInput(
-                    controller: _phoneController,
-                    hint: 'Enter Mobile No.',
-                    keyboardType: TextInputType.number,
-                    maxLength: 10,
-                    errorText: mobileError,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                if (otpEnable)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 80.0),
-                    child: OTPField(
-                      controller: _otpController,
-                    ),
-                  ),
-                const SizedBox(height: 10.0,),
-                RoundButton(
-                  onPressed: () {
-                    if (_validateMobile(_phoneController.text)) {
-                      FocusScope.of(context).unfocus();
-                      otpEnable ? _verifyOTP() : _sendOTP();
-                    }
-                  },
-                  text: buttonText,
-                ),
-              ],
-            ),
-          ),
-
+          ],
+        ),
+      ),
     );
   }
 
@@ -158,7 +151,8 @@ class _UserRegisterState extends State<UserRegister> {
         String phoneNumber = '+91${_phoneController.text.trim()}';
 
         // Check if user is already registered in the 'users' collection
-        DocumentSnapshot userDoc = await firestore.collection('users').doc(phoneNumber).get();
+        DocumentSnapshot userDoc =
+            await firestore.collection('users').doc(phoneNumber).get();
 
         if (!userDoc.exists) {
           // If the document doesn't exist, create a new document for the user
@@ -183,21 +177,22 @@ class _UserRegisterState extends State<UserRegister> {
         Navigator.pushNamedAndRemoveUntil(
           context,
           HomePage.id, // Navigate to HomeScreen
-              (Route<dynamic> route) => false, // Remove all previous routes
+          (Route<dynamic> route) => false, // Remove all previous routes
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to verify. Try after some time.')),
+          const SnackBar(
+              content: Text('Failed to verify. Try after some time.')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to verify OTP. Try after some time')),
+        const SnackBar(
+            content: Text('Failed to verify OTP. Try after some time')),
       );
       setState(() {
         loading = false;
       });
     }
   }
-
 }

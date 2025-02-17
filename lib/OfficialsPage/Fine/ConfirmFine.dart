@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../Utility/Appbar.dart';
 import '/Utility/Constants.dart';
 import '/Utility/RoundButton.dart';
-
-import '../OfficerProfile.dart';
 
 
 class Confirmfine extends StatefulWidget {
@@ -77,28 +76,7 @@ class _ConfirmfineState extends State<Confirmfine> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: kAppBarTitle,
-        backgroundColor: kPrimaryColor,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: kBackArrow),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Profile.id);
-            },
-            icon: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Icon(
-                Icons.person,
-                color: kWhite,
-              ),),
-          ),
-        ],
-      ),
+      appBar: Appbar(title: 'Confirm Fine', isBackButton: true, displayOfficerProfile: true),
       body: Scrollbar(
         child: SingleChildScrollView(
           child: Column(

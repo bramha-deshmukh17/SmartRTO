@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../Utility/Appbar.dart';
 import '../Utility/Constants.dart';
 
 class LicenseInfoPage extends StatefulWidget {
@@ -63,15 +64,10 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: kBackArrow,
-        ),
-        title: kAppBarTitle,
+      appBar: Appbar(
+        title: 'License Details',
+        isBackButton: true,
+        displayUserProfile: true,
       ),
       body: licenseData == null
           ? const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),))

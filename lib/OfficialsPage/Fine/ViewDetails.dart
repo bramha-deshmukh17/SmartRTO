@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../Utility/Appbar.dart';
 import '/Utility/RoundButton.dart';
 
 import '../../Utility/Constants.dart';
@@ -26,13 +27,10 @@ class _ViewDetailsState extends State<ViewDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        title: kAppBarTitle,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: kBackArrow,
-        ),
+      appBar: Appbar(
+        title: 'View Details',
+        isBackButton: true,
+        displayOfficerProfile: true,
       ),
       body: Scrollbar(
         child: SingleChildScrollView(
@@ -196,7 +194,8 @@ class _ViewDetailsState extends State<ViewDetails> {
       // Extract components of the number plate and format it
       final stateCode = number.substring(0, 2);
       final districtCode = number.substring(2, 4).padLeft(2, '0');
-      final letterCode = number.length > 8 ? number.substring(4, 6) : number.substring(4, 5);
+      final letterCode =
+          number.length > 8 ? number.substring(4, 6) : number.substring(4, 5);
       final numericCode = number.substring(number.length - 4).padLeft(4, '0');
 
       final formattedPlate = '$stateCode$districtCode$letterCode$numericCode';
@@ -215,5 +214,4 @@ class _ViewDetailsState extends State<ViewDetails> {
       return false;
     }
   }
-
 }

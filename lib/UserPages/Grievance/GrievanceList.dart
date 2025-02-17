@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../Utility/Appbar.dart';
 import '../../Utility/Constants.dart';
 
 class Grievancelist extends StatefulWidget {
@@ -35,15 +36,10 @@ class _GrievancelistState extends State<Grievancelist> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: kBackArrow,
-        ),
-        title: kAppBarTitle,
+      appBar: Appbar(
+        title: 'Grievances',
+        isBackButton: true,
+        displayUserProfile: true,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),

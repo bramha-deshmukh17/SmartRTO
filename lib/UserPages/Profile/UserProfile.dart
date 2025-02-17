@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../Utility/Appbar.dart';
 import '../../Welcome.dart';
 import '../../Utility/Constants.dart';
 import 'EditProfile.dart'; // Ensure constants like kPrimaryColor are defined
@@ -31,14 +32,12 @@ class _UserProfileState extends State<UserProfile> {
       print(userMobile);
 
       if (userMobile != null) {
-        DocumentSnapshot querySnapshot = await _firestore
-            .collection('users')
-            .doc(userMobile)
-            .get();
+        DocumentSnapshot querySnapshot =
+            await _firestore.collection('users').doc(userMobile).get();
 
         if (querySnapshot.exists) {
           Map<String, dynamic> documentData =
-          querySnapshot.data() as Map<String, dynamic>;
+              querySnapshot.data() as Map<String, dynamic>;
 
           setState(() {
             userImg = documentData['img'];
@@ -73,116 +72,107 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(
-            backgroundColor: kPrimaryColor,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: kBackArrow,
-            ),
-            title: kAppBarTitle,
-          ),
-          body: isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),
-                  ), // Show loading indicator
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        kBox,
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundImage: userImg != null
-                              ? NetworkImage(userImg!)
-                              : const AssetImage('images/images.png')
-                                  as ImageProvider,
-                        ),
-                        kBox,
-                        Text(
-                          userName??  'Name not available', // Handle null safely
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'InriaSans',
-                          ),
-                        ),
-                        kBox,
-                        Text(
-                          userMail ?? 'Email not available', // Handle null safely
-                          style:
-                              const TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        Text(
-                          userMobile ??
-                              'Phone number not available', // Handle null safely
-                          style:
-                              const TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        kBox,
-                        ElevatedButton.icon(
-                          icon: const Icon(
-                            FontAwesomeIcons.pen,
-                            size: 18,
-                            color: kWhite,
-                          ),
-                          label: const Text(
-                            "Edit Profile",
-                            style: kTextStyle,
-                          ),
-                          onPressed: () async {
-                            final updatedData = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditUserProfile(
-                                  userName: userName?? '',
-                                  userEmail: userMail?? '',
-                                  userImg: userImg?? '',
-                                  userMobile: userMobile?? '',
-                                ),
-                              ),
-                            );
-      
-                            if (updatedData != null) {
-                              setState(() {
-                                userName = updatedData['userName'];
-                                userMail = updatedData['userEmail'];
-                                userImg = updatedData['userImg'];
-                              });
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: kSecondaryColor,
-                            minimumSize: const Size(200, 45),
-                          ),
-                        ),
-                        kBox,
-                        ElevatedButton.icon(
-                          icon: const Icon(
-                            FontAwesomeIcons.signOut,
-                            size: 18,
-                            color: kWhite,
-                          ),
-                          label: const Text(
-                            "Logout",
-                            style: kTextStyle,
-                          ),
-                          onPressed: logout,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            minimumSize: const Size(200, 45),
-                          ),
-                        ),
-                      ],
+      appBar: Appbar(
+        title: 'Profile',
+        isBackButton: true,
+      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(kSecondaryColor),
+              ), // Show loading indicator
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    kBox,
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: userImg != null
+                          ? NetworkImage(userImg!)
+                          : const AssetImage('images/images.png')
+                              as ImageProvider,
                     ),
-                  ),
-                ),
+                    kBox,
+                    Text(
+                      userName ?? 'Name not available', // Handle null safely
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'InriaSans',
+                      ),
+                    ),
+                    kBox,
+                    Text(
+                      userMail ?? 'Email not available', // Handle null safely
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                    Text(
+                      userMobile ??
+                          'Phone number not available', // Handle null safely
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                    kBox,
+                    ElevatedButton.icon(
+                      icon: const Icon(
+                        FontAwesomeIcons.pen,
+                        size: 18,
+                        color: kWhite,
+                      ),
+                      label: const Text(
+                        "Edit Profile",
+                        style: kTextStyle,
+                      ),
+                      onPressed: () async {
+                        final updatedData = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditUserProfile(
+                              userName: userName ?? '',
+                              userEmail: userMail ?? '',
+                              userImg: userImg ?? '',
+                              userMobile: userMobile ?? '',
+                            ),
+                          ),
+                        );
 
+                        if (updatedData != null) {
+                          setState(() {
+                            userName = updatedData['userName'];
+                            userMail = updatedData['userEmail'];
+                            userImg = updatedData['userImg'];
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kSecondaryColor,
+                        minimumSize: const Size(200, 45),
+                      ),
+                    ),
+                    kBox,
+                    ElevatedButton.icon(
+                      icon: const Icon(
+                        FontAwesomeIcons.signOut,
+                        size: 18,
+                        color: kWhite,
+                      ),
+                      label: const Text(
+                        "Logout",
+                        style: kTextStyle,
+                      ),
+                      onPressed: logout,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        minimumSize: const Size(200, 45),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 

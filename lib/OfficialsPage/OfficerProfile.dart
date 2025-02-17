@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Utility/Appbar.dart';
 import '/Utility/Constants.dart';
 
 import '../Welcome.dart';
@@ -72,15 +73,9 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: kAppBarTitle,
-        backgroundColor: kPrimaryColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: kBackArrow,
-        ),
+      appBar: Appbar(
+        title: 'Profile',
+        isBackButton: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

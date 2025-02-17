@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import '../Utility/Appbar.dart';
 import '/Utility/RoundButton.dart';
 import '/Utility/UserInput.dart';
 
@@ -26,15 +27,9 @@ class _OfficerLoginState extends State<OfficerLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: kBackArrow,
-        ),
-        backgroundColor: kPrimaryColor,
-        title: kAppBarTitle,
+      appBar: Appbar(
+        title: 'Officer Login',
+        isBackButton: true,
       ),
       body: ModalProgressHUD(
         inAsyncCall: loading,

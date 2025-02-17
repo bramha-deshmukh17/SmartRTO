@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../Utility/Appbar.dart';
 import '../../Utility/Constants.dart';
 import '../Grievance/GenerateGrievance.dart';
 
@@ -138,15 +139,10 @@ class _PaymentPageState extends State<PaymentPage> {
 
     return Scaffold(
       floatingActionButton: GenerateGrievance(fineid: widget.fineid),
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: kBackArrow,
-        ),
-        title: kAppBarTitle,
+      appBar: Appbar(
+        title: 'Payment Details',
+        isBackButton: true,
+        displayUserProfile: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

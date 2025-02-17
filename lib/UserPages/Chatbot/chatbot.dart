@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import "package:image_picker/image_picker.dart";
+import '../../Utility/Appbar.dart';
 import '../../Utility/Constants.dart';
 import 'ChatModel.dart';
 import 'package:http/http.dart' as http;
@@ -117,17 +118,12 @@ class _ChatBotState extends State<ChatBot> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: kPrimaryColor,
-          title: kAppBarTitle,
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: kBackArrow,
-          ),
-        ),
+    return Scaffold(
+        appBar: Appbar(
+        title: 'AI Assistant',
+        isBackButton: true,
+        displayUserProfile: true,
+      ),
         body: Column(
           children: [
             Expanded(
@@ -183,7 +179,7 @@ class _ChatBotState extends State<ChatBot> {
             const SizedBox(height: 10),
           ],
         ),
-      ),
+      
     );
   }
 }

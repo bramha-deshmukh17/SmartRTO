@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../Utility/Appbar.dart';
 import '/OfficialsPage/Grievance/OfficerGrievanceList.dart';
 import '/Utility/MyCard.dart';
 import '../Utility/Constants.dart';
@@ -21,25 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const SizedBox(
-          width: 10.0,
-        ),
-        backgroundColor: kPrimaryColor,
-        title: kAppBarTitle,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Profile.id);
-            },
-            icon: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Icon(
-                  Icons.person,
-                  color: kWhite,
-                ),),
-          ),
-        ],
+      appBar: Appbar(
+        title: 'Home',
+        displayOfficerProfile: true,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

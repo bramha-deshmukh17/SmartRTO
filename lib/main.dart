@@ -26,7 +26,7 @@ import 'firebase_options.dart';
 void main() async{
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(statusBarColor: kPrimaryColor), // Set globally
-  );
+  ); 
   await dotenv.load(fileName: ".env");
 
   await Firebase.initializeApp(

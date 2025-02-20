@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../Utility/Appbar.dart';
-import '../Utility/Constants.dart';
+import '../../Utility/Appbar.dart';
+import '../../Utility/Constants.dart';
 
 class LicenseInfoPage extends StatefulWidget {
   static const String id = 'LicensePage';

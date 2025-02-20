@@ -12,31 +12,35 @@ class UserInput  extends StatelessWidget {
   final dynamic focusNode;
   final dynamic maxlines;
   final dynamic readonly;
+  final dynamic textAlignment;
+  final dynamic width;
 
 
-  const UserInput({super.key, required this.controller, required this.hint, this.focusNode, this.submit, required this.keyboardType, this.maxLength, this.errorText, this.maxlines, this.readonly=false});
+  const UserInput({super.key, required this.controller, required this.hint, this.focusNode, this.submit, required this.keyboardType, this.maxLength, this.errorText, this.maxlines, this.readonly=false, this.textAlignment=TextAlign.center, this.width=250.0});
 
   @override
   Widget build(BuildContext context) {
 
     return SizedBox(
-      width: 250.0,
+      width: width,
       child: TextField(
         enabled: true,
         readOnly: readonly,
         focusNode: focusNode,
-        textAlign: TextAlign.center,
+        textAlign: textAlignment,
         controller: controller,
         keyboardType: keyboardType,
         maxLength: maxLength,
         maxLines: maxlines,
         style: const TextStyle(fontFamily: 'InriaSans',fontSize: 20.0),
-
+        cursorColor: kBlack,
+      
         onSubmitted: submit,
 
         decoration: InputDecoration(
           labelText: hint,
           errorText: errorText,
+          labelStyle: TextStyle(color: kBlack),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0), // Rounded corners
           ),

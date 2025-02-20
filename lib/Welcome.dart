@@ -13,40 +13,38 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(
-            leading: Icon(Icons.add,color: Colors.transparent,),
-            backgroundColor: kPrimaryColor,
-            title: kAppBarTitle,
-          ),
-          body: Align(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                CustomCard(
-                  cardTitle: 'User',
-                  icon: FontAwesomeIcons.userLarge,
-
-                  button1: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, UserRegister.id);
-                      },
-                      child: Text('Register',style: TextStyle(color: kSecondaryColor,fontSize: 18,),)),
-                ),
-                CustomCard(
-                  cardTitle: 'Officials',
-                  icon: Icons.local_police,
-                  button2: SizedBox(),
-                  button1: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, OfficerLogin.id);
-                      },
-                      child: Text('Login',style: TextStyle(color: kSecondaryColor,fontSize: 18,),),),
-                ),
-              ],
+      appBar: AppBar(
+        leading: Icon(
+          Icons.add,
+          color: Colors.transparent,
+        ),
+        backgroundColor: kPrimaryColor,
+        title: kAppBarTitle,
+      ),
+      body: Align(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CustomCard(
+              cardTitle: 'User',
+              big: true,
+              icon: FontAwesomeIcons.userLarge,
+              onTap: () {
+                Navigator.pushNamed(context, UserRegister.id);
+              },
             ),
-          ),
-
+            CustomCard(
+              cardTitle: 'Officials',
+              icon: Icons.local_police,
+              big: true,
+              onTap: () {
+                Navigator.pushNamed(context, OfficerLogin.id);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

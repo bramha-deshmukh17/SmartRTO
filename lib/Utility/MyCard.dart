@@ -1,60 +1,57 @@
 import 'package:flutter/material.dart';
 
+import '../UserPages/License/LicenseInfoPage.dart';
+import 'Constants.dart';
+
 class CustomCard extends StatelessWidget {
   final dynamic icon;
   final String cardTitle;
-  final String cardDescription;
-  final dynamic button1;
-  final dynamic button2;
+  final dynamic onTap;
+  final dynamic big;
 
   const CustomCard(
       {super.key,
       this.icon,
       this.cardTitle = '',
-      this.cardDescription = '',
-      this.button1,
-      this.button2});
+      this.onTap,
+      this.big = false});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 300,
-      child: Card(
-        elevation: 8, // Shadow intensity
-        margin: EdgeInsets.all(8), // Margin around the card
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), // Rounded corners
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center, // Align children to the start
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  cardTitle,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, fontFamily: 'InriaSans',),
-                ),
-              ),
-            ),
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-              child: Align(
-                alignment: Alignment.center,
-                child: Icon(
+      width: big ? 300 : 200,
+      height: big ? 300 : 150,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
                   icon,
-                  size: 100.0,
+                  size: 50,
+                  color: kSecondaryColor,
                 ),
-              ),
-            ),
-            OverflowBar(
-              children: <Widget>[
-                button1,
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    cardTitle,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),                
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

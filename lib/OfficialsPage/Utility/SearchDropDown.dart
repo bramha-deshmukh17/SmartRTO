@@ -32,7 +32,7 @@ class _SearchDropDownState extends State<SearchDropDown> {
       height: 60.0,
       child: DropDownSearchFormField(
         textFieldConfiguration: TextFieldConfiguration(
-          decoration: kDropdown,
+          decoration: kDropdown("Fine"),
           controller: widget.dropdownSearchFieldController,
         ),
         suggestionsCallback: (pattern) {

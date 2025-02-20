@@ -3,9 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../Utility/Appbar.dart';
 import '/OfficialsPage/Grievance/OfficerGrievanceList.dart';
 import '/Utility/MyCard.dart';
-import '../Utility/Constants.dart';
 import 'Fine/GenerateFine.dart';
-import 'OfficerProfile.dart';
 import 'Fine/ViewDetails.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,63 +31,30 @@ class _HomeScreenState extends State<HomeScreen> {
             alignment: Alignment.center,
             child: CustomCard(
               icon: FontAwesomeIcons.ticket,
-              button1: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, GenerateFines.id);
-                },
-                child: const Text(
-                  'Generate',
-                  style: TextStyle(
-                    color: kSecondaryColor,
-                    fontSize: 18,
-                    fontFamily: 'InriaSans',
-                  ),
-                ),
-              ),
+              onTap: () {
+                Navigator.pushNamed(context, GenerateFines.id);
+              },
               cardTitle: 'Fine',
-              cardDescription: '',
             ),
           ),
           Align(
             alignment: Alignment.center,
             child: CustomCard(
               icon: FontAwesomeIcons.car,
-              button1: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, ViewDetails.id);
-                },
-                child: const Text(
-                  'View',
-                  style: TextStyle(
-                    color: kSecondaryColor,
-                    fontSize: 18,
-                    fontFamily: 'InriaSans',
-                  ),
-                ),
-              ),
-              cardTitle: 'Details',
-              cardDescription: '',
+              onTap: () {
+                Navigator.pushNamed(context, ViewDetails.id);
+              },
+              cardTitle: 'Vehicles',
             ),
           ),
           Align(
             alignment: Alignment.center,
             child: CustomCard(
               icon: Icons.message,
-              button1: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, OfficerGrievanceList.id);
-                },
-                child: const Text(
-                  'View',
-                  style: TextStyle(
-                    color: kSecondaryColor,
-                    fontSize: 18,
-                    fontFamily: 'InriaSans',
-                  ),
-                ),
-              ),
+              onTap: () {
+                Navigator.pushNamed(context, OfficerGrievanceList.id);
+              },
               cardTitle: 'Grievances',
-              cardDescription: '',
             ),
           ),
         ],

@@ -4,6 +4,7 @@ import 'OfficialsPage/Fine/ConfirmFine.dart';
 import 'OfficialsPage/Grievance/OfficerGrievanceList.dart';
 import 'OfficialsPage/OfficerProfile.dart';
 import 'UserPages/Grievance/GrievanceList.dart';
+import 'UserPages/License/LearnerApplication.dart';
 import 'UserPages/Profile/EditProfile.dart';
 import 'UserPages/Profile/UserProfile.dart';
 import 'UserPages/UserRegister.dart';
@@ -15,7 +16,7 @@ import 'OfficialsPage/HomeScreen.dart';
 import 'OfficialsPage/Fine/ViewDetails.dart';
 import 'SplashScreen.dart';
 import 'UserPages/Chatbot/chatbot.dart';
-import 'UserPages/LicenseInfoPage.dart';
+import 'UserPages/License/LicenseInfoPage.dart';
 import 'UserPages/Vehicle/Vehicles.dart';
 import 'Welcome.dart';
 import 'UserPages/HomePage.dart';
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         ViewVehicle.id: (context)=> const ViewVehicle(),
         ChatBot.id: (context)=> const ChatBot(),
         LicenseInfoPage.id: (context)=> const LicenseInfoPage(),
+        LearnerLicenseApplication.id: (context)=> const LearnerLicenseApplication(),
         Grievancelist.id: (context)=> const Grievancelist(),
 
         //officer pages

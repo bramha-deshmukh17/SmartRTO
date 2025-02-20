@@ -36,23 +36,38 @@ const kBox = SizedBox(
   height: 15.0,
 );
 
-InputDecoration kDropdown = InputDecoration(
-  labelText: 'Select Fine',
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(10.0), // Customize border radius
-    borderSide: const BorderSide(
-        color: kSecondaryColor, width: 2.0), // Customize border color and width
-  ),
-  enabledBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(10.0),
-    borderSide: const BorderSide(color: kSecondaryColor, width: 1.0),
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(10.0),
-    borderSide: const BorderSide(color: kSecondaryColor, width: 2.0),
-  ),
-  hintText: 'Select a fine',
-);
+InputDecoration kDropdown(String label) => InputDecoration(
+      labelText: label,
+      hintText: "Select $label",
+      labelStyle: TextStyle(color: kBlack),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: const BorderSide(color: kSecondaryColor, width: 2.0),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: const BorderSide(
+            color: kSecondaryColor, width: 1.0), // Default state
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: const BorderSide(
+            color: kSecondaryColor, width: 2.0), // Focused state
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide:
+            const BorderSide(color: Colors.red, width: 2.0), // Error state
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: const BorderSide(
+            color: Colors.red, width: 2.0), // Error focused state
+      ),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
+    );
+
 
 const kListHeaders = SizedBox(
   width: 280.0,

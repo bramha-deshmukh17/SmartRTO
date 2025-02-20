@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../Utility/Appbar.dart';
 import '/UserPages/Grievance/GrievanceList.dart';
-import '/UserPages/LicenseInfoPage.dart';
-import '/UserPages/Profile/UserProfile.dart';
+import 'License/LearnerApplication.dart';
+import 'License/LicenseInfoPage.dart';
 import '/UserPages/Vehicle/Vehicles.dart';
 import '/Utility/MyCard.dart';
 import './Chatbot/chatbot.dart';
@@ -20,26 +19,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ScrollController _scrollController = ScrollController();
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
-
-    Future.microtask(() {
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(statusBarColor: kPrimaryColor),
-      );
-    });
   }
+
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Reset the status bar color every time dependencies change
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: kPrimaryColor),
-    );
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -53,76 +44,79 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.pushNamed(context, ChatBot.id);
         },
-        child: const Icon(FontAwesomeIcons.robot, color: kWhite,),
+        child: const Icon(
+          FontAwesomeIcons.robot,
+          color: kWhite,
+        ),
       ),
       appBar: Appbar(
         title: 'Home',
         displayUserProfile: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-
-          Align(
-            alignment: Alignment.center,
-            child: CustomCard(
-              icon: FontAwesomeIcons.driversLicense,
-              cardTitle: 'My License',
-              button1: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, LicenseInfoPage.id);
-                },
-                child: const Text(
-                  'View',
-                  style: TextStyle(
-                    color: kSecondaryColor,
-                    fontSize: 18,
-                    fontFamily: 'InriaSans',
-                  ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Scrollbar(
+              controller: _scrollController,
+              thumbVisibility: true, // Always show scrollbar
+              thickness: 2.0, // Set the scrollbar thickness
+              radius: Radius.circular(10), // Make scrollbar edges rounded
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                scrollDirection:
+                    Axis.horizontal, // Enables horizontal scrolling
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    CustomCard(
+                      icon: FontAwesomeIcons.driversLicense,
+                      cardTitle: 'License',
+                      onTap: () {
+                        Navigator.pushNamed(context, LicenseInfoPage.id);
+                      },
+                    ),
+                    CustomCard(
+                      icon: FontAwesomeIcons.clipboardList,
+                      cardTitle: 'LL Application',
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, LearnerLicenseApplication.id);
+                      },
+                    ),
+                    CustomCard(
+                      icon: FontAwesomeIcons.filePen,
+                      cardTitle: 'License Application',
+                      onTap: () {
+                        Navigator.pushNamed(context, LicenseInfoPage.id);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: CustomCard(
-              icon: FontAwesomeIcons.car,
-              cardTitle: 'My Vehicles',
-              button1: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, ViewVehicle.id);
-                  },
-                  child: const Text(
-                    'View',
-                    style: TextStyle(
-                      color: kSecondaryColor,
-                      fontSize: 18,
-                      fontFamily: 'InriaSans',
-                    ),
-                  )),
+            Align(
+              alignment: Alignment.center,
+              child: CustomCard(
+                icon: FontAwesomeIcons.car,
+                cardTitle: 'My Vehicles',
+                onTap: () {
+                  Navigator.pushNamed(context, ViewVehicle.id);
+                },
+              ),
             ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: CustomCard(
-              icon: Icons.comment,
-              cardTitle: 'Grievance',
-              button1: TextButton(
-                onPressed: () {
+            Align(
+              alignment: Alignment.center,
+              child: CustomCard(
+                icon: Icons.comment,
+                cardTitle: 'Grievance',
+                onTap: () {
                   Navigator.pushNamed(context, Grievancelist.id);
                 },
-                child: const Text(
-                  'View',
-                  style: TextStyle(
-                    color: kSecondaryColor,
-                    fontSize: 18,
-                    fontFamily: 'InriaSans',
-                  ),
-                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -43,7 +43,6 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
       setState(() {
         districtList = districts.map((d) => d.toString()).toList();
       });
-      print("Updated Date of Birth: ${widget.formData.selectedDateOfBirth}");
     }
   }
 
@@ -119,12 +118,19 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
             child: FillPersonalDetails(formData: widget.formData),
           ),
           kBox,
+
+          //Address details
+          MyContainer(
+            child: FillAddressDetails(formData: widget.formData),
+          ),
+          kBox,
         ],
       ),
     );
   }
 }
 
+//box for different sect
 class MyContainer extends StatelessWidget {
   final Widget child;
   MyContainer({super.key, required this.child});
@@ -228,6 +234,14 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          "Personal Details",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),kBox,
+
         UserInput(
           controller: widget.formData.fullNameController,
           hint: "Enter Full Name",
@@ -249,7 +263,8 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
             );
           }).toList(),
           onChanged: (String? val) {
-            FocusScope.of(context).requestFocus(widget.formData.relativeFullNameFocus);
+            FocusScope.of(context)
+                .requestFocus(widget.formData.relativeFullNameFocus);
           },
         ),
         kBox,
@@ -421,11 +436,11 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
           focusNode: widget.formData.emergencyMobileFocus,
           maxLength: 10,
           submit: (_) {
-            FocusScope.of(context).requestFocus(widget.formData.identityMark1Focus);
+            FocusScope.of(context)
+                .requestFocus(widget.formData.identityMark1Focus);
           },
         ),
         kBox,
-
 
         //identity mark 1
         UserInput(
@@ -436,11 +451,11 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
           textAlignment: TextAlign.start,
           focusNode: widget.formData.identityMark1Focus,
           submit: (_) {
-            FocusScope.of(context).requestFocus(widget.formData.identityMark2Focus);
+            FocusScope.of(context)
+                .requestFocus(widget.formData.identityMark2Focus);
           },
         ),
         kBox,
-
 
         //identity mark 2
         UserInput(
@@ -455,6 +470,363 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
                 .requestFocus(widget.formData.identityMark2Focus);
           },
         ),
+      ],
+    );
+  }
+}
+
+//address details
+// ignore: must_be_immutable
+class FillAddressDetails extends StatefulWidget {
+  final FormData formData;
+  FillAddressDetails({
+    Key? key,
+    required this.formData,
+  }) : super(key: key);
+
+  @override
+  _FillAddressDetailsState createState() => _FillAddressDetailsState();
+}
+
+class _FillAddressDetailsState extends State<FillAddressDetails> {
+  List<String> stateList = [];
+  List<String> presentDistrictList = [];
+  List<String> permanentDistrictList = [];
+  @override
+  void initState() {
+    super.initState();
+    fetchStates();
+  }
+
+  // Fetch all states (document IDs from the 'states' collection)
+  Future<void> fetchStates() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('states').get();
+    List<String> states = snapshot.docs.map((doc) => doc.id).toList()..sort();
+    setState(() {
+      stateList = states;
+    });
+  }
+
+  // Fetch districts for the selected state from its document
+  Future<void> fetchDistricts(String state) async {
+    DocumentSnapshot docSnapshot =
+        await FirebaseFirestore.instance.collection('states').doc(state).get();
+    if (docSnapshot.exists) {
+      List<dynamic> districts = docSnapshot.get('districts');
+      setState(() {
+        if (presentDistrictList.isEmpty) {
+          presentDistrictList = districts.map((d) => d.toString()).toList();
+        }
+        permanentDistrictList = districts.map((d) => d.toString()).toList();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Address Details",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          "Present Address",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        kBox,
+
+        //present states
+        DropdownButtonFormField<String>(
+          decoration: kDropdown("State"),
+          value: widget.formData.presentState,
+          items: stateList.map((state) {
+            return DropdownMenuItem<String>(
+              value: state,
+              child: Text(state),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              widget.formData.presentState = newValue;
+              widget.formData.presentDistrict =
+                  null; // reset district selection
+              presentDistrictList = [];
+            });
+            if (newValue != null) {
+              fetchDistricts(newValue);
+            }
+          },
+        ),
+        kBox,
+
+        // present districts
+        DropdownButtonFormField<String>(
+          decoration: kDropdown("District"),
+          value: widget.formData.presentDistrict,
+          items: presentDistrictList.map((district) {
+            return DropdownMenuItem<String>(
+              value: district,
+              child: Text(district),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              widget.formData.presentDistrict = newValue;
+            });
+            FocusScope.of(context)
+                .requestFocus(widget.formData.presentTehsilFocus);
+          },
+        ),
+        kBox,
+
+        //present tehsil
+        UserInput(
+          controller: widget.formData.presentTehsilController,
+          hint: "Enter Tehsil",
+          keyboardType: TextInputType.text,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          focusNode: widget.formData.presentTehsilFocus,
+          submit: (_) {
+            FocusScope.of(context)
+                .requestFocus(widget.formData.presentVillageFocus);
+          },
+        ),
+        kBox,
+
+        //present town
+        UserInput(
+          controller: widget.formData.presentVillageController,
+          hint: "Enter Village/Town/City",
+          keyboardType: TextInputType.text,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          focusNode: widget.formData.presentVillageFocus,
+          submit: (_) {
+            FocusScope.of(context)
+                .requestFocus(widget.formData.presentAddressFocus);
+          },
+        ),
+        kBox,
+
+        //present address
+        UserInput(
+          controller: widget.formData.presentAddressController,
+          hint: "Enter Full Address",
+          keyboardType: TextInputType.text,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          focusNode: widget.formData.presentAddressFocus,
+          submit: (_) {
+            FocusScope.of(context)
+                .requestFocus(widget.formData.presentLandmarkFocus);
+          },
+        ),
+        kBox,
+
+        //present landmark
+        UserInput(
+          controller: widget.formData.presentLandmarkController,
+          hint: "Enter Landmark",
+          keyboardType: TextInputType.text,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          focusNode: widget.formData.presentLandmarkFocus,
+          submit: (_) {
+            FocusScope.of(context)
+                .requestFocus(widget.formData.presentPincodeFocus);
+          },
+        ),
+        kBox,
+
+        //present pincode
+        UserInput(
+          controller: widget.formData.presentPincodeController,
+          hint: "Enter Pincode",
+          keyboardType: TextInputType.number,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          maxLength: 6,
+          focusNode: widget.formData.presentPincodeFocus,
+        ),
+        kBox,
+
+        Text(
+          "Permanent Address",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        kBox,
+
+        //checkbox
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Checkbox(
+              value: widget.formData.sameAsPresent,
+              onChanged: (bool? val) {
+                setState(() {
+                  widget.formData.sameAsPresent = val!;
+                  if (val) {
+                    widget.formData.permanentState =
+                        widget.formData.presentState;
+                    widget.formData.permanentDistrict =
+                        widget.formData.presentDistrict;
+                    widget.formData.permanentTehsilController.text =
+                        widget.formData.presentTehsilController.text;
+                    widget.formData.permanentVillageController.text =
+                        widget.formData.presentVillageController.text;
+                    widget.formData.permanentAddressController.text =
+                        widget.formData.presentAddressController.text;
+                    widget.formData.permanentLandmarkController.text =
+                        widget.formData.presentLandmarkController.text;
+                    widget.formData.permanentPincodeController.text =
+                        widget.formData.presentPincodeController.text;
+                  } else {
+                    widget.formData.permanentState = null;
+                    widget.formData.permanentDistrict = null;
+                    permanentDistrictList = [];
+                    widget.formData.permanentTehsilController.clear();
+                    widget.formData.permanentVillageController.clear();
+                    widget.formData.permanentAddressController.clear();
+                    widget.formData.permanentLandmarkController.clear();
+                    widget.formData.permanentPincodeController.clear();
+                  }
+                });
+              },
+              activeColor: kSecondaryColor,
+            ),
+            Text('Same As Present Address'),
+          ],
+        ),
+        kBox,
+
+        //permanent states
+        DropdownButtonFormField<String>(
+          decoration: kDropdown("State"),
+          value: widget.formData.permanentState,
+          items: stateList.map((state) {
+            return DropdownMenuItem<String>(
+              value: state,
+              child: Text(state),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              widget.formData.permanentState = newValue;
+              widget.formData.permanentDistrict =
+                  null; // reset district selection
+              permanentDistrictList = [];
+            });
+            if (newValue != null) {
+              fetchDistricts(newValue);
+            }
+          },
+        ),
+        kBox,
+
+        // permanent districts
+        DropdownButtonFormField<String>(
+          decoration: kDropdown("District"),
+          value: widget.formData.permanentDistrict,
+          items: permanentDistrictList.map((district) {
+            return DropdownMenuItem<String>(
+              value: district,
+              child: Text(district),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              widget.formData.permanentDistrict = newValue;
+            });
+            FocusScope.of(context)
+                .requestFocus(widget.formData.permanentTehsilFocus);
+          },
+        ),
+        kBox,
+
+        //permanent tehsil
+        UserInput(
+          controller: widget.formData.permanentTehsilController,
+          hint: "Enter Tehsil",
+          keyboardType: TextInputType.text,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          focusNode: widget.formData.permanentTehsilFocus,
+          submit: (_) {
+            FocusScope.of(context)
+                .requestFocus(widget.formData.permanentVillageFocus);
+          },
+        ),
+        kBox,
+
+        //permanent town
+        UserInput(
+          controller: widget.formData.permanentVillageController,
+          hint: "Enter Village/Town/City",
+          keyboardType: TextInputType.text,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          focusNode: widget.formData.permanentVillageFocus,
+          submit: (_) {
+            FocusScope.of(context)
+                .requestFocus(widget.formData.permanentAddressFocus);
+          },
+        ),
+        kBox,
+
+        //permanent address
+        UserInput(
+          controller: widget.formData.permanentAddressController,
+          hint: "Enter Full Address",
+          keyboardType: TextInputType.text,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          focusNode: widget.formData.permanentAddressFocus,
+          submit: (_) {
+            FocusScope.of(context)
+                .requestFocus(widget.formData.permanentLandmarkFocus);
+          },
+        ),
+        kBox,
+
+        //permanent landmark
+        UserInput(
+          controller: widget.formData.permanentLandmarkController,
+          hint: "Enter Landmark",
+          keyboardType: TextInputType.text,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          focusNode: widget.formData.permanentLandmarkFocus,
+          submit: (_) {
+            FocusScope.of(context)
+                .requestFocus(widget.formData.permanentPincodeFocus);
+          },
+        ),
+        kBox,
+
+        //permanent pincode
+        UserInput(
+          controller: widget.formData.permanentPincodeController,
+          hint: "Enter Pincode",
+          keyboardType: TextInputType.number,
+          width: double.infinity,
+          textAlignment: TextAlign.start,
+          maxLength: 6,
+          focusNode: widget.formData.permanentPincodeFocus,
+        ),
+        kBox,
       ],
     );
   }

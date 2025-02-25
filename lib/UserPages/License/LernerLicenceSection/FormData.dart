@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class FormData {
-  // Personal Details
+  String? selectedState;
+  String? selectedDistrict;
   final TextEditingController pinCodeController = TextEditingController();
   final FocusNode pinCodeFocus = FocusNode();
 
+  // Personal Details
   final TextEditingController fullNameController = TextEditingController();
   final FocusNode fullNameFocus = FocusNode();
 
@@ -15,10 +17,6 @@ class FormData {
 
   String? selectedGender;
   DateTime? selectedDateOfBirth;
-
-  void updateDateOfBirth(DateTime val) {
-    selectedDateOfBirth = val;
-  }
 
   final TextEditingController placeOfBirthController = TextEditingController();
   final FocusNode placeOfBirthFocus = FocusNode();
@@ -96,11 +94,6 @@ class FormData {
       TextEditingController();
   final FocusNode permanentPincodeFocus = FocusNode();
 
-  // Duration of stay
-  final TextEditingController durationYearsController = TextEditingController();
-  final TextEditingController durationMonthsController =
-      TextEditingController();
-
   // Declaration Answers
   bool declarationAnswer1 = false;
   bool declarationAnswer2 = false;
@@ -108,16 +101,13 @@ class FormData {
   bool declarationAnswer4 = false;
   bool declarationAnswer5 = false;
   bool declarationAnswer6 = false;
+  // Declaration Checkbox
+  bool declarationChecked = false;
 
   // Class of Vehicle
   List<String> selectedVehicleClasses = [];
 
   // Organ Donation
-  String? donateOrgan;
-
-  // Declaration Checkbox
-  bool declarationChecked = false;
-
-  String? selectedState;
-  String? selectedDistrict;
+  bool? donateOrgan;
+  bool acknowledgement = false;
 }

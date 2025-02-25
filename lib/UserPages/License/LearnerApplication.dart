@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobile/Utility/RoundButton.dart';
 import './LernerLicenceSection/FormData.dart';
 import '../../Utility/Constants.dart';
 import '../../Utility/Appbar.dart';
@@ -85,6 +86,7 @@ class LearnerLicenseApplication extends StatefulWidget {
 
 class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
   int currentStep = 0;
+  final FormData formData = FormData(); // Store form data persistently
 
   @override
   Widget build(BuildContext context) {
@@ -99,44 +101,51 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
         child: Column(
           children: [
             StepIndicator(currentStep: currentStep),
-            SizedBox(height: 20), // Adds spacing between step indicator and form
+            SizedBox(
+                height: 20), // Adds spacing between step indicator and form
 
             Expanded(
               child: Container(
                 width: double.infinity, // Ensures the child takes full width
-                child: getCurrentStepContent(),
+                child:
+                    SingleChildScrollView(
+                      child: getCurrentStepContent(),
+                    ), // Load content without losing data
               ),
             ),
+
             // Buttons at the bottom
-            Row(
-              mainAxisAlignment: currentStep == 0
-                  ? MainAxisAlignment.end
-                  : MainAxisAlignment.spaceBetween,
-              
-              children: [
-                if (currentStep > 0)
-                  ElevatedButton(
+            Padding(
+              padding: EdgeInsets.only(top: 5.0),
+              child: Row(
+                mainAxisAlignment: currentStep == 0
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.spaceBetween,
+                children: [
+                  if (currentStep > 0)
+                    RoundButton(
+                      onPressed: () {
+                        setState(() {
+                          currentStep--;
+                        });
+                      },
+                      text: 'Previous',
+                    ),
+                  RoundButton(
                     onPressed: () {
-                      setState(() {
-                        currentStep--;
-                      });
+                      saveFormData();
+                      if (currentStep < 4) {
+                        setState(() {
+                          currentStep++;
+                        });
+                      } else {
+                        Navigator.pop(context);
+                      }
                     },
-                    child: Text('Previous'),
+                    text: currentStep < 4 ? 'Next' : 'Finish',
                   ),
-                ElevatedButton(
-                  onPressed: () {
-                    saveFormData();
-                    if (currentStep < 4) {
-                      setState(() {
-                        currentStep++;
-                      });
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text(currentStep < 4 ? 'Next' : 'Finish'),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -145,22 +154,16 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
   }
 
   Widget getCurrentStepContent() {
-    final FormData formData = FormData();
-
-    switch (currentStep) {
-      case 0:
-        return FillApplicationForm(formData: formData);
-      case 1:
-        return UploadPhotoAndSign(formData: formData);
-      case 2:
-        return UploadDocuments(formData: formData);
-      case 3:
-        return PaymentScreen(formData: formData);
-      case 4:
-        return ReceiptScreen(formData: formData);
-      default:
-        return Container();
-    }
+    return IndexedStack(
+      index: currentStep,
+      children: [
+        FillApplicationForm(formData: formData),
+        UploadPhotoAndSign(formData: formData),
+        UploadDocuments(formData: formData),
+        PaymentScreen(formData: formData),
+        ReceiptScreen(formData: formData),
+      ],
+    );
   }
 
   void saveFormData() {

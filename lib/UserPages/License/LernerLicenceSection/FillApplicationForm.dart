@@ -48,8 +48,7 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //State and District pincode
@@ -114,23 +113,62 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
           kBox,
 
           //Personal details
-          MyContainer(
-            child: FillPersonalDetails(formData: widget.formData),
-          ),
+          MyContainer(child: FillPersonalDetails(formData: widget.formData)),
           kBox,
 
           //Address details
-          MyContainer(
-            child: FillAddressDetails(formData: widget.formData),
+          MyContainer(child: FillAddressDetails(formData: widget.formData)),
+          kBox,
+
+          //Vehicle class details
+          MyContainer(child: FillVehicleClass(formData: widget.formData)),
+          kBox,
+
+          //Declaration Form
+          MyContainer(child: FillDeclarationForm(formData: widget.formData)),
+          kBox,
+
+          //donate organs
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: CustomRadioButtonGroup(
+              onChanged: (String? value) {
+                setState(() {
+                  widget.formData.donateOrgan = value == "Yes" ? true : false;
+                });
+              },
+              options: ['Yes', 'No'],
+              title: 'Donate Organs in case of the accidental death?',
+            ),
+          ),
+
+          //acknowledgement
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Checkbox(
+                  value: widget.formData.acknowledgement,
+                  onChanged: (bool? val) {
+                    setState(() {
+                      widget.formData.acknowledgement = val!;
+                    });
+                  },
+                  activeColor: kSecondaryColor,
+                ),
+                Text('I here by declare that to the best of my knowledge \nand belief the particulars given aboveare true.'),
+              ],
+            ),
           ),
           kBox,
+
         ],
-      ),
     );
   }
 }
 
-//box for different sect
+//box for different section
 class MyContainer extends StatelessWidget {
   final Widget child;
   MyContainer({super.key, required this.child});
@@ -240,7 +278,8 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
-        ),kBox,
+        ),
+        kBox,
 
         UserInput(
           controller: widget.formData.fullNameController,
@@ -284,7 +323,11 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         CustomRadioButtonGroup(
           options: ['Male', 'Female', 'Other'],
           title: 'Gender',
-          onChanged: (String? value) {},
+          onChanged: (String? value) {
+            setState(() {
+              widget.formData.selectedGender = value;
+            });
+          },
         ),
         kBox,
 
@@ -825,6 +868,249 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
           textAlignment: TextAlign.start,
           maxLength: 6,
           focusNode: widget.formData.permanentPincodeFocus,
+        ),
+        kBox,
+      ],
+    );
+  }
+}
+
+//Class of vehicle
+class FillVehicleClass extends StatefulWidget {
+  final FormData formData;
+  FillVehicleClass({Key? key, required this.formData}) : super(key: key);
+
+  @override
+  _FillVehicleClassState createState() => _FillVehicleClassState();
+}
+
+class _FillVehicleClassState extends State<FillVehicleClass> {
+  final List<String> vehicleClasses = [
+    'Select All applicable classes',
+    'Motor Cycle Less Than 50CC (MC50CC)',
+    'Motor Cycle with Gear (Non Transport) (MCWG)',
+    'Light Motor Vehicle (LMV)',
+    'LMV - 3 Wheeler NT (3W-NT)',
+    'LMV - 3 Wheeler CAB (3W-CAB)',
+    'LMV - 3 Wheeler Transport Goods Non PSV (3W-GV)',
+    'Road Roller (RDRLR)',
+    'Other Others (OTHER)',
+    'Others - Cranes (CRANE)',
+    'Others - Forklift (FLIFT)',
+    'Others - Boring Rigg (BRIGS)',
+    'Others - Construction Equipments (CNEQP)',
+    'Others - Harvester (HARVST)',
+    'Others - Trailers (TRAILR)',
+    'Others - Agriculture Tractor and Power Tiller (AGRTLR)',
+    'Others - Tow Trucks (TOWTRK)',
+    'Others - Breakdown Van and Recovery Van (BRKREC)',
+    'Motor Cycle without Gear (Non Transport) (MCWOG)',
+    'Adapted Vehicle (ADPVEH)',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Class of Vehicle",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        kBox,
+
+        // Dropdown for vehicle class
+        DropdownButtonFormField<String>(
+          decoration: kDropdown("Select Vehicle Class"),
+          value: "Select All applicable classes",
+          items: vehicleClasses.map((vehicleClass) {
+            return DropdownMenuItem<String>(
+              value: vehicleClass,
+              child: Tooltip(
+                // Tooltip to show full text on hover
+                message: vehicleClass,
+                child: SizedBox(
+                  width:
+                      MediaQuery.of(context).size.width * 0.7, // Adjust width
+                  child: Text(
+                    vehicleClass,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (!widget.formData.selectedVehicleClasses.contains(newValue) &&
+                newValue != "Select All applicable classes") {
+              setState(() {
+                widget.formData.selectedVehicleClasses.add(newValue!);
+              });
+            }
+          },
+        ),
+        kBox,
+
+        widget.formData.selectedVehicleClasses.isNotEmpty ?
+        SizedBox(
+              height: 150.0,
+              child: ListView(
+                children:
+                    widget.formData.selectedVehicleClasses.map((vehicleClass) {
+                  return ListTile(
+                    title: Text(vehicleClass),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          widget.formData.selectedVehicleClasses
+                              .remove(vehicleClass);
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+            ): SizedBox(
+
+            ),
+      ],
+    );
+  }
+}
+
+//Declaration form
+class FillDeclarationForm extends StatefulWidget {
+  final FormData formData;
+  FillDeclarationForm({
+    Key? key,
+    required this.formData,
+  }) : super(key: key);
+
+  @override
+  _FillDeclarationFormState createState() => _FillDeclarationFormState();
+}
+
+class _FillDeclarationFormState extends State<FillDeclarationForm> {
+  final List<String> options = ['Yes', 'No'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Application cum Declaration to Physical Fitness",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          "Declaration:",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        //Questions
+        CustomRadioButtonGroup(
+          options: options,
+          title:
+              '1. Do you suffer from epilepsy or from sudden attacks of loss of consciousness or giddiness from any cause?',
+          onChanged: (String? value) {
+            setState(() {
+              widget.formData.declarationAnswer1 =
+                  value == "Yes" ? true : false;
+            });
+          },
+        ),
+        kBox,
+
+        CustomRadioButtonGroup(
+          options: options,
+          title: '2. Are you able to distinguish with each eye?',
+          onChanged: (String? value) {
+            setState(() {
+              widget.formData.declarationAnswer2 =
+                  value == "Yes" ? true : false;
+            });
+          },
+        ),
+        kBox,
+
+        CustomRadioButtonGroup(
+          options: options,
+          title:
+              '3. Have you lost either hand or foot or are you suffering from any defects of muscular, control or muscular power of either arm or leg?',
+          onChanged: (String? value) {
+            setState(() {
+              widget.formData.declarationAnswer3 =
+                  value == "Yes" ? true : false;
+            });
+          },
+        ),
+        kBox,
+
+        CustomRadioButtonGroup(
+          options: options,
+          title: '4. Do you suffer from night blindness?',
+          onChanged: (String? value) {
+            setState(() {
+              widget.formData.declarationAnswer4 =
+                  value == "Yes" ? true : false;
+            });
+          },
+        ),
+        kBox,
+
+        CustomRadioButtonGroup(
+          options: options,
+          title:
+              '5. Are you so deaf as to be unable to hear (and if the application is for driving a light motor vehicle, with or without hearing aid) the ordinary sound signal?',
+          onChanged: (String? value) {
+            setState(() {
+              widget.formData.declarationAnswer5 =
+                  value == "Yes" ? true : false;
+            });
+          },
+        ),
+        kBox,
+
+        CustomRadioButtonGroup(
+          options: options,
+          title:
+              '6. Do you suffer from any other disease or disability likely to cause your driving of a motor vehicle to be a source of danger to the public, if so, give details?',
+          onChanged: (String? value) {
+            setState(() {
+              widget.formData.declarationAnswer6 =
+                  value == "Yes" ? true : false;
+            });
+          },
+        ),
+        kBox,
+
+        //declaration acknowledgement
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Checkbox(
+              value: widget.formData.declarationChecked,
+              onChanged: (bool? val) {
+                setState(() {
+                  widget.formData.declarationChecked = val!;
+                });
+              },
+              activeColor: kSecondaryColor,
+            ),
+            Text(
+                'I here by declare all the info provided in\nabove declartion are true and I am liable \nto any possible punishment if found false.'),
+          ],
         ),
         kBox,
       ],

@@ -23,36 +23,69 @@ class _CustomRadioButtonGroupState extends State<CustomRadioButtonGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(widget.title,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-        SizedBox(width: 10), // Add spacing between title and options
-        Wrap(
-          spacing: 10.0, // Space between radio buttons
-          children: widget.options
-              .map((option) => Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Radio<String>(
-                        value: option,
-                        groupValue: _selectedValue,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedValue = value;
-                          });
-                          widget.onChanged(value!);
-                        },
-                        activeColor: kSecondaryColor,
-                      ),
-                      Text(option),
-                    ],
-                  ))
-              .toList(),
-        ),
-      ],
-    );
-
+    return widget.title.length >= 10
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                style: TextStyle(fontSize: 14),
+              ),
+              SizedBox(height: 5), // Spacing between title and options
+              Wrap(
+                spacing: 10.0, // Space between radio buttons
+                runSpacing: 5.0, // Space between wrapped lines
+                children: widget.options
+                    .map((option) => Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Radio<String>(
+                              value: option,
+                              groupValue: _selectedValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedValue = value;
+                                });
+                                widget.onChanged(value!);
+                              },
+                              activeColor: kSecondaryColor,
+                            ),
+                            Text(option),
+                          ],
+                        ))
+                    .toList(),
+              ),
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(widget.title,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              SizedBox(width: 10), // Add spacing between title and options
+              Wrap(
+                spacing: 10.0, // Space between radio buttons
+                children: widget.options
+                    .map((option) => Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Radio<String>(
+                              value: option,
+                              groupValue: _selectedValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedValue = value;
+                                });
+                                widget.onChanged(value!);
+                              },
+                              activeColor: kSecondaryColor,
+                            ),
+                            Text(option),
+                          ],
+                        ))
+                    .toList(),
+              ),
+            ],
+          );
   }
 }

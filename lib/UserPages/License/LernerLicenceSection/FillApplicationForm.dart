@@ -48,7 +48,8 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //State and District pincode
@@ -157,13 +158,14 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
                   },
                   activeColor: kSecondaryColor,
                 ),
-                Text('I here by declare that to the best of my knowledge \nand belief the particulars given aboveare true.'),
+                Text(
+                    'I here by declare that to the best of my knowledge \nand belief the particulars given aboveare true.'),
               ],
             ),
           ),
           kBox,
-
         ],
+      ),
     );
   }
 }

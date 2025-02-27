@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class FormData {
@@ -110,4 +112,7 @@ class FormData {
   // Organ Donation
   bool? donateOrgan;
   bool acknowledgement = false;
+
+  //photo and sign
+  File? photo, signature;
 }

@@ -107,10 +107,8 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
             Expanded(
               child: Container(
                 width: double.infinity, // Ensures the child takes full width
-                child:
-                    SingleChildScrollView(
-                      child: getCurrentStepContent(),
-                    ), // Load content without losing data
+                child:getCurrentStepContent(),
+                     // Load content without losing data
               ),
             ),
 

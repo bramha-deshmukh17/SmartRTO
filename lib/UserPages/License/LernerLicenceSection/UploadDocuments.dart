@@ -3,7 +3,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pdfx/pdfx.dart';
 import '../../../Utility/Constants.dart';
 import 'FormData.dart';
@@ -130,7 +129,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
-                errorText!,
+                errorText,
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/Utility/RoundButton.dart';
@@ -15,8 +14,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   late Razorpay _razorpay;
-  final FirebaseFirestore _firestore =
-      FirebaseFirestore.instance; // Firestore instance
+  
   Map<String, dynamic>? finesData; // Variable to store fetched fine data
   bool isLoading = true; // Variable to track loading state
   String? transactionId; // Variable to store transaction ID

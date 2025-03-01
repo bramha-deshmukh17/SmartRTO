@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../UserPages/License/LicenseInfoPage.dart';
 import 'Constants.dart';
 
 class CustomCard extends StatelessWidget {

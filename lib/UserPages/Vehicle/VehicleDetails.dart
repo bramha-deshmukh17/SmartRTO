@@ -114,7 +114,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
         ),
         kBox,
         Text(
-          'Insurance Expiry: ${_formatDate(widget.vehicle['insurance_expiry'].toDate()) ?? 'N/A'}',
+          'Insurance Expiry: ${_formatDate(widget.vehicle['insurance_expiry'].toDate())}',
           style: const TextStyle(fontSize: 18),
         ),
       ],

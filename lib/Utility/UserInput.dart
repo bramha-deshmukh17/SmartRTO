@@ -42,20 +42,28 @@ class UserInput  extends StatelessWidget {
           errorText: errorText,
           labelStyle: TextStyle(color: kBlack),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0), // Rounded corners
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(color: kSecondaryColor, width: 2.0),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: kSecondaryColor, // Border color when not focused
-            ),
             borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(
+                color: kSecondaryColor, width: 1.0), // Default state
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: kSecondaryColor, // Border color when focused
-              //width: 2.0, // Border width
-            ),
             borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(
+                color: kSecondaryColor, width: 2.0), // Focused state
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide:
+                const BorderSide(color: Colors.red, width: 2.0), // Error state
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(
+                color: Colors.red, width: 2.0), // Error focused state
           ),
         ),
       ),

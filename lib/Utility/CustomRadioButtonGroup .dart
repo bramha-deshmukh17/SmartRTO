@@ -5,13 +5,15 @@ import 'Constants.dart';
 class CustomRadioButtonGroup extends StatefulWidget {
   final List<String> options; // List of radio button options
   final String title;
-  final Function(String) onChanged; // Callback when value changes
+  final Function(String) onChanged;
+  final String? errorText; // Callback when value changes
 
   const CustomRadioButtonGroup({
     super.key,
     required this.options,
     required this.title,
     required this.onChanged,
+    this.errorText = null,
   });
 
   @override
@@ -55,37 +57,59 @@ class _CustomRadioButtonGroupState extends State<CustomRadioButtonGroup> {
                         ))
                     .toList(),
               ),
+              if (widget.errorText != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    widget.errorText ?? '',
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
             ],
           )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(widget.title,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-              SizedBox(width: 10), // Add spacing between title and options
-              Wrap(
-                spacing: 10.0, // Space between radio buttons
-                children: widget.options
-                    .map((option) => Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Radio<String>(
-                              value: option,
-                              groupValue: _selectedValue,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedValue = value;
-                                });
-                                widget.onChanged(value!);
-                              },
-                              activeColor: kSecondaryColor,
-                            ),
-                            Text(option),
-                          ],
-                        ))
-                    .toList(),
+        : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(widget.title,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  SizedBox(width: 10), // Add spacing between title and options
+                  Wrap(
+                    spacing: 10.0, // Space between radio buttons
+                    children: widget.options
+                        .map((option) => Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Radio<String>(
+                                  value: option,
+                                  groupValue: _selectedValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedValue = value;
+                                    });
+                                    widget.onChanged(value!);
+                                  },
+                                  activeColor: kSecondaryColor,
+                                ),
+                                Text(option),
+                              ],
+                            ))
+                        .toList(),
+                  ),
+                ],
               ),
-            ],
-          );
+               if (widget.errorText != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    widget.errorText ?? '',
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
+          ],
+        );
   }
 }

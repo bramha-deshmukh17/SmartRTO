@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class FormData {
@@ -97,12 +95,13 @@ class FormData {
   final FocusNode permanentPincodeFocus = FocusNode();
 
   // Declaration Answers
-  bool declarationAnswer1 = false;
-  bool declarationAnswer2 = false;
-  bool declarationAnswer3 = false;
-  bool declarationAnswer4 = false;
-  bool declarationAnswer5 = false;
-  bool declarationAnswer6 = false;
+  bool? declarationAnswer1;
+  bool? declarationAnswer2;
+  bool? declarationAnswer3;
+  bool? declarationAnswer4;
+  bool? declarationAnswer5;
+  bool? declarationAnswer6;
+
   // Declaration Checkbox
   bool declarationChecked = false;
 
@@ -114,5 +113,71 @@ class FormData {
   bool acknowledgement = false;
 
   //photo and sign
-  File? photo, signature;
+  String? photo, signature, aadhaarPdf, billPdf, paymentId;
+  DateTime? payementDate;
+
+  // Add this map to your existing class
+  final Map<String, String?> fieldErrors = {};
+
+  void clearErrors() {
+    fieldErrors.clear();
+  }
+
+
+   // Convert FormData to a Map (excluding errors)
+  Map<String, dynamic> toMap() {
+    return {
+      'selectedState': selectedState,
+      'selectedDistrict': selectedDistrict,
+      'pinCode': pinCodeController.text,
+      'fullName': fullNameController.text,
+      'selectedRelation': selectedRelation,
+      'relativeFullName': relativeFullNameController.text,
+      'selectedGender': selectedGender,
+      'selectedDateOfBirth': selectedDateOfBirth?.toIso8601String(),
+      'placeOfBirth': placeOfBirthController.text,
+      'selectedCountryOfBirth': selectedCountryOfBirth,
+      'selectedQualification': selectedQualification,
+      'selectedBloodGroup': selectedBloodGroup,
+      'landline': landlineController.text,
+      'email': emailController.text,
+      'applicantMobile': applicantMobileController.text,
+      'emergencyMobile': emergencyMobileController.text,
+      'identityMark1': identityMark1Controller.text,
+      'identityMark2': identityMark2Controller.text,
+      'presentState': presentState,
+      'presentDistrict': presentDistrict,
+      'presentTehsil': presentTehsilController.text,
+      'presentVillage': presentVillageController.text,
+      'presentAddress': presentAddressController.text,
+      'presentLandmark': presentLandmarkController.text,
+      'presentPincode': presentPincodeController.text,
+      'sameAsPresent': sameAsPresent,
+      'permanentState': permanentState,
+      'permanentDistrict': permanentDistrict,
+      'permanentTehsil': permanentTehsilController.text,
+      'permanentVillage': permanentVillageController.text,
+      'permanentAddress': permanentAddressController.text,
+      'permanentLandmark': permanentLandmarkController.text,
+      'permanentPincode': permanentPincodeController.text,
+      'declarationAnswer1': declarationAnswer1,
+      'declarationAnswer2': declarationAnswer2,
+      'declarationAnswer3': declarationAnswer3,
+      'declarationAnswer4': declarationAnswer4,
+      'declarationAnswer5': declarationAnswer5,
+      'declarationAnswer6': declarationAnswer6,
+      'declarationChecked': declarationChecked,
+      'selectedVehicleClasses': selectedVehicleClasses,
+      'donateOrgan': donateOrgan,
+      'acknowledgement': acknowledgement,
+      'photo': photo,
+      'signature': signature,
+      'aadhaarPdf': aadhaarPdf,
+      'billPdf': billPdf,
+      'paymentId': paymentId,
+      'payementDate': payementDate?.toIso8601String(),
+    };
+  }
+
+  
 }

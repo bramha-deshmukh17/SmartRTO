@@ -56,7 +56,8 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
           // Dropdown for states/UTs
           kBox,
           DropdownButtonFormField<String>(
-            decoration: kDropdown("State"),
+            decoration: kDropdown("State",
+                errorText: widget.formData.fieldErrors['selectedState']),
             value: widget.formData.selectedState,
             items: stateList.map((state) {
               return DropdownMenuItem<String>(
@@ -80,7 +81,8 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
 
           // Dropdown for districts based on the selected state
           DropdownButtonFormField<String>(
-            decoration: kDropdown("District"),
+            decoration: kDropdown("District",
+                errorText: widget.formData.fieldErrors['selectedDistrict']),
             value: widget.formData.selectedDistrict,
             items: districtList.map((district) {
               return DropdownMenuItem<String>(
@@ -104,6 +106,7 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
             width: double.infinity,
             focusNode: widget.formData.pinCodeFocus,
             maxLength: 6,
+            errorText: widget.formData.fieldErrors['pincode'],
             textAlignment: TextAlign.start,
             submit: (_) {
               // Move focus to the second TextField
@@ -139,30 +142,44 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
                 });
               },
               options: ['Yes', 'No'],
+              errorText: widget.formData.fieldErrors['donateOrgan'],
               title: 'Donate Organs in case of the accidental death?',
             ),
           ),
 
           //acknowledgement
           Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                  value: widget.formData.acknowledgement,
-                  onChanged: (bool? val) {
-                    setState(() {
-                      widget.formData.acknowledgement = val!;
-                    });
-                  },
-                  activeColor: kSecondaryColor,
-                ),
-                Text(
-                    'I here by declare that to the best of my knowledge \nand belief the particulars given aboveare true.'),
-              ],
-            ),
-          ),
+              padding: EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Checkbox(
+                        value: widget.formData.acknowledgement,
+                        onChanged: (bool? val) {
+                          setState(() {
+                            widget.formData.acknowledgement = val!;
+                          });
+                        },
+                        activeColor: kSecondaryColor,
+                      ),
+                      Text(
+                          'I here by declare that to the best of my knowledge \nand belief the particulars given aboveare true.'),
+                    ],
+                  ),
+                  // Error message
+                  if (widget.formData.fieldErrors['acknowledgement'] != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        widget.formData.fieldErrors['acknowledgement']!,
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                ],
+              )),
           kBox,
         ],
       ),
@@ -287,6 +304,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
           controller: widget.formData.fullNameController,
           hint: "Enter Full Name",
           keyboardType: TextInputType.name,
+          errorText: widget.formData.fieldErrors['fullName'],
           width: double.infinity,
           textAlignment: TextAlign.start,
           focusNode: widget.formData.fullNameFocus,
@@ -295,7 +313,8 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         // Dropdown for relation
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Relation"),
+          decoration: kDropdown("Relation",
+              errorText: widget.formData.fieldErrors['relation']),
           value: widget.formData.selectedRelation,
           items: relationOptions.map((relation) {
             return DropdownMenuItem<String>(
@@ -304,6 +323,9 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
             );
           }).toList(),
           onChanged: (String? val) {
+            setState(() {
+              widget.formData.selectedRelation = val;
+            });
             FocusScope.of(context)
                 .requestFocus(widget.formData.relativeFullNameFocus);
           },
@@ -314,6 +336,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         UserInput(
           controller: widget.formData.relativeFullNameController,
           hint: "Enter Relative Full Name",
+          errorText: widget.formData.fieldErrors['relativeFullName'],
           keyboardType: TextInputType.name,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -325,6 +348,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         CustomRadioButtonGroup(
           options: ['Male', 'Female', 'Other'],
           title: 'Gender',
+          errorText: widget.formData.fieldErrors['gender'],
           onChanged: (String? value) {
             setState(() {
               widget.formData.selectedGender = value;
@@ -364,6 +388,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
           controller: widget.formData.placeOfBirthController,
           keyboardType: TextInputType.text,
           hint: 'Enter Place of Birth',
+          errorText: widget.formData.fieldErrors['placeOfBirth'],
           textAlignment: TextAlign.start,
           focusNode: widget.formData.placeOfBirthFocus,
           width: double.infinity,
@@ -372,7 +397,8 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         //country of birth
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Country of Birth"),
+          decoration: kDropdown("Country of Birth",
+              errorText: widget.formData.fieldErrors['countryOfBirth']),
           value: widget.formData.selectedCountryOfBirth,
           items: countryOptions.map((country) {
             return DropdownMenuItem<String>(
@@ -390,7 +416,8 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         //qualification
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Qualification"),
+          decoration: kDropdown("Qualification",
+              errorText: widget.formData.fieldErrors['qualification']),
           value: widget.formData.selectedQualification,
           items: qualificationOptions.map((qualification) {
             return DropdownMenuItem<String>(
@@ -408,7 +435,8 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         //Blood group
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Blood Group"),
+          decoration: kDropdown("Blood Group",
+              errorText: widget.formData.fieldErrors['bloodGroup']),
           value: widget.formData.selectedBloodGroup,
           items: bloodGroups.map((blood) {
             return DropdownMenuItem<String>(
@@ -429,6 +457,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         UserInput(
           controller: widget.formData.emailController,
           hint: "Enter email Address",
+          errorText: widget.formData.fieldErrors['email'],
           keyboardType: TextInputType.emailAddress,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -459,6 +488,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         UserInput(
           controller: widget.formData.applicantMobileController,
           hint: "Enter Mobile Number",
+          errorText: widget.formData.fieldErrors['applicantMobile'],
           keyboardType: TextInputType.number,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -591,7 +621,8 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
 
         //present states
         DropdownButtonFormField<String>(
-          decoration: kDropdown("State"),
+          decoration: kDropdown("State",
+              errorText: widget.formData.fieldErrors['presentState']),
           value: widget.formData.presentState,
           items: stateList.map((state) {
             return DropdownMenuItem<String>(
@@ -615,7 +646,8 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
 
         // present districts
         DropdownButtonFormField<String>(
-          decoration: kDropdown("District"),
+          decoration: kDropdown("District",
+              errorText: widget.formData.fieldErrors['presentDistrict']),
           value: widget.formData.presentDistrict,
           items: presentDistrictList.map((district) {
             return DropdownMenuItem<String>(
@@ -637,6 +669,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         UserInput(
           controller: widget.formData.presentTehsilController,
           hint: "Enter Tehsil",
+          errorText: widget.formData.fieldErrors['presentTehsil'],
           keyboardType: TextInputType.text,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -652,6 +685,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         UserInput(
           controller: widget.formData.presentVillageController,
           hint: "Enter Village/Town/City",
+          errorText: widget.formData.fieldErrors['presentVillage'],
           keyboardType: TextInputType.text,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -667,6 +701,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         UserInput(
           controller: widget.formData.presentAddressController,
           hint: "Enter Full Address",
+          errorText: widget.formData.fieldErrors['presentAddress'],
           keyboardType: TextInputType.text,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -697,6 +732,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         UserInput(
           controller: widget.formData.presentPincodeController,
           hint: "Enter Pincode",
+          errorText: widget.formData.fieldErrors['presentPincode'],
           keyboardType: TextInputType.number,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -759,7 +795,8 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
 
         //permanent states
         DropdownButtonFormField<String>(
-          decoration: kDropdown("State"),
+          decoration: kDropdown("State",
+              errorText: widget.formData.fieldErrors['permanentState']),
           value: widget.formData.permanentState,
           items: stateList.map((state) {
             return DropdownMenuItem<String>(
@@ -783,7 +820,8 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
 
         // permanent districts
         DropdownButtonFormField<String>(
-          decoration: kDropdown("District"),
+          decoration: kDropdown("District",
+              errorText: widget.formData.fieldErrors['permanentDistrict']),
           value: widget.formData.permanentDistrict,
           items: permanentDistrictList.map((district) {
             return DropdownMenuItem<String>(
@@ -805,6 +843,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         UserInput(
           controller: widget.formData.permanentTehsilController,
           hint: "Enter Tehsil",
+          errorText: widget.formData.fieldErrors['permanentTehsil'],
           keyboardType: TextInputType.text,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -820,6 +859,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         UserInput(
           controller: widget.formData.permanentVillageController,
           hint: "Enter Village/Town/City",
+          errorText: widget.formData.fieldErrors['permanentVillage'],
           keyboardType: TextInputType.text,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -835,6 +875,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         UserInput(
           controller: widget.formData.permanentAddressController,
           hint: "Enter Full Address",
+          errorText: widget.formData.fieldErrors['permanentAddress'],
           keyboardType: TextInputType.text,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -865,6 +906,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         UserInput(
           controller: widget.formData.permanentPincodeController,
           hint: "Enter Pincode",
+          errorText: widget.formData.fieldErrors['permanentPincode'],
           keyboardType: TextInputType.number,
           width: double.infinity,
           textAlignment: TextAlign.start,
@@ -926,7 +968,8 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
 
         // Dropdown for vehicle class
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Select Vehicle Class"),
+          decoration: kDropdown("Select Vehicle Class",
+              errorText: widget.formData.fieldErrors['vehicleClasses']),
           value: "Select All applicable classes",
           items: vehicleClasses.map((vehicleClass) {
             return DropdownMenuItem<String>(
@@ -957,29 +1000,28 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
         ),
         kBox,
 
-        widget.formData.selectedVehicleClasses.isNotEmpty ?
-        SizedBox(
-              height: 150.0,
-              child: ListView(
-                children:
-                    widget.formData.selectedVehicleClasses.map((vehicleClass) {
-                  return ListTile(
-                    title: Text(vehicleClass),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        setState(() {
-                          widget.formData.selectedVehicleClasses
-                              .remove(vehicleClass);
-                        });
-                      },
-                    ),
-                  );
-                }).toList(),
-              ),
-            ): SizedBox(
-
-            ),
+        widget.formData.selectedVehicleClasses.isNotEmpty
+            ? SizedBox(
+                height: 150.0,
+                child: ListView(
+                  children: widget.formData.selectedVehicleClasses
+                      .map((vehicleClass) {
+                    return ListTile(
+                      title: Text(vehicleClass),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          setState(() {
+                            widget.formData.selectedVehicleClasses
+                                .remove(vehicleClass);
+                          });
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
+            : SizedBox(),
       ],
     );
   }
@@ -1025,6 +1067,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
           options: options,
           title:
               '1. Do you suffer from epilepsy or from sudden attacks of loss of consciousness or giddiness from any cause?',
+          errorText: widget.formData.fieldErrors['declarationAnswer1'],
           onChanged: (String? value) {
             setState(() {
               widget.formData.declarationAnswer1 =
@@ -1037,6 +1080,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
         CustomRadioButtonGroup(
           options: options,
           title: '2. Are you able to distinguish with each eye?',
+          errorText: widget.formData.fieldErrors['declarationAnswer2'],
           onChanged: (String? value) {
             setState(() {
               widget.formData.declarationAnswer2 =
@@ -1048,6 +1092,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
 
         CustomRadioButtonGroup(
           options: options,
+          errorText: widget.formData.fieldErrors['declarationAnswer3'],
           title:
               '3. Have you lost either hand or foot or are you suffering from any defects of muscular, control or muscular power of either arm or leg?',
           onChanged: (String? value) {
@@ -1062,6 +1107,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
         CustomRadioButtonGroup(
           options: options,
           title: '4. Do you suffer from night blindness?',
+          errorText: widget.formData.fieldErrors['declarationAnswer4'],
           onChanged: (String? value) {
             setState(() {
               widget.formData.declarationAnswer4 =
@@ -1073,6 +1119,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
 
         CustomRadioButtonGroup(
           options: options,
+          errorText: widget.formData.fieldErrors['declarationAnswer5'],
           title:
               '5. Are you so deaf as to be unable to hear (and if the application is for driving a light motor vehicle, with or without hearing aid) the ordinary sound signal?',
           onChanged: (String? value) {
@@ -1086,6 +1133,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
 
         CustomRadioButtonGroup(
           options: options,
+          errorText: widget.formData.fieldErrors['declarationAnswer6'],
           title:
               '6. Do you suffer from any other disease or disability likely to cause your driving of a motor vehicle to be a source of danger to the public, if so, give details?',
           onChanged: (String? value) {
@@ -1098,20 +1146,33 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
         kBox,
 
         //declaration acknowledgement
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Checkbox(
-              value: widget.formData.declarationChecked,
-              onChanged: (bool? val) {
-                setState(() {
-                  widget.formData.declarationChecked = val!;
-                });
-              },
-              activeColor: kSecondaryColor,
+            Row(
+              children: [
+                Checkbox(
+                  value: widget.formData.declarationChecked,
+                  onChanged: (value) {
+                    setState(() {
+                      widget.formData.declarationChecked = value ?? false;
+                    });
+                  },
+                   activeColor: kSecondaryColor,
+                ),
+                Expanded(child: Text("I accept the terms and conditions.")),
+              ],
             ),
-            Text(
-                'I here by declare all the info provided in\nabove declartion are true and I am liable \nto any possible punishment if found false.'),
+
+            // Error message
+            if (widget.formData.fieldErrors['declarationChecked'] != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  widget.formData.fieldErrors['declarationChecked']!,
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
           ],
         ),
         kBox,

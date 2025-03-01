@@ -36,9 +36,10 @@ const kBox = SizedBox(
   height: 15.0,
 );
 
-InputDecoration kDropdown(String label) => InputDecoration(
+InputDecoration kDropdown(String label, {String? errorText=null}) => InputDecoration(
       labelText: label,
       hintText: "Select $label",
+      errorText: errorText,
       labelStyle: TextStyle(color: kBlack),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),

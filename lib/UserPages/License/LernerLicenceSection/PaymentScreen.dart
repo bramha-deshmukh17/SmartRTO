@@ -38,6 +38,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     print("Payment Successful: ${response.paymentId}");
+    setState(() {
+      widget.formData.paymentId = null;
+      widget.formData.payementDate = DateTime.now();
+    });
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -102,6 +106,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               kBox,
               RoundButton(onPressed: openCheckout, text: "Pay"),
+              if (widget.formData.fieldErrors['paymentId'] != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    widget.formData.fieldErrors['paymentId']!,
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
               kBox,
               Text(
                 "For any issues, contact support@example.com",

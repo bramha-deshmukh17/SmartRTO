@@ -117,11 +117,11 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
             Padding(
               padding: EdgeInsets.only(top: 5.0),
               child: Row(
-                mainAxisAlignment: currentStep == 0
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: currentStep > 0 && currentStep < 4
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.end,
                 children: [
-                  if (currentStep > 0)
+                  if (currentStep > 0 && currentStep < 4)
                     RoundButton(
                       onPressed: () {
                         setState(() {
@@ -131,16 +131,16 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
                       text: 'Previous',
                     ),
                   RoundButton(
-                    onPressed: () {
+                    onPressed: ()async {
                       if (currentStep < 4) {
                         bool isValid = validateForm(currentStep);
                         setState(
                             () {}); // This triggers a UI rebuild so errors appear
                         if (isValid) {
-                          if (currentStep == 3 && saveFormData(formData)) {
-                                setState(() {
-                                  currentStep++;
-                                });
+                          if (currentStep == 3 && await saveFormData(formData)) {
+                            setState(() {
+                              currentStep++;
+                            });
                           } else {
                             setState(() {
                               currentStep++;
@@ -447,18 +447,22 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
     return isValid;
   }
 
-  bool saveFormData(FormData formData) {
-    FirebaseFirestore.instance
+  Future<bool> saveFormData(FormData formData) async {
+    final String id = DateTime.now().millisecondsSinceEpoch.toString();
+    await FirebaseFirestore.instance
         .collection('llapplication')
-        .doc(DateTime.now().millisecondsSinceEpoch.toString())
+        .doc(id)
         .set(formData.toMap())
         .then((_) {
       print("Form saved successfully!");
+      setState(() {
+        formData.receiptId = id;
+      });
       return true;
     }).catchError((error) {
       print("Failed to save form: $error");
       return false;
     });
-      return false;
+    return false;
   }
 }

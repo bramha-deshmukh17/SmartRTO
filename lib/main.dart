@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'InriaSans'),
       routes: <String, WidgetBuilder>{
         '/': (context) => SplashScreen(),
         '/authenticate': (context)=> const Authenticate(),

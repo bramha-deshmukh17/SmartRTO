@@ -176,8 +176,12 @@ class FormData {
       'billPdf': billPdf,
       'paymentId': paymentId,
       'payementDate': payementDate?.toIso8601String(),
+      'marks': null,
+      'examResult':false,
+      'approved':false,
     };
   }
 
+  late String receiptId;
   
 }

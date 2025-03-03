@@ -37,7 +37,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     print("Payment Successful: ${response.paymentId}");
     setState(() {
-      widget.formData.paymentId = null;
+      widget.formData.paymentId = response.paymentId;
       widget.formData.payementDate = DateTime.now();
     });
   }

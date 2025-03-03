@@ -12,8 +12,6 @@ const Color kBlue = Colors.blue;
 const Color kGreen = Colors.green;
 const Color kGrey = Colors.grey;
 
-const String kFamily = 'InriaSans';
-
 //app bar text
 const Text kAppBarTitle = Text(
   'Smart RTO',

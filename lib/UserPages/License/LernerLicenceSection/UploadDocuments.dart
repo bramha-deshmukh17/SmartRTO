@@ -65,7 +65,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
           ),
           kBox,
           createPdfView(
-            title: 'Upload Light Bill',
+            title: 'Upload Address proof(PAN/Light bill, etc.)',
             adhaar: false,
             pdfController: _pdfBillController,
             selectedFile: _selectedBillPdf,

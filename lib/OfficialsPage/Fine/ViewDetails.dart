@@ -158,7 +158,7 @@ class _ViewDetailsState extends State<ViewDetails> {
       if (carDoc.exists) {
         // Fetch fine history for the car
         QuerySnapshot finesSnapshot = await _firestore
-            .collection('fines')
+            .collection('fines')  
             .where('to', isEqualTo: carNumber)
             .get();
 

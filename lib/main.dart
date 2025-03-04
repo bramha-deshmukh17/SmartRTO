@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'OfficialsPage/License/LernerLicense/LearnerLicenseList.dart';
 import 'OfficialsPage/Fine/ConfirmFine.dart';
 import 'OfficialsPage/Grievance/OfficerGrievanceList.dart';
 import 'OfficialsPage/OfficerProfile.dart';
@@ -78,6 +79,7 @@ class MyApp extends StatelessWidget {
         Confirmfine.id: (context)=> const Confirmfine(),
         ViewDetails.id: (context)=> const ViewDetails(),
         OfficerGrievanceList.id: (context)=> const OfficerGrievanceList(),
+        LearnerLicenseList.id: (context)=> const LearnerLicenseList(),
 
       },
       initialRoute: '/',

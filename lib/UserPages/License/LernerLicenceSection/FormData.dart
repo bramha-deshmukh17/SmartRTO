@@ -177,7 +177,7 @@ class FormData {
       'paymentId': paymentId,
       'payementDate': payementDate?.toIso8601String(),
       'marks': null,
-      'examResult':false,
+      'examResult':null,
       'approved':false,
     };
   }

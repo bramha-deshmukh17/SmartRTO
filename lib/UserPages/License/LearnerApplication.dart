@@ -8,6 +8,8 @@ import '../../Utility/Appbar.dart';
 import 'LicenceSection/FillApplicationForm.dart';
 import 'LicenceSection/PaymentScreen.dart';
 import 'LicenceSection/ReceiptScreen.dart';
+import 'LicenceSection/SelfVerification.dart';
+import 'LicenceSection/SlotBooking.dart';
 import 'LicenceSection/UploadDocuments.dart';
 import 'LicenceSection/UploadPhotoAndSign.dart';
 
@@ -74,9 +76,9 @@ class StepIndicator extends StatelessWidget {
         case 3:
           return ' Self Verification';
         case 4:
-          return ' Slot book';
-        case 5:
           return ' Payment';
+        case 5:
+          return ' Slot book';
         case 6:
           return ' Receipt';
         default:
@@ -129,8 +131,7 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
     if (arguments['driving'] == true) {
       getDataForDriving();
     }
-    formData.applicantMobileController.text =
-        arguments['mobile'] ?? '454545454';
+    formData.applicantMobileController.text = arguments['mobile'];
   }
 
   @override
@@ -226,9 +227,9 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
           FillApplicationForm(formData: formData),
           UploadPhotoAndSign(formData: formData),
           UploadDocuments(formData: formData),
-          UploadDocuments(formData: formData),
-          UploadDocuments(formData: formData),
+          SelfVerification(formData: formData),
           PaymentScreen(formData: formData),
+          SlotBooking(formData: formData),
           ReceiptScreen(formData: formData),
         ],
       );
@@ -249,7 +250,7 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
   Future<void> getDataForDriving() async {
     QuerySnapshot snapshot = await _firestore
         .collection('llapplication')
-        .where('applicantMobile', isEqualTo: arguments!['mobile'])
+        .where('applicantMobile', isEqualTo: arguments['mobile'])
         .get();
 
     if (snapshot.docs.isNotEmpty) {
@@ -305,13 +306,14 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
       formData.selectedVehicleClasses =
           List<String>.from(document['selectedVehicleClasses']);
 
-       // Set image and document URLs
+      // Set image and document URLs
       formData.photo = document['photo'];
       formData.signature = document['signature'];
       formData.aadhaarPdf = document['aadhaarPdf'];
       formData.billPdf = document['billPdf'];
-
-      print("Data fetched and set in formData.");
+      setState(() {
+        print("Data fetched and set in formData.");
+      });
     } else {
       print('No data found for the given mobile number.');
     }
@@ -328,16 +330,22 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
       case 2:
         return validateDocument();
       case 3:
-        return validateDocument();
+        if (formData.selfie == null) {
+          formData.fieldErrors['selfie'] = 'PLease upload selfie';
+          return false;
+        }
+
+        return true;
       case 4:
-        return validateDocument();
-      case 5:
         if (formData.paymentId == null) {
           formData.fieldErrors['paymentId'] = 'Payment not completed';
           return false;
         }
 
         return true;
+      case 5:
+        return validateDocument();
+        
       default:
         return false;
     }

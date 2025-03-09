@@ -82,15 +82,21 @@ class _HomePageState extends State<HomePage> {
                       cardTitle: 'LL Application',
                       onTap: () {
                         Navigator.pushNamed(
-                            context, LearnerLicenseApplication.id,arguments: {'driving': true});
+                            context, LearnerLicenseApplication.id, arguments: {
+                          'driving': false,
+                          'mobile': '9922466109'
+                        });
                       },
                     ),
                     CustomCard(
                       icon: FontAwesomeIcons.filePen,
                       cardTitle: 'DL Application',
                       onTap: () {
-                        Navigator.pushNamed(context, PhoneAuthenticate.id,
-                            arguments: {'drivingLicense': true});
+                        Navigator.pushNamed(
+                            context, LearnerLicenseApplication.id, arguments: {
+                          'driving': true,
+                          'mobile': '9922466109'
+                        });
                       },
                     ),
                   ],

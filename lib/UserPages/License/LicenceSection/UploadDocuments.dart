@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pdfx/pdfx.dart';
 import '../../../Utility/Constants.dart';
@@ -82,17 +83,17 @@ class _UploadDocumentsState extends State<UploadDocuments> {
     );
   }
 
-  Widget createPdfView({
+Widget createPdfView({
     required String title,
     required bool adhaar,
-    PdfController? pdfController,
+    PdfController? pdfController, // For local file preview if available.
     File? selectedFile,
     required VoidCallback callBack,
     String? errorText,
     required VoidCallback submit,
   }) {
-    //this variable is used to know which pdf is uploaded and which not
-    //this var will disable the all the buttons for that particular pdf file after uoploading it to the firebase
+    // Determine which file URL to use based on the adhaar flag.
+    // (Assuming widget.formData is accessible in your context.)
     String? fileUpload =
         adhaar ? widget.formData.aadhaarPdf : widget.formData.billPdf;
 
@@ -103,28 +104,57 @@ class _UploadDocumentsState extends State<UploadDocuments> {
             title,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
-          selectedFile == null
-              ? Center(
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(FontAwesomeIcons.file,
-                        size: 50, color: Colors.grey),
-                  ),
+          // If an uploaded file URL is available, show the network PDF preview.
+          fileUpload != null && fileUpload.isNotEmpty
+              ? FutureBuilder<PdfControllerPinch>(
+                  future: _buildNetworkController(fileUpload),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (snapshot.hasError) {
+                      return SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Center(child: Text("Error loading PDF")),
+                      );
+                    } else {
+                      return SizedBox(
+                        height: 250,
+                        width: 250,
+                        child: PdfViewPinch(controller: snapshot.data!),
+                      );
+                    }
+                  },
                 )
-              : Center(
-                  child: SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: pdfController != null
-                        ? PdfView(controller: pdfController)
-                        : Center(child: Text("Error loading PDF")),
-                  ),
-                ),
+              : (selectedFile != null
+                  // If no uploaded URL but a local file is selected, show its preview.
+                  ? SizedBox(
+                      height: 250,
+                      width: 250,
+                      child: pdfController != null
+                          ? PdfView(controller: pdfController)
+                          : Center(child: Text("Error loading PDF")),
+                    )
+                  // Otherwise, show a placeholder icon.
+                  : Center(
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          FontAwesomeIcons.file,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )),
           if (errorText != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),
@@ -133,7 +163,8 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),
-          fileUpload == null
+          // If no file is uploaded, show action buttons.
+          fileUpload == null || fileUpload.isEmpty
               ? Column(
                   children: [
                     selectedFile == null
@@ -174,10 +205,19 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                         : kBox,
                   ],
                 )
-              : Text("Uploaded", style: TextStyle(color: kGreen),),
+              : Text(
+                  "Uploaded",
+                  style: TextStyle(color: kGreen),
+                ),
         ],
       ),
     );
+  }
+
+// Helper function to create a PdfControllerPinch from a network URL.
+  Future<PdfControllerPinch> _buildNetworkController(String url) async {
+    final data = await NetworkAssetBundle(Uri.parse(url)).load(url);
+    return PdfControllerPinch(document: PdfDocument.openData(data.buffer.asUint8List()));
   }
 
   Future<void> _pickPdf(bool adhaar) async {

@@ -20,7 +20,6 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
   final ImagePicker _picker = ImagePicker();
   bool isLoading = false;
 
-  
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -79,9 +78,10 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
     required VoidCallback submit,
     String? errorText,
   }) {
-    String? fileUpload = title == "Upload Photo"
+    String fileUpload = title == "Upload Photo"
         ? widget.formData.photo
         : widget.formData.signature;
+    print(fileUpload);
 
     return Center(
       child: Column(
@@ -92,22 +92,29 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 10),
-          file != null
-              ? Image.file(
-                  file,
-                  width: 150,
+          fileUpload == null
+              ? file != null
+                  ? Image.file(
+                      file,
+                      width: 150,
+                      height: 150,
+                      fit: BoxFit.fill,
+                    )
+                  : Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(FontAwesomeIcons.image,
+                          size: 50, color: Colors.grey),
+                    )
+              : Image.network(
+                  fileUpload,
                   height: 150,
-                  fit: BoxFit.cover,
-                )
-              : Container(
                   width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(FontAwesomeIcons.image,
-                      size: 50, color: Colors.grey),
+                  fit: BoxFit.fill,
                 ),
           kBox,
           if (errorText != null)
@@ -118,7 +125,7 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),
-          fileUpload == null
+          fileUpload == null 
               ? file == null
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -242,5 +249,4 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
       }
     });
   }
-
 }

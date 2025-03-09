@@ -113,7 +113,9 @@ class FormData {
   bool acknowledgement = false;
 
   //photo and sign
-  String? photo, signature, aadhaarPdf, billPdf, paymentId;
+  late String photo, signature;
+  String? aadhaarPdf, billPdf, selfie, paymentId;
+
   DateTime? payementDate;
 
   // Add this map to your existing class
@@ -123,8 +125,7 @@ class FormData {
     fieldErrors.clear();
   }
 
-
-   // Convert FormData to a Map (excluding errors)
+  // Convert FormData to a Map (excluding errors)
   Map<String, dynamic> toMap() {
     return {
       'selectedState': selectedState,
@@ -177,11 +178,10 @@ class FormData {
       'paymentId': paymentId,
       'payementDate': payementDate?.toIso8601String(),
       'marks': null,
-      'examResult':null,
-      'approved':false,
+      'examResult': null,
+      'approved': false,
     };
   }
 
-  late String receiptId;
-  
+  String? receiptId;
 }

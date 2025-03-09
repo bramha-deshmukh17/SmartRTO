@@ -8,6 +8,7 @@ import '/UserPages/Vehicle/Vehicles.dart';
 import '/Utility/MyCard.dart';
 import './Chatbot/chatbot.dart';
 import '../Utility/Constants.dart';
+import 'License/PhoneAuthenticate.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = 'Homepage';
@@ -81,14 +82,15 @@ class _HomePageState extends State<HomePage> {
                       cardTitle: 'LL Application',
                       onTap: () {
                         Navigator.pushNamed(
-                            context, LearnerLicenseApplication.id);
+                            context, LearnerLicenseApplication.id,arguments: {'driving': true});
                       },
                     ),
                     CustomCard(
                       icon: FontAwesomeIcons.filePen,
-                      cardTitle: 'License Application',
+                      cardTitle: 'DL Application',
                       onTap: () {
-                        Navigator.pushNamed(context, LicenseInfoPage.id);
+                        Navigator.pushNamed(context, PhoneAuthenticate.id,
+                            arguments: {'drivingLicense': true});
                       },
                     ),
                   ],

@@ -14,8 +14,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   late Razorpay _razorpay;
-  
-  Map<String, dynamic>? finesData; // Variable to store fetched fine data
+  int fees = 50;
   bool isLoading = true; // Variable to track loading state
   String? transactionId; // Variable to store transaction ID
 
@@ -53,16 +52,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void openCheckout() async {
+    
     var options = {
       'key': dotenv
           .env['RAZOR_PAY_API'], // Replace with your Razorpay Test API Key
-      'amount': (100 * 100).toString(), // Convert to paisa
+      'amount': (fees * 100).toString(), // Convert to paisa
       'name': 'RTO India',
       'description': 'Payment for LL Application',
-      'prefill': {
-        'contact': '9999999999',
-        'email': 'test@example.com',
-      },
     };
 
     try {
@@ -76,6 +72,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
+    fees = (widget.formData.selectedVehicleClasses.length * 150) + 50;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -88,7 +87,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: Column(
             children: [
               Text(
-                "Payment: 100 Rs.",
+                "Payment: ${fees} Rs.",
                 style: TextStyle(fontSize: 16),
               ),
               kBox,

@@ -1,30 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mobile/Utility/RoundButton.dart';
-import 'LicenceSection/FormData.dart';
-import '../../Utility/Constants.dart';
 import '../../Utility/Appbar.dart';
+import '../../Utility/Constants.dart';
+import '../../Utility/RoundButton.dart';
 import 'LicenceSection/FillApplicationForm.dart';
+import 'LicenceSection/FormData.dart';
 import 'LicenceSection/PaymentScreen.dart';
 import 'LicenceSection/ReceiptScreen.dart';
 import 'LicenceSection/UploadDocuments.dart';
 import 'LicenceSection/UploadPhotoAndSign.dart';
 
-// Step Indicator Widget
 class StepIndicator extends StatelessWidget {
   final int currentStep;
-  final bool driving; // Total steps in your application
+  final int totalSteps = 7; // Total steps in your application
 
-  StepIndicator({
-    required this.currentStep,
-    this.driving = true,
-  });
+  StepIndicator({required this.currentStep});
 
   @override
   Widget build(BuildContext context) {
-    final int totalSteps = driving ? 7 : 5;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(totalSteps, (index) {
@@ -63,101 +57,67 @@ class StepIndicator extends StatelessWidget {
   }
 
   String getStepLabel(int index) {
-    if (driving) {
-      switch (index) {
-        case 0:
-          return 'Form';
-        case 1:
-          return ' Photo & Sign';
-        case 2:
-          return ' Documents';
-        case 3:
-          return ' Self Verification';
-        case 4:
-          return ' Slot book';
-        case 5:
-          return ' Payment';
-        case 6:
-          return ' Receipt';
-        default:
-          return '';
-      }
-    } else {
-      switch (index) {
-        case 0:
-          return 'Form';
-        case 1:
-          return ' Photo & Sign';
-        case 2:
-          return ' Documents';
-        case 3:
-          return ' Payment';
-        case 4:
-          return ' Receipt';
-        default:
-          return '';
-      }
+    switch (index) {
+      case 0:
+        return 'Form';
+      case 1:
+        return ' Photo & Sign';
+      case 2:
+        return ' Documents';
+      case 3:
+        return ' Self Verification';
+      case 4:
+        return ' Slot book';
+      case 5:
+        return ' Payment';
+      case 6:
+        return ' Receipt';
+      default:
+        return '';
     }
   }
 }
 
-class LearnerLicenseApplication extends StatefulWidget {
-  static const String id = 'LearnerLicenseApplication';
+class DrivingLicense extends StatefulWidget {
+  static const String id = "DrivingLicense";
 
-  const LearnerLicenseApplication({super.key});
+  const DrivingLicense({super.key});
 
   @override
-  State<LearnerLicenseApplication> createState() =>
-      _LearnerLicenseApplicationState();
+  _DrivingLicenseState createState() => _DrivingLicenseState();
 }
 
-class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
-  int currentStep = 0;
-  final FormData formData = FormData(); // Store form data persistently
-  Map<String, dynamic> arguments = {};
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+class _DrivingLicenseState extends State<DrivingLicense> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Initialize arguments once
-
-    arguments =
-        (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)!;
-    // Debug print to check the arguments
-
-    if (arguments['driving'] == true) {
-      getDataForDriving();
-    }
-    formData.applicantMobileController.text =
-        arguments['mobile'] ?? '454545454';
+  void initState() {
+    super.initState();
   }
+
+  Future<void> fetchApplicationData() async {}
+    int currentStep = 0;
+    final FormData formData = FormData(); // Store form data persistently
 
   @override
   Widget build(BuildContext context) {
-    // Ensure arguments are initialized before accessing them
-    int lastIndex = arguments['driving'] ? 6 : 4;
+   
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    formData.applicantMobileController.text = arguments['mobile'] ?? '7777777';
 
     return Scaffold(
       appBar: Appbar(
-        title: arguments['driving']
-            ? 'Driving License Application'
-            : 'Learning License Application',
-        displayUserProfile: true,
+        title: 'Driving License Application',
         isBackButton: true,
+        displayUserProfile: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+        padding: EdgeInsets.all(15.0),
         child: Column(
           children: [
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: StepIndicator(
-                currentStep: currentStep,
-                driving: arguments['driving'],
-              ),
+              child: StepIndicator(currentStep: currentStep),
             ),
-            kBox, // Adds spacing between step indicator and form
 
             Expanded(
               child: Container(
@@ -171,11 +131,11 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
             Padding(
               padding: EdgeInsets.only(top: 5.0),
               child: Row(
-                mainAxisAlignment: currentStep > 0 && currentStep < lastIndex
+                mainAxisAlignment: currentStep > 0 && currentStep < 4
                     ? MainAxisAlignment.spaceBetween
                     : MainAxisAlignment.end,
                 children: [
-                  if (currentStep > 0 && currentStep < lastIndex)
+                  if (currentStep > 0 && currentStep < 4)
                     RoundButton(
                       onPressed: () {
                         setState(() {
@@ -186,12 +146,12 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
                     ),
                   RoundButton(
                     onPressed: () async {
-                      if (currentStep < lastIndex) {
-                        bool isValid = validateForm(currentStep);
+                      if (currentStep < 4) {
+                        bool isValid = !validateForm(currentStep);
                         setState(
                             () {}); // This triggers a UI rebuild so errors appear
                         if (isValid) {
-                          if (currentStep == lastIndex - 1 &&
+                          if (currentStep == 3 &&
                               await saveFormData(formData)) {
                             setState(() {
                               currentStep++;
@@ -207,11 +167,12 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
                         Navigator.pop(context);
                       }
                     },
-                    text: currentStep < lastIndex ? 'Next' : 'Finish',
+                    text: currentStep < 4 ? 'Next' : 'Finish',
                   ),
                 ],
               ),
             ),
+
           ],
         ),
       ),
@@ -219,102 +180,16 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
   }
 
   Widget getCurrentStepContent() {
-    if (arguments['driving']) {
-      return IndexedStack(
-        index: currentStep,
-        children: [
-          FillApplicationForm(formData: formData),
-          UploadPhotoAndSign(formData: formData),
-          UploadDocuments(formData: formData),
-          UploadDocuments(formData: formData),
-          UploadDocuments(formData: formData),
-          PaymentScreen(formData: formData),
-          ReceiptScreen(formData: formData),
-        ],
-      );
-    } else {
-      return IndexedStack(
-        index: currentStep,
-        children: [
-          FillApplicationForm(formData: formData),
-          UploadPhotoAndSign(formData: formData),
-          UploadDocuments(formData: formData),
-          PaymentScreen(formData: formData),
-          ReceiptScreen(formData: formData),
-        ],
-      );
-    }
-  }
-
-  Future<void> getDataForDriving() async {
-    QuerySnapshot snapshot = await _firestore
-        .collection('llapplication')
-        .where('applicantMobile', isEqualTo: arguments!['mobile'])
-        .get();
-
-    if (snapshot.docs.isNotEmpty) {
-      DocumentSnapshot document = snapshot.docs.first;
-
-      // Set personal and contact details
-      formData.selectedState = document['selectedState'];
-      formData.selectedDistrict = document['selectedDistrict'];
-      formData.pinCodeController.text = document['pinCode'];
-
-      // Set relative details
-      formData.fullNameController.text = document['fullName'];
-      formData.selectedRelation = document['selectedRelation'];
-      formData.relativeFullNameController.text = document['relativeFullName'];
-
-      // Set additional personal details
-      formData.selectedGender = document['selectedGender'];
-      formData.selectedDateOfBirth =
-          DateTime.parse(document['selectedDateOfBirth']);
-      formData.placeOfBirthController.text = document['placeOfBirth'];
-      formData.selectedCountryOfBirth = document['selectedCountryOfBirth'];
-      formData.selectedQualification = document['selectedQualification'];
-      formData.selectedBloodGroup = document['selectedBloodGroup'];
-      formData.emailController.text = document['email'];
-      formData.landlineController.text = document['landline'];
-      formData.emergencyMobileController.text = document['emergencyMobile'];
-      formData.identityMark1Controller.text = document['identityMark1'];
-      formData.identityMark2Controller.text = document['identityMark2'];
-
-      // Set licence details (printing licenseNumber for debug)
-      print("License Number: ${document['licenseNumber']}");
-
-      // Set permanent address details
-      formData.sameAsPresent = document['sameAsPresent'];
-      formData.permanentAddressController.text = document['permanentAddress'];
-      formData.permanentDistrict = document['permanentDistrict'];
-      formData.permanentLandmarkController.text = document['permanentLandmark'];
-      formData.permanentPincodeController.text = document['permanentPincode'];
-      formData.permanentState = document['permanentState'];
-      formData.permanentTehsilController.text = document['permanentTehsil'];
-      formData.permanentVillageController.text = document['permanentVillage'];
-
-      // Set present address details
-      formData.presentAddressController.text = document['presentAddress'];
-      formData.presentDistrict = document['presentDistrict'];
-      formData.presentLandmarkController.text = document['presentLandmark'];
-      formData.presentPincodeController.text = document['presentPincode'];
-      formData.presentState = document['presentState'];
-      formData.presentTehsilController.text = document['presentTehsil'];
-      formData.presentVillageController.text = document['presentVillage'];
-
-      // Set vehicle classes (convert to List<String>)
-      formData.selectedVehicleClasses =
-          List<String>.from(document['selectedVehicleClasses']);
-
-       // Set image and document URLs
-      formData.photo = document['photo'];
-      formData.signature = document['signature'];
-      formData.aadhaarPdf = document['aadhaarPdf'];
-      formData.billPdf = document['billPdf'];
-
-      print("Data fetched and set in formData.");
-    } else {
-      print('No data found for the given mobile number.');
-    }
+    return IndexedStack(
+      index: currentStep,
+      children: [
+        FillApplicationForm(formData: formData),
+        UploadPhotoAndSign(formData: formData),
+        UploadDocuments(formData: formData),
+        PaymentScreen(formData: formData),
+        ReceiptScreen(formData: formData),
+      ],
+    );
   }
 
   bool validateForm(int currentStep) {
@@ -327,10 +202,10 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
         return validatePhotonSign();
       case 2:
         return validateDocument();
-      case 3:
-        return validateDocument();
+      case 3:  
+        return true;
       case 4:
-        return validateDocument();
+        return true;
       case 5:
         if (formData.paymentId == null) {
           formData.fieldErrors['paymentId'] = 'Payment not completed';
@@ -414,7 +289,7 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
       isValid = false;
     } else if (!RegExp(r'^\d{10}$')
         .hasMatch(formData.applicantMobileController.text)) {
-      formData.fieldErrors['applicantMobile'] = 'Enter valid phone number';
+      formData.fieldErrors['applicantMobile'] = 'Enter valida phone number';
       isValid = false;
     }
 
@@ -594,7 +469,7 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
 
   Future<bool> saveFormData(FormData formData) async {
     final String id = DateTime.now().millisecondsSinceEpoch.toString();
-    await _firestore
+    await FirebaseFirestore.instance
         .collection('llapplication')
         .doc(id)
         .set(formData.toMap())

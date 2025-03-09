@@ -5,7 +5,9 @@ import 'OfficialsPage/Fine/ConfirmFine.dart';
 import 'OfficialsPage/Grievance/OfficerGrievanceList.dart';
 import 'OfficialsPage/OfficerProfile.dart';
 import 'UserPages/Grievance/GrievanceList.dart';
+import 'UserPages/License/DrivingLicense.dart';
 import 'UserPages/License/LearnerApplication.dart';
+import 'UserPages/License/PhoneAuthenticate.dart';
 import 'UserPages/Profile/EditProfile.dart';
 import 'UserPages/Profile/UserProfile.dart';
 import 'UserPages/UserRegister.dart';
@@ -68,7 +70,9 @@ class MyApp extends StatelessWidget {
         ViewVehicle.id: (context)=> const ViewVehicle(),
         ChatBot.id: (context)=> const ChatBot(),
         LicenseInfoPage.id: (context)=> const LicenseInfoPage(),
+        PhoneAuthenticate.id: (context)=> const PhoneAuthenticate(),
         LearnerLicenseApplication.id: (context)=> const LearnerLicenseApplication(),
+        DrivingLicense.id: (context)=> const DrivingLicense(),
         Grievancelist.id: (context)=> const Grievancelist(),
 
         //officer pages

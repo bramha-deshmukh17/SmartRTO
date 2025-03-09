@@ -486,6 +486,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         //applicant mobile
         UserInput(
+          readonly: true,
           controller: widget.formData.applicantMobileController,
           hint: "Enter Mobile Number",
           errorText: widget.formData.fieldErrors['applicantMobile'],
@@ -933,6 +934,7 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
     'Select All applicable classes',
     'Motor Cycle Less Than 50CC (MC50CC)',
     'Motor Cycle with Gear (Non Transport) (MCWG)',
+    'Motor Cycle without Gear (Non Transport) (MCWOG)',
     'Light Motor Vehicle (LMV)',
     'LMV - 3 Wheeler NT (3W-NT)',
     'LMV - 3 Wheeler CAB (3W-CAB)',
@@ -948,7 +950,6 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
     'Others - Agriculture Tractor and Power Tiller (AGRTLR)',
     'Others - Tow Trucks (TOWTRK)',
     'Others - Breakdown Van and Recovery Van (BRKREC)',
-    'Motor Cycle without Gear (Non Transport) (MCWOG)',
     'Adapted Vehicle (ADPVEH)',
   ];
 

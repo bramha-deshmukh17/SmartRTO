@@ -103,17 +103,16 @@ class StepIndicator extends StatelessWidget {
   }
 }
 
-class LearnerLicenseApplication extends StatefulWidget {
-  static const String id = 'LearnerLicenseApplication';
+class LicenseApplication extends StatefulWidget {
+  static const String id = 'LicenseApplication';
 
-  const LearnerLicenseApplication({super.key});
+  const LicenseApplication({super.key});
 
   @override
-  State<LearnerLicenseApplication> createState() =>
-      _LearnerLicenseApplicationState();
+  State<LicenseApplication> createState() => LicenseApplicationState();
 }
 
-class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
+class LicenseApplicationState extends State<LicenseApplication> {
   int currentStep = 0;
   final FormData formData = FormData(); // Store form data persistently
   Map<String, dynamic> arguments = {};
@@ -206,6 +205,7 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
                           } else if (currentStep == lastIndex) {
                             Navigator.pop(context);
                           } else {
+                            
                             setState(() {
                               currentStep++;
                             });
@@ -263,7 +263,6 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
 
     if (snapshot.docs.isNotEmpty) {
       DocumentSnapshot document = snapshot.docs.first;
-
       // Set personal and contact details
       formData.selectedState = document['selectedState'];
       formData.selectedDistrict = document['selectedDistrict'];
@@ -287,9 +286,6 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
       formData.emergencyMobileController.text = document['emergencyMobile'];
       formData.identityMark1Controller.text = document['identityMark1'];
       formData.identityMark2Controller.text = document['identityMark2'];
-
-      // Set licence details (printing licenseNumber for debug)
-      print("License Number: ${document['licenseNumber']}");
 
       // Set permanent address details
       formData.sameAsPresent = document['sameAsPresent'];
@@ -319,9 +315,8 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
       formData.signature = document['signature'];
       formData.aadhaarPdf = document['aadhaarPdf'];
       formData.billPdf = document['billPdf'];
-      setState(() {
-        print("Data fetched and set in formData.");
-      });
+
+      print("Data fetched and set in formData.");
     } else {
       print('No data found for the given mobile number.');
     }
@@ -661,7 +656,8 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
           .set(formData.toMapDl());
 
       print("Form saved successfully!");
-      await bookSlot(formData); // Ensure formData.receiptId is set before calling bookSlot
+      await bookSlot(
+          formData); // Ensure formData.receiptId is set before calling bookSlot
 
       return true;
     } catch (error) {

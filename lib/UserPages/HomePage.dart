@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../Utility/Appbar.dart';
 import '/UserPages/Grievance/GrievanceList.dart';
-import 'License/LearnerApplication.dart';
 import 'License/LicenseInfoPage.dart';
 import '/UserPages/Vehicle/Vehicles.dart';
 import '/Utility/MyCard.dart';
@@ -82,9 +81,8 @@ class _HomePageState extends State<HomePage> {
                       cardTitle: 'LL Application',
                       onTap: () {
                         Navigator.pushNamed(
-                            context, LearnerLicenseApplication.id, arguments: {
+                            context, PhoneAuthenticate.id, arguments: {
                           'driving': false,
-                          'mobile': '9922466109'
                         });
                       },
                     ),
@@ -93,9 +91,8 @@ class _HomePageState extends State<HomePage> {
                       cardTitle: 'DL Application',
                       onTap: () {
                         Navigator.pushNamed(
-                            context, LearnerLicenseApplication.id, arguments: {
+                            context, PhoneAuthenticate.id, arguments: {
                           'driving': true,
-                          'mobile': '9922466109'
                         });
                       },
                     ),

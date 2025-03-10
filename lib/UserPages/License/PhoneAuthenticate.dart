@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:flutter/material.dart';
-import '/UserPages/License/LearnerApplication.dart';
+import 'LicenseApplication.dart';
 import '../../Utility/Appbar.dart';
 import '../../Utility/Constants.dart';
 import '../../Utility/OTPField.dart';
@@ -35,7 +35,7 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
 
     QuerySnapshot snapshot = await _fireStore
         .collection('llapplication')
-        .where('lLicenseNumber', isEqualTo: licenseIdController.text.trim())
+        .where('lLicenseNumber', isEqualTo: llapplicationId)
         .get();
 
     if (snapshot.docs.isNotEmpty) {
@@ -55,13 +55,13 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
 
     return Scaffold(
       appBar: Appbar(
-        title: arguments['drivingLicense'] == true
+        title: arguments['driving'] == true
             ? 'Authenticate '
             : 'Authenticate Phone Number',
         isBackButton: true,
         displayUserProfile: true,
       ),
-      body: arguments['drivingLicense'] == true
+      body: arguments['driving'] == true
           ? ModalProgressHUD(
               progressIndicator: const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
@@ -257,11 +257,11 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
           otpEnable = false;
         });
         if (llapplicationId == null) {
-          Navigator.pushReplacementNamed(context, LearnerLicenseApplication.id,
-              arguments: {'mobile': _phoneController.text, 'driving': false});
+          Navigator.pushReplacementNamed(context, LicenseApplication.id,
+              arguments: {'mobile': _phoneController.text.trim(), 'driving': false});
         } else {
-          Navigator.pushReplacementNamed(context, LearnerLicenseApplication.id,
-              arguments: {'mobile': _phoneController.text, 'driving': true});
+          Navigator.pushReplacementNamed(context, LicenseApplication.id,
+              arguments: {'mobile': _phoneController.text.trim(), 'driving': true});
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

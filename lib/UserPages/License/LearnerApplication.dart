@@ -192,11 +192,19 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
                         setState(
                             () {}); // This triggers a UI rebuild so errors appear
                         if (isValid) {
-                          if (currentStep == lastIndex - 1 &&
+                          if (arguments['driving'] &&
+                              currentStep == lastIndex - 1 &&
+                              await saveDlForm(formData)) {
+                            setState(() {
+                              currentStep++;
+                            });
+                          } else if (currentStep == lastIndex - 1 &&
                               await saveFormData(formData)) {
                             setState(() {
                               currentStep++;
                             });
+                          } else if (currentStep == lastIndex) {
+                            Navigator.pop(context);
                           } else {
                             setState(() {
                               currentStep++;
@@ -322,32 +330,57 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
   bool validateForm(int currentStep) {
     formData.clearErrors(); // Clear old errors at start
 
-    switch (currentStep) {
-      case 0:
-        return validateFormFields();
-      case 1:
-        return validatePhotonSign();
-      case 2:
-        return validateDocument();
-      case 3:
-        if (formData.selfie == null) {
-          formData.fieldErrors['selfie'] = 'PLease upload selfie';
-          return false;
-        }
+    if (arguments['driving']) {
+      switch (currentStep) {
+        case 0:
+          return validateFormFields();
+        case 1:
+          return validatePhotonSign();
+        case 2:
+          return validateDocument();
+        case 3:
+          if (formData.selfie == null) {
+            formData.fieldErrors['selfie'] = 'PLease upload selfie';
+            return false;
+          }
 
-        return true;
-      case 4:
-        if (formData.paymentId == null) {
-          formData.fieldErrors['paymentId'] = 'Payment not completed';
-          return false;
-        }
+          return true;
+        case 4:
+          if (formData.paymentId == null) {
+            formData.fieldErrors['paymentId'] = 'Payment not completed';
+            return false;
+          }
 
-        return true;
-      case 5:
-        return validateDocument();
-        
-      default:
-        return false;
+          return true;
+        case 5:
+          if (formData.slot_id == null && formData.slot_no == null) {
+            formData.fieldErrors['slot'] = 'Select Slot';
+            return false;
+          }
+
+          return true;
+
+        default:
+          return false;
+      }
+    } else {
+      switch (currentStep) {
+        case 0:
+          return validateFormFields();
+        case 1:
+          return validatePhotonSign();
+        case 2:
+          return validateDocument();
+        case 3:
+          if (formData.paymentId == null) {
+            formData.fieldErrors['paymentId'] = 'Payment not completed';
+            return false;
+          }
+
+          return true;
+        default:
+          return false;
+      }
     }
   }
 
@@ -602,20 +635,56 @@ class _LearnerLicenseApplicationState extends State<LearnerLicenseApplication> {
 
   Future<bool> saveFormData(FormData formData) async {
     final String id = DateTime.now().millisecondsSinceEpoch.toString();
+    formData.receiptId = id;
     await _firestore
         .collection('llapplication')
         .doc(id)
         .set(formData.toMap())
         .then((_) {
       print("Form saved successfully!");
-      setState(() {
-        formData.receiptId = id;
-      });
       return true;
     }).catchError((error) {
       print("Failed to save form: $error");
       return false;
     });
     return false;
+  }
+
+  Future<bool> saveDlForm(FormData formData) async {
+    final String id = DateTime.now().millisecondsSinceEpoch.toString();
+    formData.receiptId = id; // Set receiptId before saving to Firestore
+
+    try {
+      await _firestore
+          .collection('dlapplication')
+          .doc(id)
+          .set(formData.toMapDl());
+
+      print("Form saved successfully!");
+      await bookSlot(formData); // Ensure formData.receiptId is set before calling bookSlot
+
+      return true;
+    } catch (error) {
+      print("Failed to save form: $error");
+      return false;
+    }
+  }
+
+  Future<void> bookSlot(FormData formData) async {
+    try {
+      String slot = formData.slot_no ?? 'slot1';
+      await _firestore.collection('slots').doc(formData.slot_id).update({
+        '$slot.applicationsId': FieldValue.arrayUnion([formData.receiptId]),
+        '$slot.remaining': FieldValue.increment(-1),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Slot booked successfully!')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error booking slot: $error')),
+      );
+    }
   }
 }

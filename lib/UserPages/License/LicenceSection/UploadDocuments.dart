@@ -113,7 +113,10 @@ Widget createPdfView({
                       return SizedBox(
                         height: 150,
                         width: 150,
-                        child: Center(child: CircularProgressIndicator()),
+                        child: Center(child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(kSecondaryColor),
+                        )),
                       );
                     } else if (snapshot.hasError) {
                       return SizedBox(

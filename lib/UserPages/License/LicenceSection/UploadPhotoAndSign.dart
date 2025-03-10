@@ -79,8 +79,8 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
     String? errorText,
   }) {
     String fileUpload = title == "Upload Photo"
-        ? widget.formData.photo
-        : widget.formData.signature;
+        ? widget.formData.photo ?? 'f'
+        : widget.formData.signature    ?? 'f';
     print(fileUpload);
 
     return Center(
@@ -92,7 +92,7 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 10),
-          fileUpload == null
+          fileUpload == 'f'
               ? file != null
                   ? Image.file(
                       file,
@@ -125,7 +125,7 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),
-          fileUpload == null 
+          fileUpload == 'f' 
               ? file == null
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,

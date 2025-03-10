@@ -113,7 +113,7 @@ class FormData {
   bool acknowledgement = false;
 
   //photo and sign
-  late String photo, signature;
+  String? photo, signature;
   String? aadhaarPdf, billPdf, selfie, paymentId;
 
   DateTime? payementDate;
@@ -183,5 +183,61 @@ class FormData {
     };
   }
 
-  String? receiptId;
+   Map<String, dynamic> toMapDl() {
+    return {
+      'selectedState': selectedState,
+      'selectedDistrict': selectedDistrict,
+      'pinCode': pinCodeController.text,
+      'fullName': fullNameController.text,
+      'selectedRelation': selectedRelation,
+      'relativeFullName': relativeFullNameController.text,
+      'selectedGender': selectedGender,
+      'selectedDateOfBirth': selectedDateOfBirth?.toIso8601String(),
+      'placeOfBirth': placeOfBirthController.text,
+      'selectedCountryOfBirth': selectedCountryOfBirth,
+      'selectedQualification': selectedQualification,
+      'selectedBloodGroup': selectedBloodGroup,
+      'landline': landlineController.text,
+      'email': emailController.text,
+      'applicantMobile': applicantMobileController.text,
+      'emergencyMobile': emergencyMobileController.text,
+      'identityMark1': identityMark1Controller.text,
+      'identityMark2': identityMark2Controller.text,
+      'presentState': presentState,
+      'presentDistrict': presentDistrict,
+      'presentTehsil': presentTehsilController.text,
+      'presentVillage': presentVillageController.text,
+      'presentAddress': presentAddressController.text,
+      'presentLandmark': presentLandmarkController.text,
+      'presentPincode': presentPincodeController.text,
+      'sameAsPresent': sameAsPresent,
+      'permanentState': permanentState,
+      'permanentDistrict': permanentDistrict,
+      'permanentTehsil': permanentTehsilController.text,
+      'permanentVillage': permanentVillageController.text,
+      'permanentAddress': permanentAddressController.text,
+      'permanentLandmark': permanentLandmarkController.text,
+      'permanentPincode': permanentPincodeController.text,
+      'declarationAnswer1': declarationAnswer1,
+      'declarationAnswer2': declarationAnswer2,
+      'declarationAnswer3': declarationAnswer3,
+      'declarationAnswer4': declarationAnswer4,
+      'declarationAnswer5': declarationAnswer5,
+      'declarationAnswer6': declarationAnswer6,
+      'declarationChecked': declarationChecked,
+      'selectedVehicleClasses': selectedVehicleClasses,
+      'donateOrgan': donateOrgan,
+      'acknowledgement': acknowledgement,
+      'photo': photo,
+      'signature': signature,
+      'aadhaarPdf': aadhaarPdf,
+      'billPdf': billPdf,
+      'paymentId': paymentId,
+      'payementDate': payementDate?.toIso8601String(),
+      'selfie': selfie,
+      'slot': slot_id,
+      'slot_no': slot_no,
+    };
+  }
+  String? receiptId, slot_no, slot_id;
 }

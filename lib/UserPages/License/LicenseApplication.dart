@@ -598,7 +598,11 @@ class LicenseApplicationState extends State<LicenseApplication> {
       formData.fieldErrors['acknowledgement'] = 'Please check the checkbox';
       isValid = false;
     }
-
+    if(isValid){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please Fill all required fields.'), backgroundColor: kRed,),
+      );
+    }
     return isValid;
   }
 

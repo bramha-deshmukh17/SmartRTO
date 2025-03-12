@@ -70,6 +70,7 @@ class _ChatBotState extends State<ChatBot> {
   }
 
   void selectImage() async {
+    // ignore: invalid_use_of_visible_for_testing_member
     final picker = await ImagePicker.platform
         .getImageFromSource(source: ImageSource.gallery);
     if (picker != null) {

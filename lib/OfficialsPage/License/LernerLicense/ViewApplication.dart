@@ -47,7 +47,7 @@ class _ViewApplicationState extends State<ViewApplication> {
         .doc(widget.applicationId)
         .update({
       'approved': true,
-      'lLicenseNumber': licenseNumber,
+      'licenseNumber': licenseNumber,
     });
 
     setState(() {

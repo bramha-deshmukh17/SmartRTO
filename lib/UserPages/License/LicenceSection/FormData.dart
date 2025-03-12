@@ -105,7 +105,7 @@ class FormData {
   bool? declarationAnswer6;
 
   // Declaration Checkbox
-  bool declarationChecked = true;
+  bool declarationChecked = false;
 
   // Class of Vehicle
   List<String> selectedVehicleClasses = [];

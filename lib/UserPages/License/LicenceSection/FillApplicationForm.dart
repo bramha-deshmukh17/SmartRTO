@@ -1219,7 +1219,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
                   value: widget.formData.declarationChecked,
                   onChanged: (value) {
                     setState(() {
-                      widget.formData.declarationChecked = value ?? false;
+                      widget.formData.declarationChecked = value!;
                     });
                   },
                   activeColor: kSecondaryColor,

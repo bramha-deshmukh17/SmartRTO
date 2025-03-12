@@ -14,7 +14,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   late Razorpay _razorpay;
-  int fees = 50;
+  late int fees;
   bool isLoading = true; // Variable to track loading state
   String? transactionId; // Variable to store transaction ID
 
@@ -25,6 +25,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
+  }
+
+  int calculateApplicationFee() {
+    const int llBaseFee = 150; // Learner's Licence base fee per class
+    const int llTestFee = 50; // Learner's Licence test fee per class
+    const int dlBaseFee = 200; // Driving Licence base fee
+    const int dlTestFee = 300; // Driving Test fee per class
+
+    int selectedClassesCount = widget.formData.selectedVehicleClasses.length;
+
+    if (widget.formData.isDrivingApplication) {
+      // Driving Licence (DL) Calculation
+      return dlBaseFee +
+          (dlTestFee * widget.formData.selectedVehicleClasses.length);
+    } else {
+      // Learner's Licence (LL) Calculation
+      return (llBaseFee * selectedClassesCount) +
+          (llTestFee * widget.formData.selectedVehicleClasses.length);
+    }
   }
 
   @override
@@ -52,7 +72,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void openCheckout() async {
-    
+    fees = calculateApplicationFee();
     var options = {
       'key': dotenv
           .env['RAZOR_PAY_API'], // Replace with your Razorpay Test API Key
@@ -72,9 +92,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
-    fees = (widget.formData.selectedVehicleClasses.length * 150) + 50;
-
+    fees = calculateApplicationFee();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

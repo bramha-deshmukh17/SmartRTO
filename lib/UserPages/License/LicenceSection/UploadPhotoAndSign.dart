@@ -19,6 +19,17 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
   File? _signature;
   final ImagePicker _picker = ImagePicker();
   bool isLoading = false;
+  late bool isDriving;
+
+  // Track whether files are uploaded
+  bool isPhotoUploaded = false;
+  bool isSignatureUploaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isDriving = widget.formData.isDrivingApplication;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,27 +59,31 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
             file: _photo,
             onCameraTap: () => _pickImage(ImageSource.camera, true),
             onGalleryTap: () => _pickImage(ImageSource.gallery, true),
-            retry: () => retry(_photo!, true),
-            errorText: widget.formData.fieldErrors['photo'],
+            retry: () => retry(true),
             submit: () => uploadDoc(_photo, true),
+            errorText: widget.formData.fieldErrors['photo'],
+            isFileUploaded: isPhotoUploaded,
           ),
 
           SizedBox(height: 20),
 
           // Signature Upload Section
           _buildUploadSection(
-              title: "Upload Signature",
-              file: _signature,
-              onCameraTap: () => _pickImage(ImageSource.camera, false),
-              onGalleryTap: () => _pickImage(ImageSource.gallery, false),
-              retry: () => retry(_signature!, false),
-              errorText: widget.formData.fieldErrors['signature'],
-              submit: () => uploadDoc(_signature, false)),
+            title: "Upload Signature",
+            file: _signature,
+            onCameraTap: () => _pickImage(ImageSource.camera, false),
+            onGalleryTap: () => _pickImage(ImageSource.gallery, false),
+            retry: () => retry(false),
+            submit: () => uploadDoc(_signature, false),
+            errorText: widget.formData.fieldErrors['signature'],
+            isFileUploaded: isSignatureUploaded,
+          ),
         ],
       ),
     );
   }
 
+  // Widget for uploading a photo or signature
   Widget _buildUploadSection({
     required String title,
     required File? file,
@@ -76,11 +91,12 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
     required VoidCallback onGalleryTap,
     required VoidCallback retry,
     required VoidCallback submit,
+    required bool isFileUploaded, // Track upload status
     String? errorText,
   }) {
-    String fileUpload = title == "Upload Photo"
-        ? widget.formData.photo ?? 'f'
-        : widget.formData.signature    ?? 'f';
+    String? fileUpload = title == "Upload Photo"
+        ? widget.formData.photo
+        : widget.formData.signature;
 
     return Center(
       child: Column(
@@ -91,7 +107,9 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 10),
-          fileUpload == 'f'
+
+          // Display existing uploaded file or placeholder
+          !isDriving || fileUpload == null
               ? file != null
                   ? Image.file(
                       file,
@@ -115,7 +133,9 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
                   width: 150,
                   fit: BoxFit.fill,
                 ),
+
           kBox,
+
           if (errorText != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),
@@ -124,7 +144,9 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),
-          fileUpload == 'f' 
+
+          // Buttons for upload or retry
+          !isFileUploaded
               ? file == null
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -170,7 +192,9 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
                         ),
                         SizedBox(width: 10),
                         ElevatedButton.icon(
-                          onPressed: submit,
+                          onPressed: () {
+                            submit();
+                          },
                           icon: Icon(
                             FontAwesomeIcons.upload,
                             color: kSecondaryColor,
@@ -191,60 +215,70 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
     );
   }
 
+  // Function to pick an image
   Future<void> _pickImage(ImageSource source, bool isPhoto) async {
-    final pickedFile = await _picker.pickImage(
-        source: source,
-        imageQuality: 80); //get the image from source i.e. gallery or camera
+    final pickedFile =
+        await _picker.pickImage(source: source, imageQuality: 80);
 
     if (pickedFile != null) {
       setState(() {
         if (isPhoto) {
           _photo = File(pickedFile.path);
+          widget.formData.photo = null;
+          isPhotoUploaded = false;
         } else {
           _signature = File(pickedFile.path);
+          widget.formData.signature = null;
+          isSignatureUploaded = false;
         }
       });
     }
   }
 
-  Future<void> uploadDoc(File? file, bool photo) async {
+  // Function to upload document to Firebase
+  Future<void> uploadDoc(File? file, bool isPhoto) async {
     setState(() {
       isLoading = true;
     });
-    if (photo) {
+
+    try {
       String filePath =
-          'llapplication/${DateTime.now().millisecondsSinceEpoch}_photo.jpg';
-      if (_photo != null) {
-        await FirebaseStorage.instance.ref(filePath).putFile(_photo!);
+          'llapplication/${DateTime.now().millisecondsSinceEpoch}_${isPhoto ? "photo" : "sign"}.jpg';
+
+      if (file != null) {
+        await FirebaseStorage.instance.ref(filePath).putFile(file);
       }
+
       String downloadUrl =
           await FirebaseStorage.instance.ref(filePath).getDownloadURL();
+
       setState(() {
-        widget.formData.photo = downloadUrl;
+        if (isPhoto) {
+          widget.formData.photo = downloadUrl;
+          isPhotoUploaded = true;
+        } else {
+          widget.formData.signature = downloadUrl;
+          isSignatureUploaded = true;
+        }
       });
-    } else {
-      String filePath =
-          'llapplication/${DateTime.now().millisecondsSinceEpoch}_sign.pdf';
-      if (_signature != null) {
-        await FirebaseStorage.instance.ref(filePath).putFile(_signature!);
-      }
-      String downloadUrl =
-          await FirebaseStorage.instance.ref(filePath).getDownloadURL();
-      setState(() {
-        widget.formData.signature = downloadUrl;
-      });
+    } catch (e) {
+      print(e);
     }
+
     setState(() {
       isLoading = false;
     });
   }
 
-  void retry(File file, bool isPhoto) {
+  // Function to retry upload (reset the selected file)
+  void retry(bool isPhoto) {
     setState(() {
       if (isPhoto) {
         _photo = null;
+        isPhotoUploaded = false;
       } else {
         _signature = null;
+        isSignatureUploaded = false;
       }
     });
   }

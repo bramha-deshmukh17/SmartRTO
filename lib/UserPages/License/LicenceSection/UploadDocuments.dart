@@ -17,13 +17,17 @@ class UploadDocuments extends StatefulWidget {
 }
 
 class _UploadDocumentsState extends State<UploadDocuments> {
-  PdfController? _pdfAdhaarController, _pdfBillController;
-  File? _selectedAdhaarPdf, _selectedBillPdf;
+  PdfController? _pdfAadhaarController, _pdfBillController;
+  File? _selectedAadhaarPdf, _selectedBillPdf;
   bool isLoading = false;
+
+  // Track whether files are uploaded
+  bool isAadhaarUploaded = false;
+  bool isBillUploaded = false;
 
   @override
   void dispose() {
-    _pdfAdhaarController?.dispose();
+    _pdfAadhaarController?.dispose();
     _pdfBillController?.dispose();
     super.dispose();
   }
@@ -38,8 +42,6 @@ class _UploadDocumentsState extends State<UploadDocuments> {
             'Upload Aadhaar and Light Bill',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-
-
           if (isLoading)
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -48,75 +50,66 @@ class _UploadDocumentsState extends State<UploadDocuments> {
                 minHeight: 5.0,
               ),
             )
-          else kBox,
-
-
-          createPdfView(
-              title: "Upload Aadhaar",
-              adhaar: true,
-              pdfController: _pdfAdhaarController,
-              selectedFile: _selectedAdhaarPdf,
-              callBack: () => setState(() {
-                    _selectedAdhaarPdf = null;
-                    _pdfAdhaarController?.dispose();
-                    _pdfAdhaarController = null;
-                  }),
-              errorText: widget.formData.fieldErrors['aadhaarPdf'],
-              submit: () => uploadDoc(_selectedAdhaarPdf, true),
+          else
+            kBox,
+          _buildPdfUploadSection(
+            title: "Upload Aadhaar",
+            isAadhaar: true,
+            pdfController: _pdfAadhaarController,
+            selectedFile: _selectedAadhaarPdf,
+            onRetry: () => resetFile(true),
+            onSubmit: () => uploadDoc(_selectedAadhaarPdf, true),
+            errorText: widget.formData.fieldErrors['aadhaarPdf'],
+            isFileUploaded: isAadhaarUploaded,
           ),
           kBox,
-          createPdfView(
-            title: 'Upload Address proof(PAN/Light bill, etc.)',
-            adhaar: false,
+          _buildPdfUploadSection(
+            title: 'Upload Address Proof (PAN/Light Bill, etc.)',
+            isAadhaar: false,
             pdfController: _pdfBillController,
             selectedFile: _selectedBillPdf,
-            callBack: () => setState(() {
-              _selectedBillPdf = null;
-              _pdfBillController?.dispose();
-              _pdfBillController = null;
-            }),
+            onRetry: () => resetFile(false),
+            onSubmit: () => uploadDoc(_selectedBillPdf, false),
             errorText: widget.formData.fieldErrors['billPdf'],
-            submit: () => uploadDoc(_selectedBillPdf, false),
+            isFileUploaded: isBillUploaded,
           ),
         ],
       ),
     );
   }
 
-Widget createPdfView({
+  Widget _buildPdfUploadSection({
     required String title,
-    required bool adhaar,
-    PdfController? pdfController, // For local file preview if available.
+    required bool isAadhaar,
+    PdfController? pdfController,
     File? selectedFile,
-    required VoidCallback callBack,
+    required VoidCallback onRetry,
+    required VoidCallback onSubmit,
+    required bool isFileUploaded,
     String? errorText,
-    required VoidCallback submit,
   }) {
-    // Determine which file URL to use based on the adhaar flag.
-    // (Assuming widget.formData is accessible in your context.)
-    String? fileUpload =
-        adhaar ? widget.formData.aadhaarPdf : widget.formData.billPdf;
+    String? uploadedFile =
+        isAadhaar ? widget.formData.aadhaarPdf : widget.formData.billPdf;
 
     return Center(
       child: Column(
         children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-          // If an uploaded file URL is available, show the network PDF preview.
-          fileUpload != null && fileUpload.isNotEmpty
+          Text(title,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+
+          // Show uploaded file preview if available
+          uploadedFile != null && uploadedFile.isNotEmpty
               ? FutureBuilder<PdfControllerPinch>(
-                  future: _buildNetworkController(fileUpload),
+                  future: _buildNetworkController(uploadedFile),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return SizedBox(
                         height: 150,
                         width: 150,
-                        child: Center(child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(kSecondaryColor),
-                        )),
+                        child: Center(
+                            child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    kSecondaryColor))),
                       );
                     } else if (snapshot.hasError) {
                       return SizedBox(
@@ -133,8 +126,7 @@ Widget createPdfView({
                     }
                   },
                 )
-              : (selectedFile != null
-                  // If no uploaded URL but a local file is selected, show its preview.
+              : selectedFile != null
                   ? SizedBox(
                       height: 250,
                       width: 250,
@@ -142,7 +134,6 @@ Widget createPdfView({
                           ? PdfView(controller: pdfController)
                           : Center(child: Text("Error loading PDF")),
                     )
-                  // Otherwise, show a placeholder icon.
                   : Center(
                       child: Container(
                         width: 150,
@@ -151,79 +142,60 @@ Widget createPdfView({
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Icon(
-                          FontAwesomeIcons.file,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
+                        child: Icon(FontAwesomeIcons.file,
+                            size: 50, color: Colors.grey),
                       ),
-                    )),
+                    ),
+
           if (errorText != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                errorText,
-                style: TextStyle(color: Colors.red, fontSize: 12),
-              ),
+              child: Text(errorText,
+                  style: TextStyle(color: Colors.red, fontSize: 12)),
             ),
-          // If no file is uploaded, show action buttons.
-          fileUpload == null || fileUpload.isEmpty
+
+          !isFileUploaded
               ? Column(
                   children: [
                     selectedFile == null
                         ? ElevatedButton.icon(
-                            onPressed: () => _pickPdf(adhaar),
-                            icon: Icon(
-                              FontAwesomeIcons.filePdf,
-                              color: kSecondaryColor,
-                            ),
-                            label: Text(
-                              "Pick PDF",
-                              style: TextStyle(color: kBlack),
-                            ),
+                            onPressed: () => _pickPdf(isAadhaar),
+                            icon: Icon(FontAwesomeIcons.filePdf,
+                                color: kSecondaryColor),
+                            label: Text("Pick PDF",
+                                style: TextStyle(color: kBlack)),
                           )
                         : ElevatedButton.icon(
-                            onPressed: submit,
-                            icon: Icon(
-                              FontAwesomeIcons.upload,
-                              color: kSecondaryColor,
-                            ),
-                            label: Text(
-                              "Submit",
-                              style: TextStyle(color: kBlack),
-                            ),
+                            onPressed: onSubmit,
+                            icon: Icon(FontAwesomeIcons.upload,
+                                color: kSecondaryColor),
+                            label:
+                                Text("Submit", style: TextStyle(color: kBlack)),
                           ),
                     selectedFile != null
                         ? ElevatedButton.icon(
-                            onPressed: callBack,
-                            icon: Icon(
-                              FontAwesomeIcons.arrowsRotate,
-                              color: kSecondaryColor,
-                            ),
-                            label: Text(
-                              "Retry",
-                              style: TextStyle(color: kBlack),
-                            ),
+                            onPressed: onRetry,
+                            icon: Icon(FontAwesomeIcons.arrowsRotate,
+                                color: kSecondaryColor),
+                            label:
+                                Text("Retry", style: TextStyle(color: kBlack)),
                           )
                         : kBox,
                   ],
                 )
-              : Text(
-                  "Uploaded",
-                  style: TextStyle(color: kGreen),
-                ),
+              : Text("Uploaded", style: TextStyle(color: kGreen)),
         ],
       ),
     );
   }
 
-// Helper function to create a PdfControllerPinch from a network URL.
   Future<PdfControllerPinch> _buildNetworkController(String url) async {
     final data = await NetworkAssetBundle(Uri.parse(url)).load(url);
-    return PdfControllerPinch(document: PdfDocument.openData(data.buffer.asUint8List()));
+    return PdfControllerPinch(
+        document: PdfDocument.openData(data.buffer.asUint8List()));
   }
 
-  Future<void> _pickPdf(bool adhaar) async {
+  Future<void> _pickPdf(bool isAadhaar) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
@@ -232,52 +204,70 @@ Widget createPdfView({
     if (result != null) {
       File file = File(result.files.single.path!);
       setState(() {
-        if (adhaar) {
-          _selectedAdhaarPdf = file;
-          _pdfAdhaarController =
+        if (isAadhaar) {
+          _selectedAadhaarPdf = file;
+          _pdfAadhaarController =
               PdfController(document: PdfDocument.openFile(file.path));
           widget.formData.aadhaarPdf = null;
+          isAadhaarUploaded = false;
         } else {
           _selectedBillPdf = file;
           _pdfBillController =
               PdfController(document: PdfDocument.openFile(file.path));
           widget.formData.billPdf = null;
+          isBillUploaded = false;
         }
       });
     }
   }
 
-  Future<void> uploadDoc(File? file, bool aadhaar) async {
+  Future<void> uploadDoc(File? file, bool isAadhaar) async {
     setState(() {
       isLoading = true;
     });
-    if (aadhaar) {
+
+    try {
       String filePath =
-          'llapplication/${DateTime.now().millisecondsSinceEpoch}_aadhaar.pdf';
-      if (_selectedAdhaarPdf != null) {
-        await FirebaseStorage.instance
-            .ref(filePath)
-            .putFile(_selectedAdhaarPdf!);
+          'llapplication/${DateTime.now().millisecondsSinceEpoch}_${isAadhaar ? "aadhaar" : "bill"}.pdf';
+
+      if (file != null) {
+        await FirebaseStorage.instance.ref(filePath).putFile(file);
       }
+
       String downloadUrl =
           await FirebaseStorage.instance.ref(filePath).getDownloadURL();
+
       setState(() {
-        widget.formData.aadhaarPdf = downloadUrl;
+        if (isAadhaar) {
+          widget.formData.aadhaarPdf = downloadUrl;
+          isAadhaarUploaded = true;
+        } else {
+          widget.formData.billPdf = downloadUrl;
+          isBillUploaded = true;
+        }
       });
-    } else {
-      String filePath =
-          'llapplication/${DateTime.now().millisecondsSinceEpoch}_sign.pdf';
-      if (_selectedAdhaarPdf != null) {
-        await FirebaseStorage.instance.ref(filePath).putFile(_selectedBillPdf!);
-      }
-      String downloadUrl =
-          await FirebaseStorage.instance.ref(filePath).getDownloadURL();
-      setState(() {
-        widget.formData.billPdf = downloadUrl;
-      });
+    } catch (e) {
+      print(e);
     }
+
     setState(() {
       isLoading = false;
+    });
+  }
+
+  void resetFile(bool isAadhaar) {
+    setState(() {
+      if (isAadhaar) {
+        _selectedAadhaarPdf = null;
+        _pdfAadhaarController?.dispose();
+        _pdfAadhaarController = null;
+        isAadhaarUploaded = false;
+      } else {
+        _selectedBillPdf = null;
+        _pdfBillController?.dispose();
+        _pdfBillController = null;
+        isBillUploaded = false;
+      }
     });
   }
 }

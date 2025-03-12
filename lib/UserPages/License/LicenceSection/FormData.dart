@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FormData {
+  bool isDrivingApplication = true;
+
   String? selectedState;
   String? selectedDistrict;
   final TextEditingController pinCodeController = TextEditingController();
@@ -103,7 +105,7 @@ class FormData {
   bool? declarationAnswer6;
 
   // Declaration Checkbox
-  bool declarationChecked = false;
+  bool declarationChecked = true;
 
   // Class of Vehicle
   List<String> selectedVehicleClasses = [];
@@ -183,7 +185,7 @@ class FormData {
     };
   }
 
-   Map<String, dynamic> toMapDl() {
+  Map<String, dynamic> toMapDl() {
     return {
       'selectedState': selectedState,
       'selectedDistrict': selectedDistrict,
@@ -239,5 +241,6 @@ class FormData {
       'slot_no': slot_no,
     };
   }
+
   String? receiptId, slot_no, slot_id;
 }

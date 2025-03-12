@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobile/UserPages/License/LicenseApplication.dart';
 import '../Utility/Appbar.dart';
 import '/UserPages/Grievance/GrievanceList.dart';
 import 'License/LicenseInfoPage.dart';
@@ -82,8 +83,8 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         Navigator.pushNamed(
                             context, PhoneAuthenticate.id, arguments: {
-                          'driving': false,
-                        });
+                              'driving': false
+                            });
                       },
                     ),
                     CustomCard(
@@ -91,8 +92,9 @@ class _HomePageState extends State<HomePage> {
                       cardTitle: 'DL Application',
                       onTap: () {
                         Navigator.pushNamed(
-                            context, PhoneAuthenticate.id, arguments: {
+                            context, LicenseApplication.id, arguments: {
                           'driving': true,
+                          'mobile': '1234567890',
                         });
                       },
                     ),

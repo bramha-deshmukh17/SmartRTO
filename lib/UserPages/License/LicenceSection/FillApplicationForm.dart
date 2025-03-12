@@ -32,6 +32,9 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
     setState(() {
       stateList = states;
     });
+    if (widget.formData.selectedState != null) {
+      fetchDistricts(widget.formData.selectedState!);
+    }
   }
 
   // Fetch districts for the selected state from its document
@@ -83,7 +86,9 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
           DropdownButtonFormField<String>(
             decoration: kDropdown("District",
                 errorText: widget.formData.fieldErrors['selectedDistrict']),
-            value: widget.formData.selectedDistrict,
+            value: districtList.contains(widget.formData.selectedDistrict)
+                ? widget.formData.selectedDistrict
+                : null,
             items: districtList.map((district) {
               return DropdownMenuItem<String>(
                 value: district,
@@ -349,6 +354,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
           options: ['Male', 'Female', 'Other'],
           title: 'Gender',
           errorText: widget.formData.fieldErrors['gender'],
+          value: widget.formData.selectedGender,
           onChanged: (String? value) {
             setState(() {
               widget.formData.selectedGender = value;
@@ -576,26 +582,49 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
 
   // Fetch all states (document IDs from the 'states' collection)
   Future<void> fetchStates() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('states').get();
-    List<String> states = snapshot.docs.map((doc) => doc.id).toList()..sort();
-    setState(() {
-      stateList = states;
-    });
+    try {
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('states').get();
+      List<String> states = snapshot.docs.map((doc) => doc.id).toList()..sort();
+
+      setState(() {
+        stateList = states;
+      });
+
+      if (widget.formData.presentState != null) {
+        fetchDistricts(widget.formData.presentState!);
+      }
+    } catch (e) {
+      print("Error fetching states: $e");
+    }
   }
 
-  // Fetch districts for the selected state from its document
+// Fetch districts for the selected state from its document
   Future<void> fetchDistricts(String state) async {
-    DocumentSnapshot docSnapshot =
-        await FirebaseFirestore.instance.collection('states').doc(state).get();
-    if (docSnapshot.exists) {
-      List<dynamic> districts = docSnapshot.get('districts');
-      setState(() {
-        if (presentDistrictList.isEmpty) {
-          presentDistrictList = districts.map((d) => d.toString()).toList();
-        }
-        permanentDistrictList = districts.map((d) => d.toString()).toList();
-      });
+    try {
+      // Clear the lists before adding new values
+      setState(() {});
+
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('states')
+          .doc(state)
+          .get();
+
+      if (docSnapshot.exists) {
+        List<dynamic> districts = docSnapshot.get('districts');
+        // Remove duplicates by converting to a set, then back to a list
+        List<String> uniqueDistricts =
+            List<String>.from(districts).toSet().toList();
+
+        setState(() {
+          presentDistrictList = uniqueDistricts;
+          permanentDistrictList = uniqueDistricts;
+        });
+      } else {
+        print("No such document found for state: $state");
+      }
+    } catch (e) {
+      print("Error fetching districts for $state: $e");
     }
   }
 
@@ -649,7 +678,9 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         DropdownButtonFormField<String>(
           decoration: kDropdown("District",
               errorText: widget.formData.fieldErrors['presentDistrict']),
-          value: widget.formData.presentDistrict,
+          value: presentDistrictList.contains(widget.formData.presentDistrict)
+              ? widget.formData.presentDistrict
+              : null,
           items: presentDistrictList.map((district) {
             return DropdownMenuItem<String>(
               value: district,
@@ -823,7 +854,10 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         DropdownButtonFormField<String>(
           decoration: kDropdown("District",
               errorText: widget.formData.fieldErrors['permanentDistrict']),
-          value: widget.formData.permanentDistrict,
+          value:
+              permanentDistrictList.contains(widget.formData.permanentDistrict)
+                  ? widget.formData.permanentDistrict
+                  : null,
           items: permanentDistrictList.map((district) {
             return DropdownMenuItem<String>(
               value: district,
@@ -930,7 +964,8 @@ class FillVehicleClass extends StatefulWidget {
 }
 
 class _FillVehicleClassState extends State<FillVehicleClass> {
-  final List<String> vehicleClasses = [
+  late List<String> llClasses;
+  List<String> vehicleClasses = [
     'Select All applicable classes',
     'Motor Cycle Less Than 50CC (MC50CC)',
     'Motor Cycle with Gear (Non Transport) (MCWG)',
@@ -954,6 +989,19 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // If it's a driving application (DL form), allow only those classes
+    // that were selected in the LL form (already stored in formData).
+    // Otherwise (LL form), show the full list of available classes.
+    setState(() {
+      llClasses = widget.formData.selectedVehicleClasses;
+    });
+    // In DL form, you should already have some selected classes from the LL form.
+    // If the list is empty, you might want to show a message or handle it accordingly.
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -966,12 +1014,15 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
           ),
         ),
         kBox,
-
         // Dropdown for vehicle class
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Select Vehicle Class",
+          decoration: kDropdown("Vehicle Class",
               errorText: widget.formData.fieldErrors['vehicleClasses']),
-          value: "Select All applicable classes",
+          // For LL form, you can default to "Select All applicable classes".
+          // For DL form, you might want to display nothing or the first of the pre-selected classes.
+          value: !widget.formData.isDrivingApplication
+              ? "Select All applicable classes"
+              : null,
           items: vehicleClasses.map((vehicleClass) {
             return DropdownMenuItem<String>(
               value: vehicleClass,
@@ -979,8 +1030,7 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
                 // Tooltip to show full text on hover
                 message: vehicleClass,
                 child: SizedBox(
-                  width:
-                      MediaQuery.of(context).size.width * 0.7, // Adjust width
+                  width: MediaQuery.of(context).size.width * 0.7,
                   child: Text(
                     vehicleClass,
                     overflow: TextOverflow.ellipsis,
@@ -991,16 +1041,29 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
             );
           }).toList(),
           onChanged: (String? newValue) {
-            if (!widget.formData.selectedVehicleClasses.contains(newValue) &&
-                newValue != "Select All applicable classes") {
-              setState(() {
-                widget.formData.selectedVehicleClasses.add(newValue!);
-              });
+            // In DL form, allow selection only if the new value is already in selectedVehicleClasses.
+            // For LL form, add new selections if not already present.
+            if (!widget.formData.isDrivingApplication) {
+              if (!widget.formData.selectedVehicleClasses.contains(newValue) &&
+                  newValue != "Select All applicable classes") {
+                setState(() {
+                  widget.formData.selectedVehicleClasses.add(newValue!);
+                });
+              }
+            } else {
+              // For DL form, you might want to simply update a selected value.
+              // For example, you could store the chosen vehicle class for DL.
+              // Here, we'll just update the selected value.
+              if (llClasses.contains(newValue)) {
+                setState(() {
+                  widget.formData.selectedVehicleClasses.add(newValue!);
+                });
+              }
             }
           },
         ),
         kBox,
-
+        // Display the list of selected vehicle classes
         widget.formData.selectedVehicleClasses.isNotEmpty
             ? SizedBox(
                 height: 150.0,
@@ -1159,7 +1222,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
                       widget.formData.declarationChecked = value ?? false;
                     });
                   },
-                   activeColor: kSecondaryColor,
+                  activeColor: kSecondaryColor,
                 ),
                 Expanded(child: Text("I accept the terms and conditions.")),
               ],

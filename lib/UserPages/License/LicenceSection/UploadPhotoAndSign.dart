@@ -81,7 +81,6 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
     String fileUpload = title == "Upload Photo"
         ? widget.formData.photo ?? 'f'
         : widget.formData.signature    ?? 'f';
-    print(fileUpload);
 
     return Center(
       child: Column(

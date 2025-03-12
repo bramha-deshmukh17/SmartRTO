@@ -121,14 +121,16 @@ class LicenseApplicationState extends State<LicenseApplication> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Initialize arguments once
 
     arguments =
         (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)!;
-    // Debug print to check the arguments
 
     if (arguments['driving'] == true) {
-      getDataForDriving();
+      getDataForDriving().then((_) {
+        setState(() {}); // Ensure UI updates after data is set
+      }).catchError((error) {
+        debugPrint("Error fetching driving data: $error");
+      });
     }
     formData.applicantMobileController.text = arguments['mobile'];
   }
@@ -205,7 +207,6 @@ class LicenseApplicationState extends State<LicenseApplication> {
                           } else if (currentStep == lastIndex) {
                             Navigator.pop(context);
                           } else {
-                            
                             setState(() {
                               currentStep++;
                             });
@@ -316,6 +317,9 @@ class LicenseApplicationState extends State<LicenseApplication> {
       formData.aadhaarPdf = document['aadhaarPdf'];
       formData.billPdf = document['billPdf'];
 
+      setState(() {
+        
+      });
       print("Data fetched and set in formData.");
     } else {
       print('No data found for the given mobile number.');

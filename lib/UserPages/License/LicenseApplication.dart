@@ -133,6 +133,8 @@ class LicenseApplicationState extends State<LicenseApplication> {
       });
     }
     formData.applicantMobileController.text = arguments['mobile'];
+    formData.isDrivingApplication = arguments['driving'];
+    setState(() {});
   }
 
   @override
@@ -317,9 +319,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
       formData.aadhaarPdf = document['aadhaarPdf'];
       formData.billPdf = document['billPdf'];
 
-      setState(() {
-        
-      });
+      setState(() {});
       print("Data fetched and set in formData.");
     } else {
       print('No data found for the given mobile number.');
@@ -598,9 +598,12 @@ class LicenseApplicationState extends State<LicenseApplication> {
       formData.fieldErrors['acknowledgement'] = 'Please check the checkbox';
       isValid = false;
     }
-    if(isValid){
+    if (isValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please Fill all required fields.'), backgroundColor: kRed,),
+        const SnackBar(
+          content: Text('Please Fill all required fields.'),
+          backgroundColor: kRed,
+        ),
       );
     }
     return isValid;

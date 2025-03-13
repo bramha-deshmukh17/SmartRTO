@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FormData {
-  bool isDrivingApplication = true;
+  bool isDrivingApplication = false;
 
   String? selectedState;
   String? selectedDistrict;

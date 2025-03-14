@@ -283,11 +283,31 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
       },
     );
 
+    
     if (pickedDate != null) {
-      setState(() {
-        widget.formData.selectedDateOfBirth = pickedDate;
-      });
-      FocusScope.of(context).requestFocus(widget.formData.placeOfBirthFocus);
+      final currentDate = DateTime.now();
+      final age = currentDate.year - pickedDate.year;
+      final month1 = currentDate.month;
+      final month2 = pickedDate.month;
+      final day1 = currentDate.day;
+      final day2 = pickedDate.day;
+
+      if (age > 18 ||
+          (age == 18 &&
+              (month1 > month2 || (month1 == month2 && day1 >= day2)))) {
+        setState(() {
+          widget.formData.selectedDateOfBirth = pickedDate;
+        });
+        FocusScope.of(context).requestFocus(widget.formData.placeOfBirthFocus);
+      } else {
+        // Show an error message if the user is under 18
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('You must be at least 18 years old.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -376,7 +396,6 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  // ignore: unnecessary_null_comparison
                   widget.formData.selectedDateOfBirth != null
                       ? DateFormat('dd/MM/yyyy')
                           .format(widget.formData.selectedDateOfBirth!)

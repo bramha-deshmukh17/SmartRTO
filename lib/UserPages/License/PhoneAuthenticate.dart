@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:flutter/material.dart';
@@ -29,22 +30,25 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> fetchApplicationData() async {
-    setState(() {
-      llapplicationId = 'LL-${licenseIdController.text.trim()}';
-    });
-
     QuerySnapshot snapshot = await _fireStore
         .collection('llapplication')
-        .where('lLicenseNumber', isEqualTo: llapplicationId)
+        .where('licenseNumber',
+            isEqualTo: 'LL-${licenseIdController.text.trim()}')
         .get();
 
     if (snapshot.docs.isNotEmpty) {
       DocumentSnapshot document = snapshot.docs.first;
       setState(() {
+        llapplicationId = 'LL-${licenseIdController.text.trim()}';
         _phoneController.text = document['applicantMobile'];
       });
     } else {
-      print('No data found for the given mobile number.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No data found for the License number.'),
+          backgroundColor: kRed,
+        ),
+      );
     }
   }
 
@@ -214,11 +218,11 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
         if (e.code == 'too-many-requests') {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text('Too many attempts. Try again later.')),
+                content: Text('Too many attempts. Try again later.'), backgroundColor: kRed,),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.message ?? 'OTP verification failed.')),
+            SnackBar(content: Text(e.message ?? 'OTP verification failed.'), backgroundColor: kRed,),
           );
         }
       },
@@ -243,30 +247,51 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
 
     if (verificationId.isNotEmpty) {
       try {
-        credential = PhoneAuthProvider.credential(
+        PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: verificationId,
           smsCode: smsCode,
         );
 
-        await _auth.signInWithCredential(credential);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Phone number verified successfully')),
+        // Create a secondary Firebase App instance
+        FirebaseApp tempApp = await Firebase.initializeApp(
+          name: 'TemporaryApp',
+          options: Firebase.app().options,
         );
-        setState(() {
-          loading = false;
-          otpEnable = false;
-        });
-        if (llapplicationId == null) {
-          Navigator.pushReplacementNamed(context, LicenseApplication.id,
-              arguments: {'mobile': _phoneController.text.trim(), 'driving': false});
-        } else {
-          Navigator.pushReplacementNamed(context, LicenseApplication.id,
-              arguments: {'mobile': _phoneController.text.trim(), 'driving': true});
+
+        FirebaseAuth tempAuth = FirebaseAuth.instanceFor(app: tempApp);
+
+        // Sign in with OTP in temp instance (won't affect main app)
+        UserCredential userCredential =
+            await tempAuth.signInWithCredential(credential);
+
+        if (userCredential.user != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Phone number verified successfully'), backgroundColor: kGreen,),
+          );
+
+          setState(() {
+            loading = false;
+            otpEnable = false;
+          });
+
+          // Close the temporary Firebase app (to free resources)
+          await tempApp.delete();
+
+          // Navigate to the next screen
+          Navigator.pushReplacementNamed(
+            context,
+            LicenseApplication.id,
+            arguments: {
+              'mobile': _phoneController.text.trim(),
+              'driving': llapplicationId != null,
+            },
+          );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Failed to verify OTP. Try after some time')),
+              content: Text('Failed to verify OTP. Try again later'),
+              backgroundColor: kRed,),
         );
         setState(() {
           loading = false;
@@ -274,7 +299,7 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Verification ID is null or empty.')),
+        const SnackBar(content: Text('Verification ID is null or empty.'), backgroundColor: kRed,),
       );
       setState(() {
         loading = false;

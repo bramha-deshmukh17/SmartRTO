@@ -340,6 +340,14 @@ class LicenseApplicationState extends State<LicenseApplication> {
         case 3:
           if (formData.selfie == null) {
             formData.fieldErrors['selfie'] = 'PLease upload selfie';
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Please upload the selfie.'),
+                backgroundColor: kRed,
+              ),
+            );
+
             return false;
           }
 
@@ -347,6 +355,12 @@ class LicenseApplicationState extends State<LicenseApplication> {
         case 4:
           if (formData.paymentId == null) {
             formData.fieldErrors['paymentId'] = 'Payment not completed';
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Please complete the payment.'),
+                backgroundColor: kRed,
+              ),
+            );
             return false;
           }
 
@@ -354,6 +368,12 @@ class LicenseApplicationState extends State<LicenseApplication> {
         case 5:
           if (formData.slot_id == null && formData.slot_no == null) {
             formData.fieldErrors['slot'] = 'Select Slot';
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Please select a slot.'),
+                backgroundColor: kRed,
+              ),
+            );
             return false;
           }
 
@@ -373,6 +393,12 @@ class LicenseApplicationState extends State<LicenseApplication> {
         case 3:
           if (formData.paymentId == null) {
             formData.fieldErrors['paymentId'] = 'Payment not completed';
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Please complete the payment.'),
+                backgroundColor: kRed,
+              ),
+            );
             return false;
           }
 
@@ -598,7 +624,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
       formData.fieldErrors['acknowledgement'] = 'Please check the checkbox';
       isValid = false;
     }
-    if (isValid) {
+    if (!isValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please Fill all required fields.'),
@@ -620,6 +646,14 @@ class LicenseApplicationState extends State<LicenseApplication> {
       formData.fieldErrors['signature'] = 'Please upload signature';
       isValid = false;
     }
+    if (!isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please Fill all required fields.'),
+          backgroundColor: kRed,
+        ),
+      );
+    }
 
     return isValid;
   }
@@ -635,7 +669,14 @@ class LicenseApplicationState extends State<LicenseApplication> {
       formData.fieldErrors['billPdf'] = 'Please upload bill PDF';
       isValid = false;
     }
-
+    if (!isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please Fill all required fields.'),
+          backgroundColor: kRed,
+        ),
+      );
+    }
     return isValid;
   }
 
@@ -648,6 +689,12 @@ class LicenseApplicationState extends State<LicenseApplication> {
         .set(formData.toMap())
         .then((_) {
       print("Form saved successfully!");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Form submitted.'),
+          backgroundColor: kGreen,
+        ),
+      );
       return true;
     }).catchError((error) {
       print("Failed to save form: $error");
@@ -666,10 +713,15 @@ class LicenseApplicationState extends State<LicenseApplication> {
           .doc(id)
           .set(formData.toMapDl());
 
+      await bookSlot(formData); // Ensure formData.receiptId is set before calling bookSlot
+      
       print("Form saved successfully!");
-      await bookSlot(
-          formData); // Ensure formData.receiptId is set before calling bookSlot
-
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Form submitted.'),
+          backgroundColor: kGreen,
+        ),
+      );
       return true;
     } catch (error) {
       print("Failed to save form: $error");
@@ -684,13 +736,12 @@ class LicenseApplicationState extends State<LicenseApplication> {
         '$slot.applicationsId': FieldValue.arrayUnion([formData.receiptId]),
         '$slot.remaining': FieldValue.increment(-1),
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Slot booked successfully!')),
-      );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error booking slot: $error')),
+        SnackBar(
+          content: Text('Error booking slot: $error'),
+          backgroundColor: kRed,
+        ),
       );
     }
   }

@@ -179,7 +179,6 @@ class FormData {
       'billPdf': billPdf,
       'paymentId': paymentId,
       'payementDate': payementDate?.toIso8601String(),
-      'marks': null,
       'examResult': null,
       'approved': false,
     };
@@ -239,6 +238,8 @@ class FormData {
       'selfie': selfie,
       'slot': slot_id,
       'slot_no': slot_no,
+      'examResult': null,
+      'approved': false,
     };
   }
 

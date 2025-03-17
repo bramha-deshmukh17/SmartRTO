@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'OfficialsPage/License/LernerLicense/LearnerLicenseList.dart';
+import 'OfficialsPage/License/LicenseList.dart';
 import 'OfficialsPage/Fine/ConfirmFine.dart';
 import 'OfficialsPage/Grievance/OfficerGrievanceList.dart';
+import 'OfficialsPage/License/ViewApplication.dart';
 import 'OfficialsPage/OfficerProfile.dart';
 import 'UserPages/Grievance/GrievanceList.dart';
 import 'UserPages/License/LicenseApplication.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
         ViewDetails.id: (context)=> const ViewDetails(),
         OfficerGrievanceList.id: (context)=> const OfficerGrievanceList(),
         LearnerLicenseList.id: (context)=> const LearnerLicenseList(),
+        ViewApplication.id: (context)=> const ViewApplication(),
 
       },
       initialRoute: '/',

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'License/LernerLicense/LearnerLicenseList.dart';
+import 'License/LicenseList.dart';
 import '../Utility/Appbar.dart';
 import 'Grievance/OfficerGrievanceList.dart';
 import '/Utility/MyCard.dart';
@@ -59,14 +59,14 @@ ScrollController _scrollController = ScrollController();
                       cardTitle: 'LL Application',
                       onTap: () {
                         Navigator.pushNamed(
-                            context, LearnerLicenseList.id);
+                            context, LearnerLicenseList.id, arguments: {'applicationType': 'LL'});
                       },
                     ),
                     CustomCard(
                       icon: FontAwesomeIcons.filePen,
-                      cardTitle: 'License Application',
+                      cardTitle: 'DL Application',
                       onTap: () {
-                        
+                        Navigator.pushNamed(context, LearnerLicenseList.id, arguments: {'applicationType': 'DL'});
                       },
                     ),
                   ],

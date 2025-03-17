@@ -1,35 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../../../Utility/Appbar.dart';
-import '../../../Utility/Constants.dart';
+import '../../Utility/Appbar.dart';
+import '../../Utility/Constants.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 
-import '../../../Utility/RoundButton.dart';
+import '../../Utility/CustomRadioButtonGroup .dart';
+import '../../Utility/RoundButton.dart';
 
 class ViewApplication extends StatefulWidget {
-  final String applicationId;
+  static const String id = 'ViewApplication';
 
-  const ViewApplication({Key? key, required this.applicationId})
-      : super(key: key);
+  const ViewApplication({Key? key}) : super(key: key);
 
   @override
   _ViewApplicationState createState() => _ViewApplicationState();
 }
 
 class _ViewApplicationState extends State<ViewApplication> {
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   Map<String, dynamic>? applicationData;
   bool isLoading = true;
+  Map<String, dynamic>? arguments;
+  bool? examResult;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    arguments =
+        (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)!;
     fetchApplicationData();
   }
 
   Future<void> fetchApplicationData() async {
-    DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
-        .collection('llapplication')
-        .doc(widget.applicationId)
+    String type = arguments?['applicationType'] == "LL"
+        ? 'llapplication'
+        : 'dlapplication';
+    DocumentSnapshot docSnapshot = await _firestore
+        .collection(type)
+        .doc(arguments?['applicationId'])
         .get();
 
     if (docSnapshot.exists) {
@@ -40,11 +49,32 @@ class _ViewApplicationState extends State<ViewApplication> {
     }
   }
 
+  Future<void> updateStatus() async {
+    String type = arguments?['applicationType'] == "LL"
+        ? 'llapplication'
+        : 'dlapplication';
+
+    await _firestore
+        .collection(type)
+        .doc(arguments?['applicationId'])
+        .update({
+      'examResult': examResult,
+    });
+
+    setState(() {
+      applicationData?['examResult'] = examResult;
+    });
+  }
+
   Future<void> approveApplication() async {
+     String type = arguments?['applicationType'] == "LL"
+        ? 'llapplication'
+        : 'dlapplication';
+
     String licenseNumber = 'LL-${DateTime.now().millisecondsSinceEpoch}';
-    await FirebaseFirestore.instance
-        .collection('llapplication')
-        .doc(widget.applicationId)
+    await _firestore
+        .collection(type)
+        .doc(arguments?['applicationId'])
         .update({
       'approved': true,
       'licenseNumber': licenseNumber,
@@ -65,14 +95,17 @@ class _ViewApplicationState extends State<ViewApplication> {
         displayOfficerProfile: true,
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: kSecondaryColor,
+            ))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Application ID: ${widget.applicationId}',
+                    'Application ID: ${arguments?['applicationId']}',
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
@@ -293,7 +326,7 @@ class _ViewApplicationState extends State<ViewApplication> {
                   ),
                   // Photo (JPG)
                   kBox,
-                   Text(
+                  Text(
                     'Payment ID: ${applicationData?['paymentId'] ?? 'N/A'}',
                     style: const TextStyle(fontSize: 16),
                   ),
@@ -411,10 +444,70 @@ class _ViewApplicationState extends State<ViewApplication> {
                           style: TextStyle(fontSize: 16),
                         ),
                   kBox,
-                 
-                  if (applicationData?['approved'] != true)
-                    RoundButton(onPressed: approveApplication, text: 'Approve and Generate License Number',),
+
+                  if (arguments?['applicationType'] == 'DL')
+                    Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Self Verification photo',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        kBox,
+                        Image.network(
+                          applicationData?['selfie'],
+                          height: 200,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Text('Image not available'),
+                        ),
+                      ],
+                    ),
                   kBox,
+                  if(applicationData?['examResult'] != null)
+                    Text(
+                      'Exam Result: ${applicationData?['examResult'] == null ? "N/A" : applicationData?['examResult'] ? "Passed" : "Failed"}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: applicationData?['examResult'] == null
+                            ? kRed
+                            : applicationData?['examResult']
+                                ? kGreen
+                                : kRed,
+                      ),
+                    ),
+                  kBox,
+                  
+                  if (applicationData?['approved'] == false ||
+                      applicationData?['examResult'] == null)
+                    if (applicationData?['examResult'] == null)
+                      Column(
+                        children: [
+                          CustomRadioButtonGroup(
+                            options: ['Passed', 'Failed'],
+                            title: 'Exam Result',
+                            onChanged: (String val) {
+                              setState(() {
+                                examResult = val == "Passed" ? true : false;
+                              });
+                            },
+                          ),
+                          RoundButton(
+                            text: 'Update Exam Result',
+                            onPressed: updateStatus,
+                          ),
+                        ],
+                      )
+                    else if (applicationData?['examResult'] == true)
+                      RoundButton(
+                        text: 'Approve Application & generate LL number',
+                        onPressed: approveApplication,
+                      )
+                    else
+                      kBox,
                 ],
               ),
             ),

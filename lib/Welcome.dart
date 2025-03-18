@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'OfficialsPage/OfficerLogin.dart';
-import 'Utility/MyCard.dart';
-import 'Utility/Constants.dart';
-import 'UserPages/UserRegister.dart';
+import 'officials_page/officer_login.dart';
+import 'user_pages/user_register.dart';
+import 'utility/constants.dart';
+import 'utility/my_card.dart';
 
 class Welcome extends StatelessWidget {
   static const String id = 'Welcome';

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '/Welcome.dart';
-import '/UserPages/HomePage.dart';
-import '../OfficialsPage/HomeScreen.dart';
+import '/welcome.dart';
+import '/user_pages/home_page.dart';
+import '../officials_page/home_screen.dart';
 
 class Authenticate extends StatelessWidget {
-  static const String id = 'Authenticate';
+  static const String id = 'authenticate';
 
   const Authenticate({super.key});
   @override

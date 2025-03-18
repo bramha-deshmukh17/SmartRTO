@@ -5,6 +5,7 @@ import '../utility/constants.dart';
 import '../utility/my_card.dart';
 import 'grievance/grievance_list.dart';
 import 'license/license.dart';
+import 'puc/puc_application.dart';
 import 'vehicle/vehicles.dart';
 import 'chatbot/chatbot.dart';
 import 'license/phone_authenticate.dart';
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     CustomCard(
-                      icon: FontAwesomeIcons.filePen,
+                      icon: FontAwesomeIcons.clipboardList,
                       cardTitle: 'DL Application',
                       onTap: () {
                         Navigator.pushNamed(
@@ -113,10 +114,20 @@ class _HomePageState extends State<HomePage> {
             Align(
               alignment: Alignment.center,
               child: CustomCard(
-                icon: Icons.comment,
+                icon: FontAwesomeIcons.solidMessage,
                 cardTitle: 'Grievance',
                 onTap: () {
                   Navigator.pushNamed(context, Grievancelist.id);
+                },
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: CustomCard(
+                icon: FontAwesomeIcons.clipboardList,
+                cardTitle: 'PUC Application',
+                onTap: () {
+                  Navigator.pushNamed(context, PucApplication.id);
                 },
               ),
             ),

@@ -6,6 +6,7 @@ import 'license/license_list.dart';
 import 'grievance/view_grievances.dart';
 import 'fines/generate_fine.dart';
 import 'fines/view_details.dart';
+import 'puc/puc_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'officer/home';
@@ -17,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -33,80 +34,96 @@ ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(
-        title: 'Home',
-        displayOfficerProfile: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Scrollbar(
-              controller: _scrollController,
-              thumbVisibility: true, // Always show scrollbar
-              thickness: 2.0, // Set the scrollbar thickness
-              radius: Radius.circular(10), // Make scrollbar edges rounded
-              child: SingleChildScrollView(
+        appBar: Appbar(
+          title: 'Home',
+          displayOfficerProfile: true,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Scrollbar(
                 controller: _scrollController,
-                scrollDirection:
-                    Axis.horizontal, // Enables horizontal scrolling
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    
-                    CustomCard(
-                      icon: FontAwesomeIcons.clipboardList,
-                      cardTitle: 'LL Application',
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, LearnerLicenseList.id, arguments: {'applicationType': 'LL'});
-                      },
-                    ),
-                    CustomCard(
-                      icon: FontAwesomeIcons.filePen,
-                      cardTitle: 'DL Application',
-                      onTap: () {
-                        Navigator.pushNamed(context, LearnerLicenseList.id, arguments: {'applicationType': 'DL'});
-                      },
-                    ),
-                  ],
+                thumbVisibility: true, // Always show scrollbar
+                thickness: 2.0, // Set the scrollbar thickness
+                radius: Radius.circular(10), // Make scrollbar edges rounded
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  scrollDirection:
+                      Axis.horizontal, // Enables horizontal scrolling
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      CustomCard(
+                        icon: FontAwesomeIcons.clipboardList,
+                        cardTitle: 'LL Application',
+                        onTap: () {
+                          Navigator.pushNamed(context, LearnerLicenseList.id,
+                              arguments: {'applicationType': 'LL'});
+                        },
+                      ),
+                      CustomCard(
+                        icon: FontAwesomeIcons.clipboardList,
+                        cardTitle: 'DL Application',
+                        onTap: () {
+                          Navigator.pushNamed(context, LearnerLicenseList.id,
+                              arguments: {'applicationType': 'DL'});
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: CustomCard(
-                icon: FontAwesomeIcons.car,
-                cardTitle: 'Fine',
-                onTap: () {
-                  Navigator.pushNamed(context, GenerateFines.id);
-                },
+              Scrollbar(
+                controller: _scrollController,
+                thumbVisibility: true, // Always show scrollbar
+                thickness: 2.0, // Set the scrollbar thickness
+                radius: Radius.circular(10), // Make scrollbar edges rounded
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  scrollDirection:
+                      Axis.horizontal, // Enables horizontal scrolling
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      CustomCard(
+                        icon: FontAwesomeIcons.ticket,
+                        cardTitle: 'Fine',
+                        onTap: () {
+                          Navigator.pushNamed(context, GenerateFines.id);
+                        },
+                      ),
+                       CustomCard(
+                        icon: FontAwesomeIcons.car,
+                        cardTitle: 'Vehicle',
+                        onTap: () {
+                          Navigator.pushNamed(context, ViewDetails.id);
+                        },
+                      ),
+                      CustomCard(
+                        icon: FontAwesomeIcons.solidMessage,
+                        onTap: () {
+                          Navigator.pushNamed(context, OfficerGrievanceList.id);
+                        },
+                        cardTitle: 'Grievances',
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: CustomCard(
-                icon: Icons.comment,
-                cardTitle: 'Vehicle',
-                onTap: () {
-                  Navigator.pushNamed(context, ViewDetails.id);
-                },
+              
+              Align(
+                alignment: Alignment.center,
+                child: CustomCard(
+                  icon: FontAwesomeIcons.clipboardList,
+                  onTap: () {
+                    Navigator.pushNamed(context, PucList.id);
+                  },
+                  cardTitle: 'PUC Applications',
+                ),
               ),
-            ),
-            Align(
-            alignment: Alignment.center,
-            child: CustomCard(
-              icon: Icons.message,
-              onTap: () {
-                Navigator.pushNamed(context, OfficerGrievanceList.id);
-              },
-              cardTitle: 'Grievances',
-            ),
+            ],
           ),
-          ],
-        ),
-      )
-      
-    );
+        ));
   }
 }

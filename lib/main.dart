@@ -5,6 +5,8 @@ import 'officials_page/fines/confirm_fine.dart';
 import 'officials_page/grievance/view_grievances.dart';
 import 'officials_page/license/view_application.dart';
 import 'officials_page/officer_profile.dart';
+import 'officials_page/puc/puc_application.dart';
+import 'officials_page/puc/puc_list.dart';
 import 'user_pages/grievance/grievance_list.dart';
 import 'user_pages/license/license_application.dart';
 import 'user_pages/license/phone_authenticate.dart';
@@ -88,6 +90,9 @@ class MyApp extends StatelessWidget {
         OfficerGrievanceList.id: (context)=> const OfficerGrievanceList(),
         LearnerLicenseList.id: (context)=> const LearnerLicenseList(),
         ViewApplication.id: (context)=> const ViewApplication(),
+        PucList.id: (context)=>  PucList(),
+        ViewPucApplication.id: (context)=> ViewPucApplication(),
+
 
       },
       initialRoute: '/',

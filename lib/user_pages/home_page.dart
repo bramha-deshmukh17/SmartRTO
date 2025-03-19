@@ -6,7 +6,6 @@ import '../utility/my_card.dart';
 import 'grievance/grievance_list.dart';
 import 'license/license.dart';
 import 'puc/phone_authentication.dart';
-import 'puc/puc_application.dart';
 import 'vehicle/vehicles.dart';
 import 'chatbot/chatbot.dart';
 import 'license/phone_authenticate.dart';

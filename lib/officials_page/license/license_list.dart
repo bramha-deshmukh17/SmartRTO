@@ -14,15 +14,10 @@ class LearnerLicenseList extends StatefulWidget {
 }
 
 class _LearnerLicenseListState extends State<LearnerLicenseList> {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<Map<String, dynamic>> applicationList = [];
   Map<String, dynamic>? arguments;
-  final List<String> typeOfApplication = [
-    'Select type of application',
-    'Learner License',
-    'Permanent License',
-  ];
 
   @override
   void didChangeDependencies() {

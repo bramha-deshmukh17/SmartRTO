@@ -28,6 +28,7 @@ class PucApplicationState extends State<PucApplication> {
   final TextEditingController pinCodeController = TextEditingController();
   final TextEditingController registrationController = TextEditingController();
   final TextEditingController chasisController = TextEditingController();
+  Map<String, dynamic>? arguments;
 
   String? selectedState,
       selectedDistrict,
@@ -146,6 +147,11 @@ class PucApplicationState extends State<PucApplication> {
 
   @override
   Widget build(BuildContext context) {
+    arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    //auto fill user mobile number 
+    mobileController.text = arguments!['mobile'];
+
     return Scaffold(
       appBar: Appbar(
         title: 'PUC Application',
@@ -184,7 +190,8 @@ class PucApplicationState extends State<PucApplication> {
             ),
             kBox,
 
-            RoundButton(onPressed: openCheckout, text: "Pay"),
+            if (paymentId == null)
+              RoundButton(onPressed: openCheckout, text: "Pay"),
             kBox,
 
             Text(
@@ -200,7 +207,7 @@ class PucApplicationState extends State<PucApplication> {
                   if (await saveFormData()) {
                     bookSlot();
                     if (mounted) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ReceiptScreen(),
@@ -295,6 +302,7 @@ class PucApplicationState extends State<PucApplication> {
             keyboardType: TextInputType.number,
             textAlignment: TextAlign.start,
             width: double.infinity,
+            readonly: true,
           ),
           kBox,
 

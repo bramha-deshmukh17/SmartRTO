@@ -10,6 +10,7 @@ import 'user_pages/license/license_application.dart';
 import 'user_pages/license/phone_authenticate.dart';
 import 'user_pages/profile/edit_profile.dart';
 import 'user_pages/profile/profile.dart';
+import 'user_pages/puc/phone_authentication.dart';
 import 'user_pages/puc/puc_application.dart';
 import 'user_pages/user_register.dart';
 import 'Utility/Constants.dart';
@@ -74,6 +75,7 @@ class MyApp extends StatelessWidget {
         LicenseInfoPage.id: (context)=> const LicenseInfoPage(),
         PhoneAuthenticate.id: (context)=> const PhoneAuthenticate(),
         LicenseApplication.id: (context)=> const LicenseApplication(),
+        PhoneAuthentication.id: (context)=> PhoneAuthentication(),
         PucApplication.id: (context)=> const PucApplication(),
 
         //officer pages

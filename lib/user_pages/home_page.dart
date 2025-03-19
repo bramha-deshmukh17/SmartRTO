@@ -5,6 +5,7 @@ import '../utility/constants.dart';
 import '../utility/my_card.dart';
 import 'grievance/grievance_list.dart';
 import 'license/license.dart';
+import 'puc/phone_authentication.dart';
 import 'puc/puc_application.dart';
 import 'vehicle/vehicles.dart';
 import 'chatbot/chatbot.dart';
@@ -127,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                 icon: FontAwesomeIcons.clipboardList,
                 cardTitle: 'PUC Application',
                 onTap: () {
-                  Navigator.pushNamed(context, PucApplication.id);
+                  Navigator.pushNamed(context, PhoneAuthentication.id);
                 },
               ),
             ),

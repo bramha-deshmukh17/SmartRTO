@@ -12,7 +12,7 @@ import 'confirm_fine.dart';
 import '../../utility/search_dropdown.dart';
 
 class GenerateFines extends StatefulWidget {
-  static const String id = 'officer/generatefine';
+  static const String id = 'officer/fine/generate';
   const GenerateFines({super.key});
 
   @override

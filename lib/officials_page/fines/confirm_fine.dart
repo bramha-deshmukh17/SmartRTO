@@ -7,7 +7,7 @@ import '../../utility/round_button.dart';
 
 
 class Confirmfine extends StatefulWidget {
-  static const String id = 'officer/confirmfine';
+  static const String id = 'officer/fine/confirm';
 
   const Confirmfine({super.key});
 

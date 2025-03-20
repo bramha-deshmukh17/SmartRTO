@@ -18,7 +18,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController2 = ScrollController();
 
   @override
   void initState() {
@@ -75,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Scrollbar(
-                controller: _scrollController,
+                controller: _scrollController2,
                 thumbVisibility: true, // Always show scrollbar
                 thickness: 2.0, // Set the scrollbar thickness
                 radius: Radius.circular(10), // Make scrollbar edges rounded

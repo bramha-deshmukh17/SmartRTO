@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../utility/appbar.dart';
 import '../../utility/constants.dart';
 import '../../utility/round_button.dart';
 import '../../utility/user_input.dart';
+import '../fines/edit_fine.dart';
 
 class OfficerGrievanceList extends StatefulWidget {
   static const String id = "officer/grievancelist";
@@ -15,15 +17,17 @@ class OfficerGrievanceList extends StatefulWidget {
 }
 
 class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
-
   final TextEditingController _replyController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String? replyError;
   List<Map<String, dynamic>>? grievanceList;
 
-  Stream<QuerySnapshot> getGrievance(){
-    return _firestore.collection('grievance').where('reply', isEqualTo: 'NA').snapshots();
+  Stream<QuerySnapshot> getGrievance() {
+    return _firestore
+        .collection('grievance')
+        .where('reply', isEqualTo: null)
+        .snapshots();
   }
 
   void _showBottomSheet(BuildContext context, String docId) {
@@ -43,7 +47,9 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
                     style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.copy,),
+                    icon: const Icon(
+                      Icons.copy,
+                    ),
                     onPressed: () {
                       // Copy label text to clipboard
                       Navigator.pop(context);
@@ -69,12 +75,12 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
               kBox,
               RoundButton(
                   onPressed: () {
-                    if(_replyController.text.isNotEmpty){
+                    if (_replyController.text.isNotEmpty) {
                       _firestore.collection('grievance').doc(docId).update({
                         'reply': _replyController.text,
                       });
                       Navigator.pop(context);
-                    }else{
+                    } else {
                       setState(() {
                         replyError = 'This is required field';
                       });
@@ -92,9 +98,10 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Appbar(
-          title: 'Grievances',
-          isBackButton: true,
-          displayOfficerProfile: true,),
+        title: 'Grievances',
+        isBackButton: true,
+        displayOfficerProfile: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: StreamBuilder<QuerySnapshot>(
@@ -120,12 +127,25 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
                 return Card(
                   margin: const EdgeInsets.all(10),
                   child: ListTile(
-                    title: Text(grievances['fineno']),
+                    title: TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          EditFine.id,
+                          arguments: {
+                            'id': grievances['fineno'],
+                          },
+                        );
+                      },
+                      child: Text(grievances['fineno']),
+                    ),
                     subtitle: Text('Grievance: ${grievances['grievance']}'),
-                    onTap: () {
-                      // Navigate to the Grievances details screen
-                      _showBottomSheet(context, doc.id);
-                    },
+                    trailing: IconButton(
+                      icon: const Icon(FontAwesomeIcons.reply),
+                      onPressed: () {
+                        _showBottomSheet(context, doc.id);
+                      },
+                    ),
                   ),
                 );
               },

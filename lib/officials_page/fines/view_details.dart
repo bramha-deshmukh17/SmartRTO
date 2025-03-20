@@ -4,9 +4,10 @@ import '../../utility/appbar.dart';
 import '../../Utility/constants.dart';
 import '../../utility/round_button.dart';
 import '../../utility/user_input.dart';
+import 'edit_fine.dart';
 
 class ViewDetails extends StatefulWidget {
-  static const String id = "officer/viewdetails";
+  static const String id = "officer/vehicle/view";
 
   const ViewDetails({super.key});
 
@@ -60,7 +61,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 80.0),
                     child: LinearProgressIndicator(
-                      color: kPrimaryColor,
+                      color: kSecondaryColor,
                       minHeight: 5.0,
                     ),
                   ),
@@ -90,36 +91,46 @@ class _ViewDetailsState extends State<ViewDetails> {
                               itemCount: fineHistory.length,
                               itemBuilder: (context, index) {
                                 final fine = fineHistory[index];
-                                return Card(
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 10.0),
-                                  child: ListTile(
-                                    leading: fine['photo'] != null
-                                        ? Image.network(
-                                            fine['photo'],
-                                            width: 50,
-                                            height: 50,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : const Icon(
-                                            Icons.image_not_supported,
-                                            size: 50,
-                                          ),
-                                    title: Text(
-                                      '${fine['date'].toDate().toString()}',
-                                      style: TextStyle(fontSize: 16.0),
-                                    ),
-                                    subtitle: Text(
-                                      'Status: ${fine['status']}',
-                                      style: TextStyle(
-                                          color: fine['status'] == "Paid"
-                                              ? kGreen
-                                              : kRed,
-                                          fontSize: 18.0),
-                                    ),
-                                    trailing: Text(
-                                      'By: ${fine['by']}',
-                                      style: TextStyle(fontSize: 12.0),
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      EditFine.id,
+                                      arguments: {
+                                        'id': fine['id'],
+                                      },
+                                    );
+                                  },
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0, horizontal: 10.0),
+                                    child: ListTile(
+                                      leading: fine['photo'] != null
+                                          ? Image.network(
+                                              fine['photo'],
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : const Icon(
+                                              Icons.image_not_supported,
+                                              size: 50),
+                                      title: Text(
+                                        '${fine['date'].toDate().toString()}',
+                                        style: TextStyle(fontSize: 16.0),
+                                      ),
+                                      subtitle: Text(
+                                        'Status: ${fine['status']}',
+                                        style: TextStyle(
+                                            color: fine['status'] == "Paid"
+                                                ? kGreen
+                                                : kRed,
+                                            fontSize: 18.0),
+                                      ),
+                                      trailing: Text(
+                                        'By: ${fine['by']}',
+                                        style: TextStyle(fontSize: 12.0),
+                                      ),
                                     ),
                                   ),
                                 );
@@ -157,15 +168,19 @@ class _ViewDetailsState extends State<ViewDetails> {
       if (carDoc.exists) {
         // Fetch fine history for the car
         QuerySnapshot finesSnapshot = await _firestore
-            .collection('fines')  
+            .collection('fines')
             .where('to', isEqualTo: carNumber)
             .get();
 
         setState(() {
           carDetails = carDoc.data() as Map<String, dynamic>?;
-          fineHistory = finesSnapshot.docs
-              .map((doc) => doc.data() as Map<String, dynamic>)
-              .toList();
+
+          fineHistory = finesSnapshot.docs.map((doc) {
+            var data = doc.data() as Map<String, dynamic>;
+            data['id'] = doc.id; // Assign document ID explicitly
+            return data;
+          }).toList();
+
           _visible = true;
           loading = false;
         });

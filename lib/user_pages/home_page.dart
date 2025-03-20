@@ -5,6 +5,7 @@ import '../utility/constants.dart';
 import '../utility/my_card.dart';
 import 'grievance/grievance_list.dart';
 import 'license/license.dart';
+import 'license/track_application.dart';
 import 'puc/phone_authentication.dart';
 import 'vehicle/vehicles.dart';
 import 'chatbot/chatbot.dart';
@@ -71,10 +72,17 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     CustomCard(
-                      icon: FontAwesomeIcons.driversLicense,
+                      icon: FontAwesomeIcons.idCard,
                       cardTitle: 'License',
                       onTap: () {
                         Navigator.pushNamed(context, LicenseInfoPage.id);
+                      },
+                    ),
+                    CustomCard(
+                      icon: FontAwesomeIcons.listCheck,
+                      cardTitle: 'Track Application',
+                      onTap: () {
+                        Navigator.pushNamed(context, TrackApplication.id);
                       },
                     ),
                     CustomCard(

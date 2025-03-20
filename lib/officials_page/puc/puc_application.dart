@@ -8,6 +8,8 @@ import '../../utility/constants.dart';
 class ViewPucApplication extends StatefulWidget {
   static const String id = 'officer/puc/application';
 
+  const ViewPucApplication({super.key});
+
   @override
   _ViewPucApplicationState createState() => _ViewPucApplicationState();
 }

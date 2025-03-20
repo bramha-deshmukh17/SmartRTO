@@ -11,7 +11,7 @@ import '../../utility/user_input.dart';
 import 'license_application.dart';
 
 class PhoneAuthenticate extends StatefulWidget {
-  static const String id = 'user/phontauthenticate/license';
+  static const String id = 'user/license/phontauthenticate';
   const PhoneAuthenticate({super.key});
 
   @override

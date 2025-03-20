@@ -6,6 +6,8 @@ import 'puc_application.dart';
 
 class PucList extends StatefulWidget {
   static const String id = 'officer/puc/list';
+
+  const PucList({super.key});
   @override
   _PucListState createState() => _PucListState();
 }

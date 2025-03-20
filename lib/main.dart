@@ -11,6 +11,7 @@ import 'officials_page/puc/puc_list.dart';
 import 'user_pages/grievance/grievance_list.dart';
 import 'user_pages/license/license_application.dart';
 import 'user_pages/license/phone_authenticate.dart';
+import 'user_pages/license/track_application.dart';
 import 'user_pages/profile/edit_profile.dart';
 import 'user_pages/profile/profile.dart';
 import 'user_pages/puc/phone_authentication.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
         LicenseApplication.id: (context)=> const LicenseApplication(),
         PhoneAuthentication.id: (context)=> PhoneAuthentication(),
         PucApplication.id: (context)=> const PucApplication(),
+        TrackApplication.id: (context)=> const TrackApplication(),
 
         //officer pages
         OfficerLogin.id: (context)=> const OfficerLogin(),
@@ -92,8 +94,8 @@ class MyApp extends StatelessWidget {
         OfficerGrievanceList.id: (context)=> const OfficerGrievanceList(),
         LearnerLicenseList.id: (context)=> const LearnerLicenseList(),
         ViewApplication.id: (context)=> const ViewApplication(),
-        PucList.id: (context)=>  PucList(),
-        ViewPucApplication.id: (context)=> ViewPucApplication(),
+        PucList.id: (context)=> const PucList(),
+        ViewPucApplication.id: (context)=> const ViewPucApplication(),
 
 
       },

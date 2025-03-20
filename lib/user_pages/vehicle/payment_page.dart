@@ -17,7 +17,8 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   late Razorpay _razorpay;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Firestore instance
+  final FirebaseFirestore _firestore =
+      FirebaseFirestore.instance; // Firestore instance
   Map<String, dynamic>? finesData; // Variable to store fetched fine data
   bool isLoading = true; // Variable to track loading state
   String? transactionId; // Variable to store transaction ID
@@ -43,7 +44,7 @@ class _PaymentPageState extends State<PaymentPage> {
       // Fetch fine data from Firestore using the 'where' method
       DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
           .collection('fines')
-          .doc(widget.fineid)    // Filter by license plate
+          .doc(widget.fineid) // Filter by license plate
           .get();
 
       if (snapshot.exists) {
@@ -69,8 +70,8 @@ class _PaymentPageState extends State<PaymentPage> {
     if (widget.fineid.isNotEmpty) {
       String documentId = widget.fineid; // Document ID
       await _firestore.collection('fines').doc(documentId).update({
-        'status': 'Paid',  // Update payment status to Completed
-        'transaction_id': response.paymentId,  // Store payment ID
+        'status': 'Paid', // Update payment status to Completed
+        'transaction_id': response.paymentId, // Store payment ID
       }).then((_) {
         print("Document updated successfully");
 
@@ -99,7 +100,8 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void openCheckout(double totalFine) async {
     var options = {
-      'key': dotenv.env['RAZOR_PAY_API'], // Replace with your Razorpay Test API Key
+      'key': dotenv
+          .env['RAZOR_PAY_API'], // Replace with your Razorpay Test API Key
       'amount': (totalFine * 100).toString(), // Convert to paisa
       'name': 'RTO India',
       'description': 'Payment for Fines',
@@ -122,7 +124,10 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator(color: kSecondaryColor,)); // Show loading indicator
+      return const Center(
+          child: CircularProgressIndicator(
+        color: kSecondaryColor,
+      )); // Show loading indicator
     }
 
     if (finesData == null) {
@@ -130,14 +135,15 @@ class _PaymentPageState extends State<PaymentPage> {
         appBar: AppBar(
           title: const Text("No Fines Found"),
         ),
-        body: const Center(child: Text("No fine data available for this license plate.")),
+        body: const Center(
+            child: Text("No fine data available for this license plate.")),
       );
     }
 
     final fines = finesData!['fines'] as Map<String, dynamic>;
 
     return Scaffold(
-      floatingActionButton: GenerateGrievance(fineid: widget.fineid),
+      floatingActionButton: finesData!['status'] == 'Pending' ? GenerateGrievance(fineid: widget.fineid) : null,
       appBar: Appbar(
         title: 'Payment Details',
         isBackButton: true,
@@ -149,14 +155,21 @@ class _PaymentPageState extends State<PaymentPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Display the fine-related photo (if available)
-            Image.network(
-              finesData!['photo'],
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-              const Icon(Icons.error, size: 100),
-            ),
+            finesData!['photo'] != null &&
+                    finesData!['photo'].toString().isNotEmpty
+                ? Image.network(
+                    finesData!['photo'],
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.error, size: 100),
+                  )
+                : const Center(
+                    child: Icon(Icons.image_not_supported,
+                        size: 100, color: Colors.grey),
+                  ),
+
             const SizedBox(height: 16),
 
             // Display license plate and issued by
@@ -237,11 +250,14 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
 
             // "Pay Now" button to redirect to the payment gateway
-            if (finesData!['status'] == 'Pending') // Show button only if status is Pending
+            if (finesData!['status'] ==
+                'Pending') // Show button only if status is Pending
+
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    double totalFine = double.tryParse(finesData!['total'].toString()) ?? 0.0;
+                    double totalFine =
+                        double.tryParse(finesData!['total'].toString()) ?? 0.0;
                     print(totalFine);
                     openCheckout(totalFine); // Open Razorpay checkout
                   },

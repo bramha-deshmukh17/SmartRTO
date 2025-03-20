@@ -26,8 +26,70 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
   Stream<QuerySnapshot> getGrievance() {
     return _firestore
         .collection('grievance')
-        .where('reply', isEqualTo: null)
+        .where('reply', isNull: true)
         .snapshots();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: Appbar(
+        title: 'Grievances',
+        isBackButton: true,
+        displayOfficerProfile: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: getGrievance(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return const Center(child: Text('Error loading Grievances.'));
+            }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(child: Text('No New Grievances found.'));
+            }
+
+            // Display the list of vehicles
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var doc = snapshot.data!.docs[index];
+                var grievances = doc.data() as Map<String, dynamic>;
+
+                return Card(
+                  margin: const EdgeInsets.all(10),
+                  child: ListTile(
+                    title: TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          EditFine.id,
+                          arguments: {
+                            'id': grievances['fineno'],
+                          },
+                        );
+                      },
+                      child: Text(grievances['fineno']),
+                    ),
+                    subtitle: Align(alignment: Alignment.center,child: Text('Grievance: ${grievances['grievance']}'),),
+                    trailing: IconButton(
+                      icon: const Icon(FontAwesomeIcons.reply),
+                      onPressed: () {
+                        _showBottomSheet(context, doc.id);
+                      },
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 
   void _showBottomSheet(BuildContext context, String docId) {
@@ -91,68 +153,6 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
           ),
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Appbar(
-        title: 'Grievances',
-        isBackButton: true,
-        displayOfficerProfile: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: StreamBuilder<QuerySnapshot>(
-          stream: getGrievance(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              return const Center(child: Text('Error loading Grievances.'));
-            }
-            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text('No New Grievances found.'));
-            }
-
-            // Display the list of vehicles
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                var doc = snapshot.data!.docs[index];
-                var grievances = doc.data() as Map<String, dynamic>;
-
-                return Card(
-                  margin: const EdgeInsets.all(10),
-                  child: ListTile(
-                    title: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          EditFine.id,
-                          arguments: {
-                            'id': grievances['fineno'],
-                          },
-                        );
-                      },
-                      child: Text(grievances['fineno']),
-                    ),
-                    subtitle: Text('Grievance: ${grievances['grievance']}'),
-                    trailing: IconButton(
-                      icon: const Icon(FontAwesomeIcons.reply),
-                      onPressed: () {
-                        _showBottomSheet(context, doc.id);
-                      },
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
     );
   }
 }

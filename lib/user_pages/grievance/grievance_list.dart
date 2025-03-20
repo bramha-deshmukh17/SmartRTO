@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../utility/appbar.dart';
 import '../../utility/constants.dart';
+import '../vehicle/payment_page.dart';
 
 class Grievancelist extends StatefulWidget {
   static const String id = "user/grievancelist";
@@ -48,7 +49,8 @@ class _GrievancelistState extends State<Grievancelist> {
           stream: _getGrievance(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator(
+              return const Center(
+                  child: CircularProgressIndicator(
                 color: kSecondaryColor,
               ));
             }
@@ -73,7 +75,21 @@ class _GrievancelistState extends State<Grievancelist> {
                       kBox,
                       ListTile(
                         leading: const Icon(FontAwesomeIcons.ticket),
-                        title: Center(child: Text(grievance['fineno'])),
+                        title: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PaymentPage(fineid: grievance['fineno']),
+                                ),
+                              );
+                            },
+                            child: Center(
+                                child: Text(
+                              grievance['fineno'],
+                              style: TextStyle(color: kBlack),
+                            ))),
                       ),
                       ListTile(
                         leading: const Icon(FontAwesomeIcons.comment),
@@ -82,9 +98,11 @@ class _GrievancelistState extends State<Grievancelist> {
                       kBox,
                       ListTile(
                         leading: const Icon(FontAwesomeIcons.reply),
-                        title: Center(child: grievance['reply'] != 'NA'
-                            ? Text(grievance['reply'])
-                            : const Text('No Reply'),),
+                        title: Center(
+                          child: grievance['reply'] != 'NA'
+                              ? Text(grievance['reply'])
+                              : const Text('No Reply'),
+                        ),
                       ),
                       kBox,
                     ],

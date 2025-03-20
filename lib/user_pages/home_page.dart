@@ -21,16 +21,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final ScrollController _scrollController1 = ScrollController();
+  final ScrollController _scrollController2 = ScrollController();
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollController1.dispose();
+    _scrollController2.dispose();
     super.dispose();
   }
 
@@ -59,15 +56,15 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            // First horizontal scroll view using _scrollController1
             Scrollbar(
-              controller: _scrollController,
-              thumbVisibility: true, // Always show scrollbar
-              thickness: 2.0, // Set the scrollbar thickness
-              radius: Radius.circular(10), // Make scrollbar edges rounded
+              controller: _scrollController1,
+              thumbVisibility: true,
+              thickness: 2.0,
+              radius: const Radius.circular(10),
               child: SingleChildScrollView(
-                controller: _scrollController,
-                scrollDirection:
-                    Axis.horizontal, // Enables horizontal scrolling
+                controller: _scrollController1,
+                scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.all(10),
                 child: Row(
                   children: [
@@ -90,9 +87,10 @@ class _HomePageState extends State<HomePage> {
                       cardTitle: 'LL Application',
                       onTap: () {
                         Navigator.pushNamed(
-                            context, PhoneAuthenticate.id, arguments: {
-                          'driving': false,
-                        });
+                          context,
+                          PhoneAuthenticate.id,
+                          arguments: {'driving': false},
+                        );
                       },
                     ),
                     CustomCard(
@@ -100,35 +98,48 @@ class _HomePageState extends State<HomePage> {
                       cardTitle: 'DL Application',
                       onTap: () {
                         Navigator.pushNamed(
-                            context, PhoneAuthenticate.id, arguments: {
-                          'driving': true,
-                        });
+                          context,
+                          PhoneAuthenticate.id,
+                          arguments: {'driving': true},
+                        );
                       },
                     ),
                   ],
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: CustomCard(
-                icon: FontAwesomeIcons.car,
-                cardTitle: 'My Vehicles',
-                onTap: () {
-                  Navigator.pushNamed(context, ViewVehicle.id);
-                },
+
+            // Second horizontal scroll view using _scrollController2
+            Scrollbar(
+              controller: _scrollController2,
+              thumbVisibility: true,
+              thickness: 2.0,
+              radius: const Radius.circular(10),
+              child: SingleChildScrollView(
+                controller: _scrollController2,
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    CustomCard(
+                      icon: FontAwesomeIcons.car,
+                      cardTitle: 'My Vehicles',
+                      onTap: () {
+                        Navigator.pushNamed(context, ViewVehicle.id);
+                      },
+                    ),
+                    CustomCard(
+                      icon: FontAwesomeIcons.solidMessage,
+                      cardTitle: 'Grievance',
+                      onTap: () {
+                        Navigator.pushNamed(context, Grievancelist.id);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: CustomCard(
-                icon: FontAwesomeIcons.solidMessage,
-                cardTitle: 'Grievance',
-                onTap: () {
-                  Navigator.pushNamed(context, Grievancelist.id);
-                },
-              ),
-            ),
+
             Align(
               alignment: Alignment.center,
               child: CustomCard(

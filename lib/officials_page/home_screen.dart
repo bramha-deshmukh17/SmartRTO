@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 thickness: 2.0, // Set the scrollbar thickness
                 radius: Radius.circular(10), // Make scrollbar edges rounded
                 child: SingleChildScrollView(
-                  controller: _scrollController,
+                  controller: _scrollController2,
                   scrollDirection:
                       Axis.horizontal, // Enables horizontal scrolling
                   padding: const EdgeInsets.all(10),

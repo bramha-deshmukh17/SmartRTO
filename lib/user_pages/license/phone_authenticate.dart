@@ -38,10 +38,22 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
 
     if (snapshot.docs.isNotEmpty) {
       DocumentSnapshot document = snapshot.docs.first;
-      setState(() {
-        llapplicationId = 'LL-${licenseIdController.text.trim()}';
-        _phoneController.text = document['applicantMobile'];
-      });
+      DateTime applicationDate = DateTime.parse(document['payementDate']);
+      DateTime currentDate = DateTime.now();
+
+      if (currentDate.difference(applicationDate).inDays > 15) {
+        setState(() {
+          llapplicationId = 'LL-${licenseIdController.text.trim()}';
+          _phoneController.text = document['applicantMobile'];
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please wait for the 15 days period to complete before appling for DL.'),
+            backgroundColor: kRed,
+          ),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -51,6 +63,7 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
       );
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {

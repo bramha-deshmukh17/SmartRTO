@@ -6,7 +6,6 @@ import '../utility/appbar.dart';
 import '../utility/constants.dart';
 import '../welcome.dart';
 
-
 class Profile extends StatefulWidget {
   static const String id = 'office/profile';
   const Profile({super.key});
@@ -16,46 +15,23 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  // Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  // Officer data
-  String officerName = '', officerEmail = '', officerDesignation = '', officerPhone = '', officerId = '';
-  String profileImageUrl = '';
-  late DateTime joiningDate;
+  DocumentSnapshot? officerDoc;
 
-
-  // Fetch officer details from Firestore
   Future<void> getOfficerData() async {
     User? user = _auth.currentUser;
 
     if (user != null) {
-      setState(() {
-        officerEmail = user.email!;
-      });
-
       try {
-        // Fetch the officer's data using the email
         QuerySnapshot officerSnapshot = await _firestore
             .collection('officials')
-            .where('email', isEqualTo: officerEmail)
+            .where('email', isEqualTo: user.email)
             .get();
 
-
-          // Assuming that email is unique, we can take the first document
-        DocumentSnapshot officerDoc = officerSnapshot.docs.first;
-        Map<String, dynamic> data = officerDoc.data() as Map<String, dynamic>;
-
-          setState(() {
-            officerId = officerDoc.id;
-            officerName = data['name'] ?? 'N/A';
-            officerEmail = data['email'] ?? 'N/A';
-            officerDesignation = data['post'] ?? 'N/A';
-            profileImageUrl = data['photoUrl']; // Placeholder image if URL is empty
-            officerPhone = data['phoneNumber'] ?? 'N/A';
-            joiningDate = data['joiningDate'].toDate();
-          });
-
+        setState(() {
+          officerDoc = officerSnapshot.docs.first;
+        });
       } catch (e) {
         print('Error fetching officer data: $e');
       }
@@ -63,7 +39,6 @@ class _ProfileState extends State<Profile> {
       print('No user is currently logged in.');
     }
   }
-
 
   @override
   void initState() {
@@ -80,8 +55,8 @@ class _ProfileState extends State<Profile> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: officerName.isEmpty
-            ? const Center(child: CircularProgressIndicator(color:kSecondaryColor))
+        child: officerDoc == null
+            ? const Center(child: CircularProgressIndicator(color: kSecondaryColor))
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -89,13 +64,13 @@ class _ProfileState extends State<Profile> {
                   Center(
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(profileImageUrl),
+                      backgroundImage: NetworkImage(officerDoc!['photoUrl']),
                     ),
                   ),
                   kBox,
                   Center(
                     child: Text(
-                      officerName,
+                      officerDoc!['name'] ?? 'N/A',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -105,7 +80,7 @@ class _ProfileState extends State<Profile> {
                   kBox,
                   Center(
                     child: Text(
-                      officerDesignation,
+                      officerDoc!['post'] ?? 'N/A',
                       style: const TextStyle(
                         fontSize: 18,
                         color: Colors.grey,
@@ -120,7 +95,7 @@ class _ProfileState extends State<Profile> {
                       'ID',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(officerId),
+                    subtitle: Text(officerDoc!.id),
                   ),
                   ListTile(
                     leading: const Icon(Icons.email, color: kSecondaryColor),
@@ -128,7 +103,7 @@ class _ProfileState extends State<Profile> {
                       'Email',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(officerEmail),
+                    subtitle: Text(officerDoc!['email'] ?? 'N/A'),
                   ),
                   ListTile(
                     leading: const Icon(Icons.phone, color: kSecondaryColor),
@@ -136,7 +111,7 @@ class _ProfileState extends State<Profile> {
                       'Phone',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(officerPhone),
+                    subtitle: Text(officerDoc!['phoneNumber'] ?? 'N/A'),
                   ),
                   ListTile(
                     leading: const Icon(Icons.calendar_today, color: kSecondaryColor),
@@ -144,7 +119,7 @@ class _ProfileState extends State<Profile> {
                       'Joined on',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(_formatDate(joiningDate)),
+                    subtitle: Text(_formatDate(officerDoc!['joiningDate'].toDate())),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
@@ -152,8 +127,8 @@ class _ProfileState extends State<Profile> {
                       backgroundColor: kSecondaryColor,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                    onPressed:logout,
-                    child: const Text('Log Out', style: TextStyle(color: kWhite),),
+                    onPressed: logout,
+                    child: const Text('Log Out', style: TextStyle(color: kWhite)),
                   ),
                 ],
               ),
@@ -166,12 +141,11 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> logout() async {
-    await _auth.signOut(); // Sign out the user
+    await _auth.signOut();
 
-    // Clear the app stack and navigate to the welcome screen
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => Welcome()), // Replace with your welcome screen widget
-          (Route<dynamic> route) => false, // Remove all previous routes
+      MaterialPageRoute(builder: (context) => Welcome()),
+      (Route<dynamic> route) => false,
     );
   }
 }

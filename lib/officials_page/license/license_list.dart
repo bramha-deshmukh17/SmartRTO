@@ -28,11 +28,13 @@ class _LearnerLicenseListState extends State<LearnerLicenseList> {
   }
 
   Future<void> fetchApplicationList() async {
+    //fetching the application list from the firestore
     if (arguments == null) return;
 
     String type = arguments?['applicationType'] == "LL"
         ? 'llapplication'
         : 'dlapplication';
+        //fetching the only non approved application list from the firestore
     final approvedFalseSnapshot = await _firestore
         .collection(type)
         .where('approved', isEqualTo: false)
@@ -44,6 +46,7 @@ class _LearnerLicenseListState extends State<LearnerLicenseList> {
 
     for (var doc in approvedFalseSnapshot.docs) {
       uniqueDocs[doc.id] = {
+        //adding doc id to the application data for further use
         'applicationId': doc.id,
         'approved': doc['approved'],
         'examResult': doc['examResult'],
@@ -105,6 +108,7 @@ class _LearnerLicenseListState extends State<LearnerLicenseList> {
                         ],
                       ),
                       onTap: () {
+                        // navigat to the view application page
                         Navigator.pushNamed(context, ViewApplication.id, arguments: {
                           'applicationId': application['applicationId'],
                           'applicationType': arguments?['applicationType'],

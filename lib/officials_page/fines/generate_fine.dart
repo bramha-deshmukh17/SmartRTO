@@ -36,6 +36,7 @@ class _GenerateFinesState extends State<GenerateFines> {
   late Map<String, int> finesAndPenalties = {};
 
   Future<Map<String, int>> fetchFinesFromFirestore() async {
+    // Fetch fines from Firestore
     try {
       DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
           .instance
@@ -140,6 +141,7 @@ class _GenerateFinesState extends State<GenerateFines> {
                         numberError = null;
                         listError = false;
 
+                        //send data to confirm screen
                         Navigator.pushNamed(context, Confirmfine.id,
                             arguments: {
                               'total': total,
@@ -167,6 +169,14 @@ class _GenerateFinesState extends State<GenerateFines> {
   }
 
   Future<bool> verifyNumber(String number) async {
+    //here we have created 4 groups to match the number plate
+    //eg: MH12AB1234
+    //group 1: MH
+    //group 2: 12
+    //group 3: AB
+    //group 4: 1234
+    //group 1 and 3 are alphabets and group 2 and 4 are numbers
+    //we have used regex to match the number plate
     RegExp regExp = RegExp(r'([A-Z]{2})(\d{1,2})([A-Z]{2})(\d{1,4})');
     Match? match = regExp.firstMatch(number);
 

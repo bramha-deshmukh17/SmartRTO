@@ -44,7 +44,7 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
           stream: getGrievance(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: kSecondaryColor));
             }
             if (snapshot.hasError) {
               return const Center(child: Text('Error loading Grievances.'));
@@ -53,7 +53,7 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
               return const Center(child: Text('No New Grievances found.'));
             }
 
-            // Display the list of vehicles
+            // Display the list of grievances
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -64,6 +64,7 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
                   margin: const EdgeInsets.all(10),
                   child: ListTile(
                     title: TextButton(
+                      //text button to navigate to edit fine page with the fine number
                       onPressed: () {
                         Navigator.pushNamed(
                           context,
@@ -95,6 +96,7 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
   void _showBottomSheet(BuildContext context, String docId) {
     print(docId);
     showModalBottomSheet(
+      //bottom sheet to reply to the grievance
       context: context,
       builder: (BuildContext context) {
         return Center(
@@ -137,6 +139,7 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
               kBox,
               RoundButton(
                   onPressed: () {
+                    //update the firestore with the reply
                     if (_replyController.text.isNotEmpty) {
                       _firestore.collection('grievance').doc(docId).update({
                         'reply': _replyController.text,

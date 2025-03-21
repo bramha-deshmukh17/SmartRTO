@@ -5,7 +5,6 @@ import '../../utility/appbar.dart';
 import '../../utility/constants.dart';
 import '../../utility/round_button.dart';
 
-
 class Confirmfine extends StatefulWidget {
   static const String id = 'officer/fine/confirm';
 
@@ -38,14 +37,12 @@ class _ConfirmfineState extends State<Confirmfine> {
             .where('email', isEqualTo: userEmail)
             .get();
 
-
         // Assuming that email is unique, we can take the first document
         DocumentSnapshot officerDoc = officerSnapshot.docs.first;
 
         setState(() {
           officerId = officerDoc.id;
         });
-
       } catch (e) {
         print('Error fetching officer data: $e');
       }
@@ -53,7 +50,6 @@ class _ConfirmfineState extends State<Confirmfine> {
       print('No user is currently logged in.');
     }
   }
-
 
   @override
   void initState() {
@@ -64,7 +60,7 @@ class _ConfirmfineState extends State<Confirmfine> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    //getting fines data collected from previous screen
+    //getting fines data collected from generate fines screen
     final arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     fines = arguments['fines'];
@@ -76,7 +72,11 @@ class _ConfirmfineState extends State<Confirmfine> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(title: 'Confirm Fine', isBackButton: true, displayOfficerProfile: true),
+      appBar: Appbar(
+        title: 'Confirm Fine',
+        isBackButton: true,
+        displayOfficerProfile: true,
+      ),
       body: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
@@ -90,12 +90,12 @@ class _ConfirmfineState extends State<Confirmfine> {
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold,
                 ),
-              ),//Car number
+              ), //Car number
               if (imgUrl != null)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Image.network(imgUrl!), // Display the captured image
-                ),//show img if any
+                ), //show img if any
               kListHeaders,
               SizedBox(
                 height: 150.0,
@@ -121,12 +121,22 @@ class _ConfirmfineState extends State<Confirmfine> {
               ),
               RoundButton(
                 onPressed: () {
-                  _firestore.collection('fines').add({'by': officerId, 'date':FieldValue.serverTimestamp(), 'fines':fines, 'total': total, 'photo':imgUrl, 'to':number, 'status': 'Pending',});
+                  // Add the fine details to the Firestore
+                  _firestore.collection('fines').add({
+                    'by': officerId,
+                    'date': FieldValue.serverTimestamp(),
+                    'fines': fines,
+                    'total': total,
+                    'photo': imgUrl,
+                    'to': number,
+                    'status': 'Pending',
+                  });
                   int count = 0;
+                  // Navigate back to the home screen
                   Navigator.popUntil(context, (route) => count++ == 2);
                 },
-                text:'Confirm',
-                ),
+                text: 'Confirm',
+              ),
             ],
           ),
         ),

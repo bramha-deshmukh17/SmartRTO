@@ -33,8 +33,7 @@ class _OfficerLoginState extends State<OfficerLogin> {
       body: ModalProgressHUD(
         inAsyncCall: loading,
         progressIndicator: const CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-              kSecondaryColor), // Set custom color
+          color:kSecondaryColor, // Set custom color
         ),
         child: Center(
           child: Column(
@@ -108,6 +107,7 @@ class _OfficerLoginState extends State<OfficerLogin> {
   }
 
   Future<void> signInWithEmailAndPassword() async {
+    //sign in with email and password
     setState(() {
       loading = true;
     });

@@ -26,6 +26,7 @@ class _CaptureImageState extends State<CaptureImage> {
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
 
     if (image != null) {
+      //capture photo for generating fine and upload to the firebase 
       String filePath = 'fines/${DateTime.now().millisecondsSinceEpoch}.jpg';
       File file = File(image.path);
 

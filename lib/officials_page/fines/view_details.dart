@@ -67,7 +67,8 @@ class _ViewDetailsState extends State<ViewDetails> {
                   ),
                 kBox,
                 if (_visible)
-                  carDetails != null
+                // Display car details and fine history
+                  carDetails != null //if car details are available
                       ? Column(
                           children: [
                             Text('Owner Name: ${carDetails!['owner_name']}'),
@@ -92,6 +93,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                               itemBuilder: (context, index) {
                                 final fine = fineHistory[index];
                                 return GestureDetector(
+                                  // Navigate to edit fine page
                                   onTap: () {
                                     Navigator.pushNamed(
                                       context,
@@ -201,12 +203,20 @@ class _ViewDetailsState extends State<ViewDetails> {
   }
 
   bool verifyNumber(String number) {
-    // Correct regex for Indian number plates
+    //here we have created 4 groups to match the number plate
+    //eg: MH12AB1234
+    //group 1: MH
+    //group 2: 12
+    //group 3: AB
+    //group 4: 1234
+    //group 1 and 3 are alphabets and group 2 and 4 are numbers
+    //we have used regex to match the number plate
     final regExp = RegExp(r'^[A-Z]{2}\d{1,2}[A-Z]{1,2}\d{4}$');
 
     if (regExp.hasMatch(number)) {
       // Extract components of the number plate and format it
       final stateCode = number.substring(0, 2);
+      // Divide into 4 groups for easier formatting
       final districtCode = number.substring(2, 4).padLeft(2, '0');
       final letterCode =
           number.length > 8 ? number.substring(4, 6) : number.substring(4, 5);

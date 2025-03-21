@@ -26,12 +26,14 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundImage: AssetImage('images/logo.png') as ImageProvider,
+            Image(
+              height: 300,width: 350,
+              image: AssetImage('images/logo.png'),
             ), // Splash logo
             kBox,
-            CircularProgressIndicator(color: kSecondaryColor,), // Loader
+            CircularProgressIndicator(
+              color: kSecondaryColor,
+            ), // Loader
             kBox,
             Text(
               'Loading...',

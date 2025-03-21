@@ -29,7 +29,7 @@ class _ViewPucApplicationState extends State<ViewPucApplication> {
   }
 
   Future<void> fetchApplicationData() async {
-    
+    //fetch puc application data
     DocumentSnapshot docSnapshot = await _firestore
         .collection('pucapplication')
         .doc(arguments?['applicationId'])
@@ -52,7 +52,7 @@ class _ViewPucApplicationState extends State<ViewPucApplication> {
         isBackButton: true,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: kSecondaryColor,))
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

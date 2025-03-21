@@ -35,6 +35,7 @@ class _ViewApplicationState extends State<ViewApplication> {
   }
 
   Future<void> fetchApplicationData() async {
+    //fetch application data according to the its type
     String type = arguments?['applicationType'] == "LL"
         ? 'llapplication'
         : 'dlapplication';
@@ -52,6 +53,7 @@ class _ViewApplicationState extends State<ViewApplication> {
   }
 
   Future<void> updateStatus() async {
+    //update the exam status for the application
     String type = arguments?['applicationType'] == "LL"
         ? 'llapplication'
         : 'dlapplication';
@@ -69,6 +71,7 @@ class _ViewApplicationState extends State<ViewApplication> {
   }
 
   Future<void> approveApplication() async {
+    //update approval status for the application
      String type = arguments?['applicationType'] == "LL"
         ? 'llapplication'
         : 'dlapplication';
@@ -483,9 +486,11 @@ class _ViewApplicationState extends State<ViewApplication> {
                     ),
                   kBox,
                   
+                  //if the status of approval or exam is false then display these buttons
                   if (applicationData?['approved'] == false ||
                       applicationData?['examResult'] == null)
                     if (applicationData?['examResult'] == null)
+                      //if exam result is null then display the update exam status
                       Column(
                         children: [
                           CustomRadioButtonGroup(
@@ -504,6 +509,7 @@ class _ViewApplicationState extends State<ViewApplication> {
                         ],
                       )
                     else if (applicationData?['examResult'] == true)
+                      //if exam result is true then only display the approval button
                       RoundButton(
                         text: 'Approve Application & generate LL number',
                         onPressed: approveApplication,

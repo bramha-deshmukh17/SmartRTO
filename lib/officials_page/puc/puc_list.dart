@@ -23,6 +23,7 @@ class _PucListState extends State<PucList> {
   }
 
   Future<void> fetchApplicationList() async {
+    //fetch puc application list
     final snapshot = await _firestore.collection('pucapplication').get();
 
     // Use a set to track unique document IDs
@@ -30,6 +31,7 @@ class _PucListState extends State<PucList> {
 
     for (var doc in snapshot.docs) {
       uniqueDocs[doc.id] = {
+        //add doc id in the data for future use
         'applicationId': doc['receiptId'],
         'registrationNo': doc['registration'],
         'fullName': doc['fullName'],

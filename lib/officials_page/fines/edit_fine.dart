@@ -3,8 +3,10 @@ import 'package:drop_down_search_field/drop_down_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../utility/appbar.dart';
+import '../../utility/constants.dart';
 import '../../utility/round_button.dart';
 import '../../utility/search_dropdown.dart';
+import '../utility/fines_list.dart';
 
 class EditFine extends StatefulWidget {
   static const String id = "officer/fine/edit";
@@ -28,10 +30,6 @@ class _EditFineState extends State<EditFine> {
     super.didChangeDependencies();
     args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     fetchFines();
-
-    print('id: ${args?['id']}');
-    
-    print('fineData: $fineData');
   }
 
   void fetchFines() async {
@@ -40,16 +38,15 @@ class _EditFineState extends State<EditFine> {
     setState(() {
       finesAndPenalties = fines;
       fineData = fines2;
-      fineData['id'] = args?['id']; 
+      fineData['id'] = args?['id'];
     });
   }
 
   Future<Map<String, int>> fetchFinesFromFirestore() async {
+    //fetch finesdata from firestore
     try {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
-          .collection('finesdata')
-          .doc('penalties')
-          .get();
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await _firestore.collection('finesdata').doc('penalties').get();
       finesAndPenalties = Map<String, int>.from(snapshot.data()!);
       return finesAndPenalties;
     } catch (e) {
@@ -59,18 +56,17 @@ class _EditFineState extends State<EditFine> {
   }
 
   Future<Map<String, dynamic>> fetchVehicleFinesFromFirestore() async {
+    //fetch vehicle finesdata from firestore
     try {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
-          .collection('fines')
-          .doc(args?['id'])
-          .get();
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await _firestore.collection('fines').doc(args?['id']).get();
       return snapshot.data() ?? {};
     } catch (e) {
       print('Error fetching fines: $e');
       return {};
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +77,9 @@ class _EditFineState extends State<EditFine> {
       ),
       body: fineData.isEmpty
           ? const Center(
-              child: CircularProgressIndicator()) // Show loading indicator
+              child: CircularProgressIndicator(
+              color: kSecondaryColor,
+            )) // Show loading indicator
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -97,8 +95,8 @@ class _EditFineState extends State<EditFine> {
                       errorBuilder: (context, error, stackTrace) =>
                           const Icon(Icons.error, size: 100),
                     ),
-                  const SizedBox(height: 16),
-
+                  kBox,
+                  // Display License Plate, Issued By, Issued on, Total Fine, Status
                   Text(
                     'License Plate: ${fineData['to'] ?? "N/A"}',
                     style: const TextStyle(
@@ -144,7 +142,8 @@ class _EditFineState extends State<EditFine> {
                     ),
                   const SizedBox(height: 16),
 
-                   Row(
+                  // Display Fines and its edit option
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
@@ -162,25 +161,21 @@ class _EditFineState extends State<EditFine> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  
+
                   if (fineData.containsKey('fines') &&
                       fineData['fines'] != null)
                     Column(
-                      children: fineData['fines'].entries.map<Widget>((entry) {
-                        return ListTile(
-                          title: Text(entry.key),
-                          trailing: Text(
-                            '₹${entry.value}',
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                      kListHeaders,
+                      FineList(
+                        selectedFines: fineData['fines'],
+                      ), //selected fines list
+                    ]),
                 ],
               ),
             ),
-
     );
   }
 
@@ -204,7 +199,7 @@ class _EditFineState extends State<EditFine> {
           builder: (context, setState) {
             return FractionallySizedBox(
               heightFactor:
-                  0.6, // ✅ Limits bottom sheet to 60% of the screen height
+                  0.6, // Limits bottom sheet to 60% of the screen height
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -256,13 +251,19 @@ class _EditFineState extends State<EditFine> {
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete,
+                                  //button to remove fines
+                                  icon: Icon(FontAwesomeIcons.trash,
                                       color: Colors.red),
                                   onPressed: () {
                                     setState(() {
                                       selectedFines.remove(entry.key);
+                                      // Calculate the total fine amount by summing all values in the selectedFines map
                                       total = selectedFines.values
+                                          // Use the fold method to iterate over each fine amount
                                           .fold(0, (sum, value) => sum + value);
+                                      // The fold method starts with an initial sum of 0
+                                      // For each fine amount (value), add it to the current sum
+                                      // The result is the total sum of all fine amounts
                                     });
                                   },
                                 ),
@@ -300,7 +301,7 @@ class _EditFineState extends State<EditFine> {
                           print("Error updating fine data: $error");
                         });
 
-                        // ✅ Refresh fineData in EditFine class
+                        //  Refresh fineData in EditFine class
                         setState(() {
                           fineData['fines'] = selectedFines;
                           fineData['total'] = total;

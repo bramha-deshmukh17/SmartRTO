@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../utility/constants.dart';
 
 class FineList extends StatelessWidget {
-  final Map<String, int> selectedFines;
+  final Map<String, dynamic> selectedFines;
 
   const FineList({super.key, required this.selectedFines});
-
+  //display list of the fnes
   @override
   Widget build(BuildContext context) {
     return  ConstrainedBox(

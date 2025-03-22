@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../utility/appbar.dart';
 import '../../utility/constants.dart';
 
-
 class LicenseInfoPage extends StatefulWidget {
   static const String id = 'user/license';
 
@@ -18,7 +17,7 @@ class LicenseInfoPage extends StatefulWidget {
 class _LicenseInfoPageState extends State<LicenseInfoPage> {
   Map<String, dynamic>? licenseData;
   String? mobileNumber;
-  bool loading = true;
+  bool loading = true, driving = true;
 
   Future<void> _fetchMobileNumber() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -40,6 +39,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
   }
 
   Future<void> fetchLicenseData() async {
+    //fetch user license first check for dl if not found then go for ll
     try {
       setState(() {
         loading = true;
@@ -80,6 +80,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
           setState(() {
             licenseData = llData;
             loading = false;
+            driving = false;
           });
           return; // Exit if LL is found
         }
@@ -111,6 +112,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    //display license data
     return Scaffold(
       appBar: Appbar(
         title: 'License Details',
@@ -176,7 +178,6 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
                           "Date of Birth: ${_formatDate(DateTime.parse(licenseData!['selectedDateOfBirth']))}",
                           style: const TextStyle(fontSize: 18),
                         ),
-
                         const SizedBox(height: 8),
                         Text(
                           "Gender: ${licenseData!['selectedGender']}",
@@ -187,9 +188,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
                           "Issue Date: ${_formatDate(DateTime.parse(licenseData!['payementDate']))}",
                           style: const TextStyle(fontSize: 18),
                         ),
-
                         const SizedBox(height: 8),
-                        
                         const SizedBox(height: 8),
                         Text(
                           "Address: ${licenseData!['permanentAddress']}",
@@ -201,7 +200,11 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
                           style: const TextStyle(fontSize: 18),
                         ),
                         const SizedBox(height: 8),
-                        
+                        Text(
+                          "Expiry on: ${_calculateExpiryDate(licenseData!['payementDate'], driving)}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),
@@ -209,5 +212,21 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
               ),
             ),
     );
+  }
+
+// Function to calculate the expiry date based on license type
+  String _calculateExpiryDate(String paymentDate, bool licenseType) {
+    DateTime paymentDateTime = DateTime.parse(paymentDate);
+    DateTime expiryDate;
+
+    if (licenseType) {
+      // Add 6 months for learning license
+      expiryDate = paymentDateTime.add(Duration(days: 6 * 30));
+    } else {
+      // Add 20 years for driving license
+      expiryDate = paymentDateTime.add(Duration(days: 20 * 365));
+    } 
+
+    return _formatDate(expiryDate);
   }
 }

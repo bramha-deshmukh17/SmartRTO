@@ -28,6 +28,7 @@ class _GrievancelistState extends State<Grievancelist> {
   }
 
   Stream<QuerySnapshot> _getGrievance() {
+    //getting all the grievance made by the user
     return _firestore
         .collection('grievance')
         .where('by',
@@ -61,7 +62,7 @@ class _GrievancelistState extends State<Grievancelist> {
               return const Center(child: Text('No Grievances found.'));
             }
 
-            // Display the list of vehicles
+            // Display the list of grievance
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {

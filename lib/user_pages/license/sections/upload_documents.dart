@@ -34,6 +34,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
 
   @override
   Widget build(BuildContext context) {
+    //upload the relevant docs
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,6 +99,9 @@ class _UploadDocumentsState extends State<UploadDocuments> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
 
           // Show uploaded file preview if available
+          //here if thisi sdl form then the docs uploaded in the ll form are preloaded here and displayed here
+          //also user can update them if they want
+          //and if it is ll form then the user needs to upload the docs
           uploadedFile != null && uploadedFile.isNotEmpty
               ? FutureBuilder<PdfControllerPinch>(
                   future: _buildNetworkController(uploadedFile),
@@ -153,11 +157,12 @@ class _UploadDocumentsState extends State<UploadDocuments> {
               child: Text(errorText,
                   style: TextStyle(color: Colors.red, fontSize: 12)),
             ),
-
-          !isFileUploaded
+          //if file is uploaded then the buttons are hidden and if not then showed
+          //if file is selected for the upload then clear and submit buttons are visible else camera and gallery buttons are visible
+          !isFileUploaded //if file is not uploaded
               ? Column(
                   children: [
-                    selectedFile == null
+                    selectedFile == null //if selected file is null
                         ? ElevatedButton.icon(
                             onPressed: () => _pickPdf(isAadhaar),
                             icon: Icon(FontAwesomeIcons.filePdf,
@@ -196,6 +201,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
   }
 
   Future<void> _pickPdf(bool isAadhaar) async {
+    //pick up pdf from the files
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
@@ -204,6 +210,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
     if (result != null) {
       File file = File(result.files.single.path!);
       setState(() {
+        //set file data
         if (isAadhaar) {
           _selectedAadhaarPdf = file;
           _pdfAadhaarController =
@@ -222,11 +229,14 @@ class _UploadDocumentsState extends State<UploadDocuments> {
   }
 
   Future<void> uploadDoc(File? file, bool isAadhaar) async {
+    //upload the pdf
     setState(() {
       isLoading = true;
+      //trigger the loading animation
     });
 
     try {
+      //filepath  to store the file in the firebase
       String filePath =
           'llapplication/${DateTime.now().millisecondsSinceEpoch}_${isAadhaar ? "aadhaar" : "bill"}.pdf';
 
@@ -238,6 +248,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
           await FirebaseStorage.instance.ref(filePath).getDownloadURL();
 
       setState(() {
+        //update file upload status and store its url
         if (isAadhaar) {
           widget.formData.aadhaarPdf = downloadUrl;
           isAadhaarUploaded = true;
@@ -257,6 +268,7 @@ class _UploadDocumentsState extends State<UploadDocuments> {
 
   void resetFile(bool isAadhaar) {
     setState(() {
+      //reset the file if user wants to change the reupload it 
       if (isAadhaar) {
         _selectedAadhaarPdf = null;
         _pdfAadhaarController?.dispose();

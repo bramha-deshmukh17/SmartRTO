@@ -99,19 +99,13 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void openCheckout(double totalFine) async {
+    //open razorpay gateway
     var options = {
       'key': dotenv
           .env['RAZOR_PAY_API'], // Replace with your Razorpay Test API Key
       'amount': (totalFine * 100).toString(), // Convert to paisa
       'name': 'RTO India',
       'description': 'Payment for Fines',
-      'prefill': {
-        'contact': '9999999999',
-        'email': 'test@example.com',
-      },
-      'external': {
-        'wallets': ['paytm'], // Add external wallets if required
-      },
     };
 
     try {

@@ -8,7 +8,7 @@ class ChatBox extends StatelessWidget {
   final dynamic controller;
 
   const ChatBox({super.key, required this.controller, required this.filePressed, });
-
+  //chatbox design where user ask a query
   @override
   Widget build(BuildContext context) {
     return Padding(

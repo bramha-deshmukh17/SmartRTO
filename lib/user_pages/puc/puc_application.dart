@@ -76,6 +76,7 @@ class PucApplicationState extends State<PucApplication> {
   }
 
   void openCheckout() async {
+    //open razorpay gateway
     var options = {
       'key': dotenv
           .env['RAZOR_PAY_API'], // Replace with your Razorpay Test API Key

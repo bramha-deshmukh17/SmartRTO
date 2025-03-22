@@ -27,7 +27,7 @@ class _PhoneAuthenticationState extends State<PhoneAuthentication> {
 
   @override
   Widget build(BuildContext context) {
-    
+    //authenticate user number
     return Scaffold(
       appBar: Appbar(
         title: 'Authenticate Phone Number',

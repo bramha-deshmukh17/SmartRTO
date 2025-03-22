@@ -37,7 +37,7 @@ class _ChatBotState extends State<ChatBot> {
 
   void onSendMessage() async {
     late ChatModel model;
-
+    //store the message in chatmodel
     if (image == null) {
       model = ChatModel(isMe: true, message: controller.text);
     } else {
@@ -50,6 +50,7 @@ class _ChatBotState extends State<ChatBot> {
       );
     }
 
+    //later store it in chatlist to show in the chat screen of the chatbot
     chatList.insert(0, model);
     setState(() {});
     controller.text = '';
@@ -59,7 +60,7 @@ class _ChatBotState extends State<ChatBot> {
     setState(() {
       isTyping = true;
     });
-
+    //send request to gemini
     final geminiModel = await sendRequestToGemini(model);
 
     // Remove typing animation and add response
@@ -82,6 +83,7 @@ class _ChatBotState extends State<ChatBot> {
     String url =
         "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}";
 
+    //api body with instructions and user query and img if it is not null
     Map<String, dynamic> body = {
       "contents": [
         {
@@ -99,6 +101,7 @@ class _ChatBotState extends State<ChatBot> {
       ],
     };
 
+    //getting the response from the api call
     Uri uri = Uri.parse(url);
     final result = await http.post(
       uri,
@@ -106,6 +109,7 @@ class _ChatBotState extends State<ChatBot> {
       body: json.encode(body),
     );
 
+    //processing the api response and storing in the chatlist with the help of chatmodel class
     if (result.statusCode >= 500 && result.statusCode <= 599) {
       return ChatModel(
           isMe: false, message: 'Currently Chatbot is down try again later...');
@@ -120,67 +124,66 @@ class _ChatBotState extends State<ChatBot> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: Appbar(
+      appBar: Appbar(
         title: 'AI Assistant',
         isBackButton: true,
         displayUserProfile: true,
       ),
-        body: Column(
-          children: [
-            Expanded(
-              flex: 10,
-              child: ListView.builder(
-                reverse: true,
-                itemCount: chatList.length + (isTyping ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (isTyping && index == 0) {
-                    return ListTile(
-                      title: const Text("Assistant",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: const TypingAnimation(),
-                    );
-                  }
-
-                  final chatIndex = isTyping ? index - 1 : index;
+      body: Column(
+        children: [
+          Expanded(
+            flex: 10,
+            child: ListView.builder(
+              reverse: true,
+              itemCount: chatList.length + (isTyping ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (isTyping && index == 0) {
                   return ListTile(
-                    title: Text(chatList[chatIndex].isMe ? "Me" : "Assistant",
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: chatList[chatIndex].base64EncodedImage != null
-                        ? Column(
-                            children: [
-                              Image.memory(
-                                base64Decode(
-                                    chatList[chatIndex].base64EncodedImage!),
-                                height: 300,
-                                width: double.infinity,
-                              ),
-                              Text(chatList[chatIndex].message),
-                            ],
-                          )
-                        : Text(chatList[chatIndex].message),
+                    title: const Text("Assistant",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: const TypingAnimation(),
                   );
-                },
+                }
+
+                final chatIndex = isTyping ? index - 1 : index;
+                return ListTile(
+                  title: Text(chatList[chatIndex].isMe ? "Me" : "Assistant",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: chatList[chatIndex].base64EncodedImage != null
+                      ? Column(
+                          children: [
+                            Image.memory(
+                              base64Decode(
+                                  chatList[chatIndex].base64EncodedImage!),
+                              height: 300,
+                              width: double.infinity,
+                            ),
+                            Text(chatList[chatIndex].message),
+                          ],
+                        )
+                      : Text(chatList[chatIndex].message),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: ChatBox(
+                  controller: controller,
+                  filePressed: selectImage,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: ChatBox(
-                    controller: controller,
-                    filePressed: selectImage,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => onSendMessage(),
-                  icon: const Icon(Icons.send, color: kSecondaryColor),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
-      
+              IconButton(
+                onPressed: () => onSendMessage(),
+                icon: const Icon(Icons.send, color: kSecondaryColor),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }

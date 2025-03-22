@@ -54,6 +54,9 @@ class StepIndicator extends StatelessWidget {
   }
 
   IconData icons(int index) {
+    // if index is greater than current show ongoing icon
+    //else if less than current show completed icon
+    //else just a circle
     if (index == currentStep) {
       return FontAwesomeIcons.circleDot;
     } else if (index < currentStep) {
@@ -65,6 +68,7 @@ class StepIndicator extends StatelessWidget {
   }
 
   String getStepLabel(int index) {
+    //show labels for each step according to the index
     if (driving) {
       switch (index) {
         case 0:
@@ -122,9 +126,11 @@ class LicenseApplicationState extends State<LicenseApplication> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    //fetch the type of application
     arguments =
         (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)!;
 
+    //if it is driving application fetch data from the license application 
     if (arguments['driving'] == true) {
       getDataForDriving().then((_) {
         setState(() {}); // Ensure UI updates after data is set
@@ -140,7 +146,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   @override
   Widget build(BuildContext context) {
     // Ensure arguments are initialized before accessing them
-    int lastIndex = arguments['driving'] ? 6 : 4;
+    int lastIndex = arguments['driving'] ? 6 : 4;//for dl last is 6 and for ll it is 4
 
     return Scaffold(
       appBar: Appbar(
@@ -166,13 +172,14 @@ class LicenseApplicationState extends State<LicenseApplication> {
             Expanded(
               child: Container(
                 width: double.infinity, // Ensures the child takes full width
-                child: getCurrentStepContent(),
+                child: getCurrentStepContent(),//get the content of the current step
                 // Load content without losing data
               ),
             ),
 
             // Buttons at the bottom
             Padding(
+              //buttons to increase and decrease the current step
               padding: EdgeInsets.only(top: 5.0),
               child: Row(
                 mainAxisAlignment: currentStep > 0 && currentStep < lastIndex
@@ -180,6 +187,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
                     : MainAxisAlignment.end,
                 children: [
                   if (currentStep > 0 && currentStep < lastIndex)
+                    //show previous only for step greater than 0 and less than last index
                     RoundButton(
                       onPressed: () {
                         setState(() {
@@ -231,6 +239,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   }
 
   Widget getCurrentStepContent() {
+    //indexed stack will return the nth index item ie.e part of our application
     if (arguments['driving']) {
       return IndexedStack(
         index: currentStep,
@@ -259,6 +268,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   }
 
   Future<void> getDataForDriving() async {
+    //fucntion to get the data for the driving license from the ll
     QuerySnapshot snapshot = await _firestore
         .collection('llapplication')
         .where('applicantMobile', isEqualTo: arguments['mobile'])
@@ -329,6 +339,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   bool validateForm(int currentStep) {
     formData.clearErrors(); // Clear old errors at start
 
+    //validate form data 
     if (arguments['driving']) {
       switch (currentStep) {
         case 0:
@@ -410,6 +421,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   }
 
   bool validateFormFields() {
+    //all user data in the first step validated here
     bool isValid = true;
     if (formData.selectedState == null) {
       formData.fieldErrors['selectedState'] = 'Please select state';
@@ -636,6 +648,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   }
 
   bool validatePhotonSign() {
+    //check user photo sign upload status
     bool isValid = true;
     if (formData.photo == null) {
       formData.fieldErrors['photo'] = 'Please upload a photo';
@@ -659,6 +672,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   }
 
   bool validateDocument() {
+    //check user docs upload status
     bool isValid = true;
     if (formData.aadhaarPdf == null) {
       formData.fieldErrors['aadhaarPdf'] = 'Please upload Aadhaar PDF';
@@ -681,6 +695,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   }
 
   Future<bool> saveFormData(FormData formData) async {
+    //save ll application to firebase
     final String id = DateTime.now().millisecondsSinceEpoch.toString();
     formData.receiptId = id;
     await _firestore
@@ -704,6 +719,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   }
 
   Future<bool> saveDlForm(FormData formData) async {
+    //save dl application to firebase
     final String id = DateTime.now().millisecondsSinceEpoch.toString();
     formData.receiptId = id; // Set receiptId before saving to Firestore
 
@@ -730,6 +746,7 @@ class LicenseApplicationState extends State<LicenseApplication> {
   }
 
   Future<void> bookSlot(FormData formData) async {
+    //function to book slot for the dl test
     try {
       String slot = formData.slot_no ?? 'slot1';
       await _firestore.collection('slots').doc(formData.slot_id).update({

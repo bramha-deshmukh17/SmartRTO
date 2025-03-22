@@ -292,6 +292,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
       final day1 = currentDate.day;
       final day2 = pickedDate.day;
 
+      //only 18+ people are allowed to apply for the license  
       if (age > 18 ||
           (age == 18 &&
               (month1 > month2 || (month1 == month2 && day1 >= day2)))) {

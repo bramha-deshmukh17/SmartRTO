@@ -20,6 +20,7 @@ class _SelfVerificationState extends State<SelfVerification> {
 
   @override
   Widget build(BuildContext context) {
+    //self verification based on the selfie
     return SingleChildScrollView(
       child: Center(
         child: Column(
@@ -87,6 +88,7 @@ class _SelfVerificationState extends State<SelfVerification> {
     );
   }
 
+  //take selfie and store locally
   Future<void> _takeSelfie() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
@@ -98,6 +100,7 @@ class _SelfVerificationState extends State<SelfVerification> {
     }
   }
 
+  //upload the the selfie to firebase
   Future<void> _uploadSelfie() async {
     setState(() {
       isLoading = true;

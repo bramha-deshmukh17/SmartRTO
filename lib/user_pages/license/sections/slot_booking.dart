@@ -17,6 +17,7 @@ class _SlotBookingState extends State<SlotBooking> {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   String? selectedSlotId; // Track selected slot
 
+  //fetch slots data from the database
   Future<List<Map<String, dynamic>>> fetchSlots() async {
     final now = DateTime.now();
     final todayStart =
@@ -33,6 +34,7 @@ class _SlotBookingState extends State<SlotBooking> {
         .toList();
   }
 
+  //book the slot for the test 
   void _bookSlot(int slotNo, String slotId) {
     setState(() {
       widget.formData.slot_no = slotNo == 1 ? 'slot1' : 'slot2';
@@ -44,6 +46,7 @@ class _SlotBookingState extends State<SlotBooking> {
 
   @override
   Widget build(BuildContext context) {
+    //slot booking for the driving license application
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: fetchSlots(),
       builder: (context, snapshot) {

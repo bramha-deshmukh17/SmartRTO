@@ -71,6 +71,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     print("External Wallet: ${response.walletName}");
   }
 
+  //opens razor pay gateway
   void openCheckout() async {
     fees = calculateApplicationFee();
     var options = {
@@ -78,7 +79,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           .env['RAZOR_PAY_API'], // Replace with your Razorpay Test API Key
       'amount': (fees * 100).toString(), // Convert to paisa
       'name': 'RTO India',
-      'description': 'Payment for LL Application',
+      'description': 'Payment for License Application',
     };
 
     try {

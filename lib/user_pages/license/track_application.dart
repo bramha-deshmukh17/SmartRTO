@@ -38,9 +38,10 @@ class _TrackApplicationState extends State<TrackApplication> {
         padding: EdgeInsets.all(15.0),
         child: Column(
           children: [
+            //dropdown for the selecting the type of the 
             DropdownButtonFormField<String>(
               decoration: kDropdown(
-                "District",
+                "Application Type",
                 errorText: applicationTypeError,
               ),
               value: applicationTypeList[0],
@@ -62,6 +63,8 @@ class _TrackApplicationState extends State<TrackApplication> {
               },
             ),
             kBox,
+
+            //user input for application number
             UserInput(
               controller: _applicationNumberController,
               hint: 'Enter application Number',
@@ -74,6 +77,8 @@ class _TrackApplicationState extends State<TrackApplication> {
               onPressed: fetchStatus,
               text: 'Track',
             ),
+
+            //if data found then display
             if (applicationData != null) ...[
               const SizedBox(height: 20),
               const Text(
@@ -201,6 +206,12 @@ class _TrackApplicationState extends State<TrackApplication> {
         if (!snapshot.exists) {
           applicationData = null;
         } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Wrong application number.'),
+              backgroundColor: kRed,
+            ),
+          );
           applicationData = snapshot.data() as Map<String, dynamic>?;
         }
       });

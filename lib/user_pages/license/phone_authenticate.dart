@@ -30,6 +30,7 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> fetchApplicationData() async {
+    //if user is filling dl then fetch the data from the ll like mobile number which will be authenticated
     QuerySnapshot snapshot = await _fireStore
         .collection('llapplication')
         .where('licenseNumber',
@@ -87,6 +88,8 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
               inAsyncCall: loading,
               child: llapplicationId == null
                   ? Column(
+                      //to authenticate the dl user
+                      //fetch the mobile number from the ll application
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -156,6 +159,7 @@ class _PhoneAuthenticateState extends State<PhoneAuthenticate> {
                     ),
             )
           : ModalProgressHUD(
+            //for ll user authentication
               progressIndicator: const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
                     kSecondaryColor), // Set custom color

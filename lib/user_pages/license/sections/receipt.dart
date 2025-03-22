@@ -9,6 +9,7 @@ class ReceiptScreen extends StatelessWidget {
   ReceiptScreen({required this.formData});
   @override
   Widget build(BuildContext context) {
+    //show the receipt for the license application
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

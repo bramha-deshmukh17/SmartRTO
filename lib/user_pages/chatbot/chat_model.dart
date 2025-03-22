@@ -6,6 +6,7 @@ class ChatModel {
 
   ChatModel({required this.isMe, required this.message, this.base64EncodedImage,});
 
+//this variable hold a system prompt for the chatbot
   static const String instructions = """
 You are an assistant who analyzes road signs in images and responds to queries about fines in India. You greet users warmly and provide helpful information about fines based on Indian traffic laws. For any unrelated queries, including those not involving fines or road signs, you politely respond:
 

@@ -25,6 +25,7 @@ class _GenerateGrievanceState extends State<GenerateGrievance> {
   final _focusNodeSecond = FocusNode();
 
   void _showBottomSheet(BuildContext context) {
+    //bottom sheet to generate the grievance
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -56,6 +57,7 @@ class _GenerateGrievanceState extends State<GenerateGrievance> {
               kBox,
               RoundButton(
                   onPressed: () {
+                    //generate grievance against the fine issued and store in the firebase
                     _fireStore.collection('grievance').add({
                       'fineno': _fineNoController.text,
                       'grievance': _grievance.text,

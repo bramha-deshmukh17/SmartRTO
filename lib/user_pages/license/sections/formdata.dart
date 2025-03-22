@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FormData {
+  //form data of license application
   bool isDrivingApplication = false;
 
   String? selectedState;
@@ -127,7 +128,7 @@ class FormData {
     fieldErrors.clear();
   }
 
-  // Convert FormData to a Map (excluding errors)
+  // Convert FormData to a Map of learning license
   Map<String, dynamic> toMap() {
     return {
       'selectedState': selectedState,
@@ -184,6 +185,7 @@ class FormData {
     };
   }
 
+  // Convert FormData to a Map of driving license
   Map<String, dynamic> toMapDl() {
     return {
       'selectedState': selectedState,

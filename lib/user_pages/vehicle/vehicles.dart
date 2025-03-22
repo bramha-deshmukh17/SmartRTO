@@ -27,6 +27,7 @@ class _ViewVehicleState extends State<ViewVehicle> {
 
   // Fetch the user's vehicles from Firestore
   Stream<QuerySnapshot> _getUserVehicles() {
+    //get the vehicle based on phone number of the user
     return _firestore
         .collection('cars')
         .where('contact', isEqualTo: userPhone) // Assuming 'contact' stores user phone
@@ -34,6 +35,7 @@ class _ViewVehicleState extends State<ViewVehicle> {
   }
 
   Widget _getIcon(String type) {
+    //icon according to vehicle type
     switch (type) {
       case 'TW':
         return Icon(FontAwesomeIcons.motorcycle);

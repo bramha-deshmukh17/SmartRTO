@@ -110,7 +110,8 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
 
           // Display existing uploaded file or placeholder
           !isDriving || fileUpload == null
-              ? file != null
+              //if file is uploded show it using its url else show for local storage
+              ? file != null //if file is not null show preview of selected file else a placeholder with the img icon
                   ? Image.file(
                       file,
                       width: 150,
@@ -145,9 +146,10 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
               ),
             ),
 
-          // Buttons for upload or retry
-          !isFileUploaded
+          // Buttons for upload and retry or camera and gallery
+          !isFileUploaded //if file is uploaded then show uploaded text else buttons
               ? file == null
+                  //if file is null display the camera and gallery buttons else retry or submit
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -215,8 +217,8 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
     );
   }
 
-  // Function to pick an image
   Future<void> _pickImage(ImageSource source, bool isPhoto) async {
+  // Function to pick an image
     final pickedFile =
         await _picker.pickImage(source: source, imageQuality: 80);
 
@@ -235,8 +237,8 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
     }
   }
 
-  // Function to upload document to Firebase
   Future<void> uploadDoc(File? file, bool isPhoto) async {
+  // Function to upload document to Firebase
     setState(() {
       isLoading = true;
     });
@@ -270,8 +272,8 @@ class _UploadPhotoAndSignState extends State<UploadPhotoAndSign> {
     });
   }
 
-  // Function to retry upload (reset the selected file)
   void retry(bool isPhoto) {
+  // Function to retry upload (reset the selected file)
     setState(() {
       if (isPhoto) {
         _photo = null;

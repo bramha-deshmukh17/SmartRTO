@@ -100,6 +100,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   }
 
   Widget _buildInsuranceDetails() {
+    //to display vehicle details
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -122,6 +123,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   }
 
   Widget _buildFinesList(
+    //to display the list of fine
       List<QueryDocumentSnapshot<Map<String, dynamic>>> fines) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,6 +192,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   }
 
   Widget _getIcon(String type) {
+    //get icons for the vehicle type
     switch (type) {
       case 'TW':
         return const Icon(FontAwesomeIcons.motorcycle);

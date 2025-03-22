@@ -9,6 +9,7 @@ class TypingAnimation extends StatefulWidget {
 
 class _TypingAnimationState extends State<TypingAnimation>
     with TickerProviderStateMixin {
+      //this is typing animation for the chatbot till the chat generates the response for the user query
   late AnimationController _controller1;
   late AnimationController _controller2;
   late AnimationController _controller3;

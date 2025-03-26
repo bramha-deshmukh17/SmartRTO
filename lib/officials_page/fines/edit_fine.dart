@@ -11,6 +11,8 @@ import '../utility/fines_list.dart';
 class EditFine extends StatefulWidget {
   static const String id = "officer/fine/edit";
 
+  const EditFine({super.key});
+
   @override
   _EditFineState createState() => _EditFineState();
 }

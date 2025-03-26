@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../utility/appbar.dart';
 import '../utility/my_card.dart';
+import 'fines/modify_fine_info.dart';
 import 'license/license_list.dart';
 import 'grievance/view_grievances.dart';
 import 'fines/generate_fine.dart';
@@ -92,6 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         cardTitle: 'Fine',
                         onTap: () {
                           Navigator.pushNamed(context, GenerateFines.id);
+                        },
+                      ),
+                      CustomCard(
+                        icon: FontAwesomeIcons.filePen,
+                        cardTitle: 'Fine Data',
+                        onTap: () {
+                          Navigator.pushNamed(context, ModifyFineData.id);
                         },
                       ),
                        CustomCard(

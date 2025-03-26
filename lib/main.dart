@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'officials_page/fines/edit_fine.dart';
+import 'officials_page/fines/modify_fine_info.dart';
 import 'officials_page/license/license_list.dart';
 import 'officials_page/fines/confirm_fine.dart';
 import 'officials_page/grievance/view_grievances.dart';
@@ -89,7 +90,8 @@ class MyApp extends StatelessWidget {
         Profile.id:  (context)=> const Profile(),
         GenerateFines.id: (context)=> const GenerateFines(),
         Confirmfine.id: (context)=> const Confirmfine(),
-        EditFine.id: (context)=> EditFine(),
+        EditFine.id: (context)=> const EditFine(),
+        ModifyFineData.id: (context)=> const ModifyFineData(),
         ViewDetails.id: (context)=> const ViewDetails(),
         OfficerGrievanceList.id: (context)=> const OfficerGrievanceList(),
         LearnerLicenseList.id: (context)=> const LearnerLicenseList(),

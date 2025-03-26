@@ -33,7 +33,7 @@ class UserInput  extends StatelessWidget {
         maxLength: maxLength,
         maxLines: maxlines,
         style: const TextStyle(fontFamily: 'InriaSans',fontSize: 20.0),
-        cursorColor: kBlack,
+        cursorColor: kSecondaryColor,
       
         onSubmitted: submit,
 

@@ -38,9 +38,11 @@ class _ViewPucApplicationState extends State<ViewPucApplication> {
     if (docSnapshot.exists) {
       setState(() {
         applicationData = docSnapshot.data() as Map<String, dynamic>?;
-        isLoading = false;
       });
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -52,74 +54,85 @@ class _ViewPucApplicationState extends State<ViewPucApplication> {
         isBackButton: true,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator(color: kSecondaryColor,))
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Application ID: ${applicationData?['receiptId']}',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ? Center(
+              child: CircularProgressIndicator(
+              color: kSecondaryColor,
+            ))
+          : applicationData == null
+              ? Center(
+                  child: Text(
+                    "No Application found",
+                    style: TextStyle(color: kRed, fontSize: 20),
                   ),
-                  kBox,
-                  Text(
-                    'Full Name: ${applicationData?['fullName']}',
-                    style: TextStyle(fontSize: 16),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Application ID: ${applicationData?['receiptId']}',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      kBox,
+                      Text(
+                        'Full Name: ${applicationData?['fullName']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Mobile: ${applicationData?['mobile']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Pin Code: ${applicationData?['pinCode']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Registration: ${applicationData?['registration']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Chasis: ${applicationData?['chasis']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Selected State: ${applicationData?['selectedState']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Selected District: ${applicationData?['selectedDistrict']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Payment ID: ${applicationData?['paymentId']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Slot ID: ${applicationData?['slot_id']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Slot No: ${applicationData?['slot_no']}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      kBox,
+                      Text(
+                        'Created At: ${DateFormat('dd MMMM yyyy, HH:mm:ss').format((applicationData?['createdAt'] as Timestamp).toDate())}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
                   ),
-                  kBox,
-                  Text(
-                    'Mobile: ${applicationData?['mobile']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Pin Code: ${applicationData?['pinCode']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Registration: ${applicationData?['registration']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Chasis: ${applicationData?['chasis']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Selected State: ${applicationData?['selectedState']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Selected District: ${applicationData?['selectedDistrict']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Payment ID: ${applicationData?['paymentId']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Slot ID: ${applicationData?['slot_id']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Slot No: ${applicationData?['slot_no']}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  kBox,
-                  Text(
-                    'Created At: ${DateFormat('dd MMMM yyyy, HH:mm:ss').format((applicationData?['createdAt'] as Timestamp).toDate())}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
+                ),
     );
   }
 }

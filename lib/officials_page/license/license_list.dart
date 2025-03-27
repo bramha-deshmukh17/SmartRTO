@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../utility/appbar.dart';
 import '../../utility/constants.dart';
+import '../../utility/user_input.dart';
 import 'view_application.dart';
 
 class LearnerLicenseList extends StatefulWidget {
@@ -15,6 +17,7 @@ class LearnerLicenseList extends StatefulWidget {
 
 class _LearnerLicenseListState extends State<LearnerLicenseList> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final TextEditingController _controller = TextEditingController();
 
   List<Map<String, dynamic>> applicationList = [];
   Map<String, dynamic>? arguments;
@@ -34,12 +37,11 @@ class _LearnerLicenseListState extends State<LearnerLicenseList> {
     String type = arguments?['applicationType'] == "LL"
         ? 'llapplication'
         : 'dlapplication';
-        //fetching the only non approved application list from the firestore
+    //fetching the only non approved application list from the firestore
     final approvedFalseSnapshot = await _firestore
         .collection(type)
         .where('approved', isEqualTo: false)
         .get();
-
 
     // Use a set to track unique document IDs
     final uniqueDocs = <String, Map<String, dynamic>>{};
@@ -61,67 +63,107 @@ class _LearnerLicenseListState extends State<LearnerLicenseList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(
-        title: arguments?['applicationType'] == "LL"
-            ? 'Lerner License Application List'
-            : 'Driving License Application List',
-        isBackButton: true,
-        displayOfficerProfile: true,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: applicationList.length,
-              itemBuilder: (context, index) {
-                final application = applicationList[index];
-                return Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                  child: Card(
-                    child: ListTile(
-                      title: Text(
-                        'Application ID: ${application['applicationId']}',
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Verification: ${application['approved'] ? "Approved" : "Under Scrutiny"}',
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: application['approved'] ? kGreen : kRed),
-                          ),
-                          Text(
-                            'Exam Result: ${application['examResult'] == null ? "N/A" : application['examResult'] ? "Passed" : "Failed"}',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: application['examResult'] == null
-                                  ? kRed
-                                  : application['examResult']
-                                      ? kGreen
-                                      : kRed,
-                            ),
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        // navigat to the view application page
-                        Navigator.pushNamed(context, ViewApplication.id, arguments: {
-                          'applicationId': application['applicationId'],
-                          'applicationType': arguments?['applicationType'],
-                        });
-                      },
+        appBar: Appbar(
+          title: arguments?['applicationType'] == "LL"
+              ? 'Lerner License Application List'
+              : 'Driving License Application List',
+          isBackButton: true,
+          displayOfficerProfile: true,
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 15.0,
+                  ),
+                  Expanded(
+                    child: UserInput(
+                      controller: _controller,
+                      hint: 'Enter Application Number',
+                      keyboardType: TextInputType.number,
                     ),
                   ),
-                );
-              },
-            ),
+                  IconButton(
+                    onPressed: () {
+                      if (_controller.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: kRed,
+                              content: Text(
+                                  'Please enter a valid application number')),
+                        );
+                        return;
+                      }
+                      Navigator.pushNamed(context, ViewApplication.id,
+                          arguments: {
+                            'applicationId': _controller.text,
+                            'applicationType': arguments?['applicationType'],
+                          });
+                    },
+                    icon: Icon(FontAwesomeIcons.search),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: applicationList.length,
+                  itemBuilder: (context, index) {
+                    final application = applicationList[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 15.0),
+                      child: Card(
+                        child: ListTile(
+                          title: Text(
+                            'Application ID: ${application['applicationId']}',
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Verification: ${application['approved'] ? "Approved" : "Under Scrutiny"}',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: application['approved']
+                                        ? kGreen
+                                        : kRed),
+                              ),
+                              Text(
+                                'Exam Result: ${application['examResult'] == null ? "N/A" : application['examResult'] ? "Passed" : "Failed"}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: application['examResult'] == null
+                                      ? kRed
+                                      : application['examResult']
+                                          ? kGreen
+                                          : kRed,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            // navigat to the view application page
+                            Navigator.pushNamed(context, ViewApplication.id,
+                                arguments: {
+                                  'applicationId': application['applicationId'],
+                                  'applicationType':
+                                      arguments?['applicationType'],
+                                });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

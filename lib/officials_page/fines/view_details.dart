@@ -41,7 +41,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                 kBox,
                 UserInput(
                   controller: carController,
-                  hint: 'Enter car number',
+                  hint: 'Enter Vehicle number',
                   keyboardType: TextInputType.text,
                   errorText: carNoError,
                 ),
@@ -55,7 +55,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                         loading = false;
                       });
                     },
-                    text: 'Get Car Details'),
+                    text: 'Get Vehicle Details'),
                 kBox,
                 if (loading)
                   const Padding(

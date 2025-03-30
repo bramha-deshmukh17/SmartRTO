@@ -59,7 +59,7 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
           // Dropdown for states/UTs
           kBox,
           DropdownButtonFormField<String>(
-            decoration: kDropdown("State",
+            decoration: kDropdown("State*",
                 errorText: widget.formData.fieldErrors['selectedState']),
             value: widget.formData.selectedState,
             items: stateList.map((state) {
@@ -84,7 +84,7 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
 
           // Dropdown for districts based on the selected state
           DropdownButtonFormField<String>(
-            decoration: kDropdown("District",
+            decoration: kDropdown("District*",
                 errorText: widget.formData.fieldErrors['selectedDistrict']),
             value: districtList.contains(widget.formData.selectedDistrict)
                 ? widget.formData.selectedDistrict
@@ -106,7 +106,7 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
           //pincode
           UserInput(
             controller: widget.formData.pinCodeController,
-            hint: "Enter Pincode",
+            hint: "Enter Pincode*",
             keyboardType: TextInputType.number,
             width: double.infinity,
             focusNode: widget.formData.pinCodeFocus,
@@ -148,7 +148,7 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
               },
               options: ['Yes', 'No'],
               errorText: widget.formData.fieldErrors['donateOrgan'],
-              title: 'Donate Organs in case of the accidental death?',
+              title: 'Donate Organs in case of the accidental death?*',
             ),
           ),
 
@@ -171,7 +171,7 @@ class _FillApplicationFormState extends State<FillApplicationForm> {
                         activeColor: kSecondaryColor,
                       ),
                       Text(
-                          'I here by declare that to the best of my knowledge \nand belief the particulars given aboveare true.'),
+                          'I here by declare that to the best of my knowledge \nand belief the particulars given aboveare true.*'),
                     ],
                   ),
                   // Error message
@@ -328,7 +328,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         UserInput(
           controller: widget.formData.fullNameController,
-          hint: "Enter Full Name",
+          hint: "Enter Full Name*",
           keyboardType: TextInputType.name,
           errorText: widget.formData.fieldErrors['fullName'],
           width: double.infinity,
@@ -339,7 +339,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         // Dropdown for relation
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Relation",
+          decoration: kDropdown("Relation*",
               errorText: widget.formData.fieldErrors['relation']),
           value: widget.formData.selectedRelation,
           items: relationOptions.map((relation) {
@@ -361,7 +361,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         //Relative full name
         UserInput(
           controller: widget.formData.relativeFullNameController,
-          hint: "Enter Relative Full Name",
+          hint: "Enter Relative Full Name*",
           errorText: widget.formData.fieldErrors['relativeFullName'],
           keyboardType: TextInputType.name,
           width: double.infinity,
@@ -373,7 +373,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         //gender select
         CustomRadioButtonGroup(
           options: ['Male', 'Female', 'Other'],
-          title: 'Gender',
+          title: 'Gender*',
           errorText: widget.formData.fieldErrors['gender'],
           value: widget.formData.selectedGender,
           onChanged: (String? value) {
@@ -387,7 +387,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         //SELECT DOB
         Row(
           children: [
-            Text("Select Your Birthday:   ", style: TextStyle(fontSize: 16)),
+            Text("Select Your Birthday*:   ", style: TextStyle(fontSize: 16)),
             GestureDetector(
               onTap: () => _pickDate(context),
               child: Container(
@@ -413,7 +413,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         UserInput(
           controller: widget.formData.placeOfBirthController,
           keyboardType: TextInputType.text,
-          hint: 'Enter Place of Birth',
+          hint: 'Enter Place of Birth*',
           errorText: widget.formData.fieldErrors['placeOfBirth'],
           textAlignment: TextAlign.start,
           focusNode: widget.formData.placeOfBirthFocus,
@@ -423,7 +423,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         //country of birth
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Country of Birth",
+          decoration: kDropdown("Country of Birth*",
               errorText: widget.formData.fieldErrors['countryOfBirth']),
           value: widget.formData.selectedCountryOfBirth,
           items: countryOptions.map((country) {
@@ -442,7 +442,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         //qualification
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Qualification",
+          decoration: kDropdown("Qualification*",
               errorText: widget.formData.fieldErrors['qualification']),
           value: widget.formData.selectedQualification,
           items: qualificationOptions.map((qualification) {
@@ -461,7 +461,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
 
         //Blood group
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Blood Group",
+          decoration: kDropdown("Blood Group*",
               errorText: widget.formData.fieldErrors['bloodGroup']),
           value: widget.formData.selectedBloodGroup,
           items: bloodGroups.map((blood) {
@@ -482,7 +482,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         //email address
         UserInput(
           controller: widget.formData.emailController,
-          hint: "Enter email Address",
+          hint: "Enter email Address*",
           errorText: widget.formData.fieldErrors['email'],
           keyboardType: TextInputType.emailAddress,
           width: double.infinity,
@@ -514,7 +514,7 @@ class _FillPersonalDetailsState extends State<FillPersonalDetails> {
         UserInput(
           readonly: true,
           controller: widget.formData.applicantMobileController,
-          hint: "Enter Mobile Number",
+          hint: "Enter Mobile Number*",
           errorText: widget.formData.fieldErrors['applicantMobile'],
           keyboardType: TextInputType.number,
           width: double.infinity,
@@ -661,7 +661,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
           ),
         ),
         Text(
-          "Present Address",
+          "Present Address*",
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -696,7 +696,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
 
         // present districts
         DropdownButtonFormField<String>(
-          decoration: kDropdown("District",
+          decoration: kDropdown("District*",
               errorText: widget.formData.fieldErrors['presentDistrict']),
           value: presentDistrictList.contains(widget.formData.presentDistrict)
               ? widget.formData.presentDistrict
@@ -720,7 +720,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         //present tehsil
         UserInput(
           controller: widget.formData.presentTehsilController,
-          hint: "Enter Tehsil",
+          hint: "Enter Tehsil*",
           errorText: widget.formData.fieldErrors['presentTehsil'],
           keyboardType: TextInputType.text,
           width: double.infinity,
@@ -736,7 +736,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         //present town
         UserInput(
           controller: widget.formData.presentVillageController,
-          hint: "Enter Village/Town/City",
+          hint: "Enter Village/Town/City*",
           errorText: widget.formData.fieldErrors['presentVillage'],
           keyboardType: TextInputType.text,
           width: double.infinity,
@@ -752,7 +752,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         //present address
         UserInput(
           controller: widget.formData.presentAddressController,
-          hint: "Enter Full Address",
+          hint: "Enter Full Address*",
           errorText: widget.formData.fieldErrors['presentAddress'],
           keyboardType: TextInputType.text,
           width: double.infinity,
@@ -783,7 +783,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         //present pincode
         UserInput(
           controller: widget.formData.presentPincodeController,
-          hint: "Enter Pincode",
+          hint: "Enter Pincode*",
           errorText: widget.formData.fieldErrors['presentPincode'],
           keyboardType: TextInputType.number,
           width: double.infinity,
@@ -847,7 +847,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
 
         //permanent states
         DropdownButtonFormField<String>(
-          decoration: kDropdown("State",
+          decoration: kDropdown("State*",
               errorText: widget.formData.fieldErrors['permanentState']),
           value: widget.formData.permanentState,
           items: stateList.map((state) {
@@ -872,7 +872,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
 
         // permanent districts
         DropdownButtonFormField<String>(
-          decoration: kDropdown("District",
+          decoration: kDropdown("District*",
               errorText: widget.formData.fieldErrors['permanentDistrict']),
           value:
               permanentDistrictList.contains(widget.formData.permanentDistrict)
@@ -897,7 +897,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         //permanent tehsil
         UserInput(
           controller: widget.formData.permanentTehsilController,
-          hint: "Enter Tehsil",
+          hint: "Enter Tehsil*",
           errorText: widget.formData.fieldErrors['permanentTehsil'],
           keyboardType: TextInputType.text,
           width: double.infinity,
@@ -913,7 +913,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         //permanent town
         UserInput(
           controller: widget.formData.permanentVillageController,
-          hint: "Enter Village/Town/City",
+          hint: "Enter Village/Town/City*",
           errorText: widget.formData.fieldErrors['permanentVillage'],
           keyboardType: TextInputType.text,
           width: double.infinity,
@@ -929,7 +929,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         //permanent address
         UserInput(
           controller: widget.formData.permanentAddressController,
-          hint: "Enter Full Address",
+          hint: "Enter Full Address*",
           errorText: widget.formData.fieldErrors['permanentAddress'],
           keyboardType: TextInputType.text,
           width: double.infinity,
@@ -960,7 +960,7 @@ class _FillAddressDetailsState extends State<FillAddressDetails> {
         //permanent pincode
         UserInput(
           controller: widget.formData.permanentPincodeController,
-          hint: "Enter Pincode",
+          hint: "Enter Pincode*",
           errorText: widget.formData.fieldErrors['permanentPincode'],
           keyboardType: TextInputType.number,
           width: double.infinity,
@@ -1036,7 +1036,7 @@ class _FillVehicleClassState extends State<FillVehicleClass> {
         kBox,
         // Dropdown for vehicle class
         DropdownButtonFormField<String>(
-          decoration: kDropdown("Vehicle Class",
+          decoration: kDropdown("Vehicle Class*",
               errorText: widget.formData.fieldErrors['vehicleClasses']),
           // For LL form, you can default to "Select All applicable classes".
           // For DL form, you might want to display nothing or the first of the pre-selected classes.
@@ -1150,7 +1150,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
         CustomRadioButtonGroup(
           options: options,
           title:
-              '1. Do you suffer from epilepsy or from sudden attacks of loss of consciousness or giddiness from any cause?',
+              '1. Do you suffer from epilepsy or from sudden attacks of loss of consciousness or giddiness from any cause?*',
           errorText: widget.formData.fieldErrors['declarationAnswer1'],
           onChanged: (String? value) {
             setState(() {
@@ -1163,7 +1163,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
 
         CustomRadioButtonGroup(
           options: options,
-          title: '2. Are you able to distinguish with each eye?',
+          title: '2. Are you able to distinguish with each eye?*',
           errorText: widget.formData.fieldErrors['declarationAnswer2'],
           onChanged: (String? value) {
             setState(() {
@@ -1178,7 +1178,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
           options: options,
           errorText: widget.formData.fieldErrors['declarationAnswer3'],
           title:
-              '3. Have you lost either hand or foot or are you suffering from any defects of muscular, control or muscular power of either arm or leg?',
+              '3. Have you lost either hand or foot or are you suffering from any defects of muscular, control or muscular power of either arm or leg?*',
           onChanged: (String? value) {
             setState(() {
               widget.formData.declarationAnswer3 =
@@ -1190,7 +1190,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
 
         CustomRadioButtonGroup(
           options: options,
-          title: '4. Do you suffer from night blindness?',
+          title: '4. Do you suffer from night blindness?*',
           errorText: widget.formData.fieldErrors['declarationAnswer4'],
           onChanged: (String? value) {
             setState(() {
@@ -1205,7 +1205,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
           options: options,
           errorText: widget.formData.fieldErrors['declarationAnswer5'],
           title:
-              '5. Are you so deaf as to be unable to hear (and if the application is for driving a light motor vehicle, with or without hearing aid) the ordinary sound signal?',
+              '5. Are you so deaf as to be unable to hear (and if the application is for driving a light motor vehicle, with or without hearing aid) the ordinary sound signal?*',
           onChanged: (String? value) {
             setState(() {
               widget.formData.declarationAnswer5 =
@@ -1219,7 +1219,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
           options: options,
           errorText: widget.formData.fieldErrors['declarationAnswer6'],
           title:
-              '6. Do you suffer from any other disease or disability likely to cause your driving of a motor vehicle to be a source of danger to the public, if so, give details?',
+              '6. Do you suffer from any other disease or disability likely to cause your driving of a motor vehicle to be a source of danger to the public, if so, give details?*',
           onChanged: (String? value) {
             setState(() {
               widget.formData.declarationAnswer6 =
@@ -1244,7 +1244,7 @@ class _FillDeclarationFormState extends State<FillDeclarationForm> {
                   },
                   activeColor: kSecondaryColor,
                 ),
-                Expanded(child: Text("I accept the terms and conditions.")),
+                Expanded(child: Text("I accept the terms and conditions.*")),
               ],
             ),
 

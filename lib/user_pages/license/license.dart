@@ -88,7 +88,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
 
       // If neither DL nor LL is found, show error
       setState(() {
-        licenseData = {}; // Reset data
+        licenseData = null; // Reset data
         loading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
@@ -124,93 +124,97 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
               child: CircularProgressIndicator(
               color: kSecondaryColor,
             ))
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "License Holder Name: ${licenseData!['fullName']}",
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+          : licenseData == null
+              ? Center(
+                  child: Text("No License data availble for this mobile number."),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "License Holder Name: ${licenseData!['fullName']}",
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "DL Number: ${licenseData!['licenseNumber']}",
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Photo:",
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            Image.network(
+                              licenseData!['photo'],
+                              height: 150,
+                              width: 150,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Text("Failed to load photo.");
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              "Signature:",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            Image.network(
+                              licenseData!['signature'],
+                              height: 50,
+                              width: 150,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Text("Failed to load signature.");
+                              },
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Date of Birth: ${_formatDate(DateTime.parse(licenseData!['selectedDateOfBirth']))}",
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Gender: ${licenseData!['selectedGender']}",
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Issue Date: ${_formatDate(DateTime.parse(licenseData!['payementDate']))}",
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 8),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Address: ${licenseData!['permanentAddress']}",
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Mobile: ${licenseData!['applicantMobile']}",
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Expiry on: ${_calculateExpiryDate(licenseData!['payementDate'], driving)}",
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "DL Number: ${licenseData!['licenseNumber']}",
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "Photo:",
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        Image.network(
-                          licenseData!['photo'],
-                          height: 150,
-                          width: 150,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Text("Failed to load photo.");
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "Signature:",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        Image.network(
-                          licenseData!['signature'],
-                          height: 50,
-                          width: 150,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Text("Failed to load signature.");
-                          },
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Date of Birth: ${_formatDate(DateTime.parse(licenseData!['selectedDateOfBirth']))}",
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Gender: ${licenseData!['selectedGender']}",
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Issue Date: ${_formatDate(DateTime.parse(licenseData!['payementDate']))}",
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Address: ${licenseData!['permanentAddress']}",
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Mobile: ${licenseData!['applicantMobile']}",
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Expiry on: ${_calculateExpiryDate(licenseData!['payementDate'], driving)}",
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
     );
   }
 
@@ -225,7 +229,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
     } else {
       // Add 20 years for driving license
       expiryDate = paymentDateTime.add(Duration(days: 20 * 365));
-    } 
+    }
 
     return _formatDate(expiryDate);
   }

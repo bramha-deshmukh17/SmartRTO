@@ -205,13 +205,14 @@ class _TrackApplicationState extends State<TrackApplication> {
       setState(() {
         if (!snapshot.exists) {
           applicationData = null;
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Wrong application number.'),
               backgroundColor: kRed,
             ),
           );
+        } else {
+         
           applicationData = snapshot.data() as Map<String, dynamic>?;
         }
       });

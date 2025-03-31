@@ -27,6 +27,7 @@ class _GenerateGrievanceState extends State<GenerateGrievance> {
   void _showBottomSheet(BuildContext context) {
     //bottom sheet to generate the grievance
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return Center(
@@ -50,6 +51,7 @@ class _GenerateGrievanceState extends State<GenerateGrievance> {
                 hint: "Description*",
                 keyboardType: TextInputType.text,
                 maxlines: 5,
+                textAlignment: TextAlign.start,
                 submit: (value) {
                   FocusScope.of(context).unfocus(); // Dismiss the keyboard
                 },

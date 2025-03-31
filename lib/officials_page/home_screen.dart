@@ -36,14 +36,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: Appbar(
-          title: 'Home',
-          displayOfficerProfile: true,
-        ),
-        body: SingleChildScrollView(
+      appBar: Appbar(
+        title: 'Home',
+        displayOfficerProfile: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'License Application',
+                style: TextStyle(fontSize: 18.0),
+              ),
               Scrollbar(
                 controller: _scrollController,
                 thumbVisibility: true, // Always show scrollbar
@@ -76,6 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+
+              Text(
+                'Fine and grievance',
+                style: TextStyle(fontSize: 18.0),
+              ),
               Scrollbar(
                 controller: _scrollController2,
                 thumbVisibility: true, // Always show scrollbar
@@ -102,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.pushNamed(context, ModifyFineData.id);
                         },
                       ),
-                       CustomCard(
+                      CustomCard(
                         icon: FontAwesomeIcons.car,
                         cardTitle: 'Vehicle',
                         onTap: () {
@@ -120,9 +131,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              
+
+              Text(
+                'PUC Application',
+                style: TextStyle(fontSize: 18.0),
+              ),
+
               Align(
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 child: CustomCard(
                   icon: FontAwesomeIcons.clipboardList,
                   onTap: () {
@@ -133,6 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

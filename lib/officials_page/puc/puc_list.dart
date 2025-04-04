@@ -28,7 +28,10 @@ class _PucListState extends State<PucList> {
 
   Future<void> fetchApplicationList() async {
     //fetch puc application list
-    final snapshot = await _firestore.collection('pucapplication').get();
+    final snapshot = await _firestore
+        .collection('pucapplication')
+        .where('approved', isEqualTo: false)
+        .get();
 
     // Use a set to track unique document IDs
     final uniqueDocs = <String, Map<String, dynamic>>{};

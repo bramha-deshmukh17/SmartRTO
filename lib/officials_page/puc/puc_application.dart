@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../utility/appbar.dart';
 import '../../utility/constants.dart';
+import '../../utility/round_button.dart';
 
 class ViewPucApplication extends StatefulWidget {
   static const String id = 'officer/puc/application';
@@ -42,6 +43,21 @@ class _ViewPucApplicationState extends State<ViewPucApplication> {
     }
     setState(() {
       isLoading = false;
+    });
+  }
+
+  Future<void> approveApplication() async {
+    //update approval status for the application
+
+    await _firestore
+        .collection('pucapplication')
+        .doc(arguments?['applicationId'])
+        .update({
+      'approved': true,
+    });
+
+    setState(() {
+      applicationData?['approved'] = true;
     });
   }
 
@@ -130,6 +146,14 @@ class _ViewPucApplicationState extends State<ViewPucApplication> {
                         'Created At: ${DateFormat('dd MMMM yyyy, HH:mm:ss').format((applicationData?['createdAt'] as Timestamp).toDate())}',
                         style: TextStyle(fontSize: 16),
                       ),
+
+                      kBox,
+                      !applicationData!['approved']
+                          ? RoundButton(
+                              onPressed: approveApplication,
+                              text: "Mark Done",
+                            )
+                          : kBox,
                     ],
                   ),
                 ),

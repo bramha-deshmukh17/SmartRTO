@@ -501,6 +501,7 @@ class PucApplicationState extends State<PucApplication> {
         'slot_no': slot_no,
         'slot_id': slot_id,
         'createdAt': FieldValue.serverTimestamp(),
+        'approved':false,
       });
 
       print("Form saved successfully!");

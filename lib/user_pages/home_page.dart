@@ -151,14 +151,14 @@ class _HomePageState extends State<HomePage> {
               ),
 
               Text(
-                'PUC Application',
+                'PUC Appointment',
                 style: TextStyle(fontSize: 18.0),
               ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomCard(
                   icon: FontAwesomeIcons.clipboardList,
-                  cardTitle: 'PUC Application',
+                  cardTitle: 'PUC Appointment',
                   onTap: () {
                     Navigator.pushNamed(context, PhoneAuthentication.id);
                   },

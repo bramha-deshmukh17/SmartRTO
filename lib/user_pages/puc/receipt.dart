@@ -31,7 +31,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   Widget build(BuildContext context) {
     //receipt for pucapplication
     return Scaffold(
-      appBar: Appbar(title: 'PUC Receipt',isBackButton: true, displayUserProfile: true),
+      appBar: Appbar(title: 'Receipt',isBackButton: true, displayUserProfile: true),
       body:  Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

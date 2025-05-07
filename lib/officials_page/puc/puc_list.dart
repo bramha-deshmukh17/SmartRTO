@@ -55,7 +55,7 @@ class _PucListState extends State<PucList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Appbar(
-        title: 'PUC List',
+        title: 'PUC Appointment List',
         displayOfficerProfile: true,
         isBackButton: true,
       ),
@@ -72,7 +72,7 @@ class _PucListState extends State<PucList> {
                 Expanded(
                   child: UserInput(
                     controller: _controller,
-                    hint: 'Enter Application Number',
+                    hint: 'Enter Appointment Number',
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -83,7 +83,7 @@ class _PucListState extends State<PucList> {
                         SnackBar(
                           backgroundColor: kRed,
                           content:
-                              Text('Please enter a valid application number'),
+                              Text('Please enter a valid appointment number'),
                         ),
                       );
                       return;
@@ -108,7 +108,7 @@ class _PucListState extends State<PucList> {
                     child: Card(
                       child: ListTile(
                         title: Text(
-                          'Application ID: ${application['applicationId']}',
+                          'Appointment ID: ${application['applicationId']}',
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold),
                         ),

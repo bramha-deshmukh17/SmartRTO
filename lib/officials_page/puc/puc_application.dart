@@ -65,7 +65,7 @@ class _ViewPucApplicationState extends State<ViewPucApplication> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Appbar(
-        title: 'PUC Application',
+        title: 'PUC Appointment',
         displayOfficerProfile: true,
         isBackButton: true,
       ),

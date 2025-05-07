@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               Text(
-                'PUC Application',
+                'PUC Appointment',
                 style: TextStyle(fontSize: 18.0),
               ),
 
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.pushNamed(context, PucList.id);
                   },
-                  cardTitle: 'PUC Applications',
+                  cardTitle: 'PUC Appointment',
                 ),
               ),
             ],

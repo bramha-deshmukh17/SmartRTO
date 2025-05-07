@@ -155,7 +155,7 @@ class PucApplicationState extends State<PucApplication> {
 
     return Scaffold(
       appBar: Appbar(
-        title: 'PUC Application',
+        title: 'PUC Appointment Booking',
         displayUserProfile: true,
         isBackButton: true,
       ),

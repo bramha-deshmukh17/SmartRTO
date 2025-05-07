@@ -223,7 +223,7 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
     DateTime paymentDateTime = DateTime.parse(paymentDate);
     DateTime expiryDate;
 
-    if (licenseType) {
+    if (!licenseType) {
       // Add 6 months for learning license
       expiryDate = paymentDateTime.add(Duration(days: 6 * 30));
     } else {

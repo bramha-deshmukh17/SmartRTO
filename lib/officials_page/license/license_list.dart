@@ -77,7 +77,7 @@ Future<void> fetchApplicationList() async {
     return Scaffold(
         appBar: Appbar(
           title: arguments?['applicationType'] == "LL"
-              ? 'Lerner License Application List'
+              ? 'Learner License Application List'
               : 'Driving License Application List',
           isBackButton: true,
           displayOfficerProfile: true,

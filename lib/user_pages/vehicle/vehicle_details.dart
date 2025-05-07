@@ -31,6 +31,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     return await _firestore
         .collection('fines')
         .where('to', isEqualTo: licensePlate)
+        .orderBy('date', descending: true)
         .get();
   }
 

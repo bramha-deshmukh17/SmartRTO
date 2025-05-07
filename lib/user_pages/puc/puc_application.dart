@@ -1,3 +1,4 @@
+// All your imports remain the same
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -36,8 +37,18 @@ class PucApplicationState extends State<PucApplication> {
       receiptId,
       selectedSlot,
       slot_no,
-      slot_id;
+      slot_id,
+      selectedVehicleType;
+
   int? slotNo;
+  int paymentAmount = 0;
+
+  final Map<String, int> vehicleFees = {
+    'Two-Wheeler': 65,
+    'Three Wheeler (Auto)': 75,
+    'Four-Wheeler (Petrol)': 115,
+    'Four-Wheeler (Diesel)': 160,
+  };
 
   late Razorpay _razorpay;
 
@@ -66,21 +77,28 @@ class PucApplicationState extends State<PucApplication> {
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    // Handle failed payment
     print("Payment Failed: ${response.message}");
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    // Handle external wallet selection
     print("External Wallet: ${response.walletName}");
   }
 
   void openCheckout() async {
-    //open razorpay gateway
+    if (selectedVehicleType == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Please select a vehicle type before proceeding to payment.'),
+          backgroundColor: kRed,
+        ),
+      );
+      return;
+    }
+
     var options = {
-      'key': dotenv
-          .env['RAZOR_PAY_API'], // Replace with your Razorpay Test API Key
-      'amount': (100 * 100).toString(), // Convert to paisa
+      'key': dotenv.env['RAZOR_PAY_API'],
+      'amount': (paymentAmount * 100).toString(),
       'name': 'RTO India',
       'description': 'Payment for PUC Application',
     };
@@ -92,7 +110,6 @@ class PucApplicationState extends State<PucApplication> {
     }
   }
 
-  // Fetch all states (document IDs from the 'states' collection)
   Future<void> fetchStates() async {
     QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection('states').get();
@@ -105,7 +122,6 @@ class PucApplicationState extends State<PucApplication> {
     }
   }
 
-  // Fetch districts for the selected state from its document
   Future<void> fetchDistricts(String state) async {
     DocumentSnapshot docSnapshot =
         await FirebaseFirestore.instance.collection('states').doc(state).get();
@@ -142,7 +158,7 @@ class PucApplicationState extends State<PucApplication> {
     setState(() {
       slot_no = slotNo == 1 ? 'slot1' : 'slot2';
       slot_id = slotId;
-      selectedSlot = slotId + (slotNo == 1 ? '_1' : '_2'); // Unique identifier
+      selectedSlot = slotId + (slotNo == 1 ? '_1' : '_2');
     });
   }
 
@@ -150,7 +166,6 @@ class PucApplicationState extends State<PucApplication> {
   Widget build(BuildContext context) {
     arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    //auto fill user mobile number 
     mobileController.text = arguments!['mobile'];
 
     return Scaffold(
@@ -164,44 +179,36 @@ class PucApplicationState extends State<PucApplication> {
         child: Column(
           children: [
             FillApplicationForm(),
-
-            // Payment Section
             Text(
               'Payment Screen',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             kBox,
-
             Text(
-              "Payment: 100 Rs.",
+              "Payment: ₹$paymentAmount",
               style: TextStyle(fontSize: 16),
             ),
             kBox,
-
             Text(
               "Payment powered by Razorpay",
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             kBox,
-
             Text(
               "Please ensure that your contact and email details are correct.",
               style: TextStyle(fontSize: 14, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             kBox,
-
             if (paymentId == null)
               RoundButton(onPressed: openCheckout, text: "Pay"),
             kBox,
-
             Text(
               "For any issues, contact support@example.com",
               style: TextStyle(fontSize: 14, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             kBox,
-
             RoundButton(
               onPressed: () async {
                 if (validateFormFields()) {
@@ -212,10 +219,9 @@ class PucApplicationState extends State<PucApplication> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ReceiptScreen(),
-                          settings: RouteSettings(
-                              arguments: {
+                          settings: RouteSettings(arguments: {
                             'receiptId': receiptId,
-                            'fullname':  fullNameController.text,
+                            'fullname': fullNameController.text,
                             'applicantMobile': mobileController.text,
                           }),
                         ),
@@ -236,7 +242,6 @@ class PucApplicationState extends State<PucApplication> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Dropdown for State
           DropdownButtonFormField<String>(
             decoration: kDropdown("State"),
             value: selectedState,
@@ -258,8 +263,6 @@ class PucApplicationState extends State<PucApplication> {
             },
           ),
           kBox,
-
-          // Dropdown for District
           DropdownButtonFormField<String>(
             decoration: kDropdown("District"),
             value: districtList.contains(selectedDistrict)
@@ -278,7 +281,23 @@ class PucApplicationState extends State<PucApplication> {
             },
           ),
           kBox,
-
+          DropdownButtonFormField<String>(
+            decoration: kDropdown("Vehicle Type"),
+            value: selectedVehicleType,
+            items: vehicleFees.keys.map((type) {
+              return DropdownMenuItem<String>(
+                value: type,
+                child: Text(type),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedVehicleType = newValue;
+                paymentAmount = vehicleFees[newValue]!;
+              });
+            },
+          ),
+          kBox,
           UserInput(
             controller: pinCodeController,
             hint: 'Pincode',
@@ -287,7 +306,6 @@ class PucApplicationState extends State<PucApplication> {
             width: double.infinity,
           ),
           kBox,
-
           UserInput(
             controller: fullNameController,
             hint: 'Full Name',
@@ -296,7 +314,6 @@ class PucApplicationState extends State<PucApplication> {
             width: double.infinity,
           ),
           kBox,
-
           UserInput(
             controller: mobileController,
             hint: 'Mobile',
@@ -306,7 +323,6 @@ class PucApplicationState extends State<PucApplication> {
             readonly: true,
           ),
           kBox,
-
           UserInput(
             controller: registrationController,
             hint: 'Registration Number',
@@ -315,7 +331,6 @@ class PucApplicationState extends State<PucApplication> {
             width: double.infinity,
           ),
           kBox,
-
           UserInput(
             controller: chasisController,
             hint: 'Chasis Number',
@@ -324,17 +339,12 @@ class PucApplicationState extends State<PucApplication> {
             width: double.infinity,
           ),
           kBox,
-
-          //Slot selection
           FutureBuilder<List<Map<String, dynamic>>>(
             future: fetchSlots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: CircularProgressIndicator(
-                    color: kSecondaryColor,
-                  ),
-                );
+                    child: CircularProgressIndicator(color: kSecondaryColor));
               }
 
               if (snapshot.hasError) {
@@ -343,94 +353,89 @@ class PucApplicationState extends State<PucApplication> {
 
               final slots = snapshot.data ?? [];
 
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    slots.isEmpty
-                        ? Center(child: Text('No slots available'))
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: slots.length,
-                            itemBuilder: (context, index) {
-                              final slot = slots[index];
+              return Column(
+                children: [
+                  slots.isEmpty
+                      ? Center(child: Text('No slots available'))
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: slots.length,
+                          itemBuilder: (context, index) {
+                            final slot = slots[index];
 
-                              return Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(15.0),
-                                  child: Column(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          DateFormat('dd/MM/yyyy').format(
-                                              (slot['date'] as Timestamp)
-                                                  .toDate()),
+                            return Card(
+                              child: Padding(
+                                padding: EdgeInsets.all(15.0),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        DateFormat('dd/MM/yyyy').format(
+                                            (slot['date'] as Timestamp)
+                                                .toDate()),
+                                        style: TextStyle(
+                                            fontSize: 18.0, color: kGreen),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: slot['slot1']['remaining'] > 0
+                                          ? () => selectSlot(1, slot['id'])
+                                          : null,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            selectedSlot == '${slot['id']}_1'
+                                                ? kSecondaryColor
+                                                : kWhite,
+                                      ),
+                                      child: ListTile(
+                                        title: Text('Slot 1: Morning 10AM'),
+                                        subtitle: Text(
+                                          '${slot['slot1']['remaining']} remaining',
                                           style: TextStyle(
-                                              fontSize: 18.0, color: kGreen),
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: slot['slot1']['remaining'] >
-                                                0
-                                            ? () => selectSlot(1, slot['id'])
-                                            : null,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: selectedSlot ==
-                                                  '${slot['id']}_1'
-                                              ? kSecondaryColor // Highlighted color
-                                              : kWhite, // Default color
-                                        ),
-                                        child: ListTile(
-                                          title: Text('Slot 1: Morning 10AM'),
-                                          subtitle: Text(
-                                            '${slot['slot1']['remaining']} remaining',
-                                            style: TextStyle(
-                                              color:
-                                                  slot['slot1']['remaining'] > 0
-                                                      ? kGreen
-                                                      : kRed,
-                                            ),
+                                            color:
+                                                slot['slot1']['remaining'] > 0
+                                                    ? kGreen
+                                                    : kRed,
                                           ),
                                         ),
                                       ),
-                                      kBox,
-                                      ElevatedButton(
-                                        onPressed: slot['slot2']['remaining'] >
-                                                0
-                                            ? () => selectSlot(2, slot['id'])
-                                            : null,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: selectedSlot ==
-                                                  '${slot['id']}_2'
-                                              ? kSecondaryColor // Highlighted color
-                                              : kWhite, // Default color
-                                        ),
-                                        child: ListTile(
-                                          title: Text('Slot 2: Afternoon 2PM'),
-                                          subtitle: Text(
-                                            '${slot['slot2']['remaining']} remaining',
-                                            style: TextStyle(
-                                              color:
-                                                  slot['slot2']['remaining'] > 0
-                                                      ? kGreen
-                                                      : kRed,
-                                            ),
+                                    ),
+                                    kBox,
+                                    ElevatedButton(
+                                      onPressed: slot['slot2']['remaining'] > 0
+                                          ? () => selectSlot(2, slot['id'])
+                                          : null,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            selectedSlot == '${slot['id']}_2'
+                                                ? kSecondaryColor
+                                                : kWhite,
+                                      ),
+                                      child: ListTile(
+                                        title: Text('Slot 2: Afternoon 2PM'),
+                                        subtitle: Text(
+                                          '${slot['slot2']['remaining']} remaining',
+                                          style: TextStyle(
+                                            color:
+                                                slot['slot2']['remaining'] > 0
+                                                    ? kGreen
+                                                    : kRed,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                          ),
-                  ],
-                ),
+                              ),
+                            );
+                          },
+                        ),
+                ],
               );
             },
           ),
-          kBox,
         ],
       ),
     );
@@ -438,39 +443,17 @@ class PucApplicationState extends State<PucApplication> {
 
   bool validateFormFields() {
     bool isValid = true;
-    if (selectedState == null) {
-      isValid = false;
-    }
-    if (selectedDistrict == null) {
-      isValid = false;
-    }
-    // Pincode Validation
-    if (pinCodeController.text.isEmpty) {
-      isValid = false;
-    }
 
-    // Personal Details Validation
-    if (fullNameController.text.isEmpty) {
-      isValid = false;
-    }
-
-    if (mobileController.text.isEmpty) {
-      isValid = false;
-    }
-
-    if (chasisController.text.isEmpty) {
-      isValid = false;
-    }
-
-    if (registrationController.text.isEmpty) {
-      isValid = false;
-    }
-
-    if (selectedSlot == null) {
-      isValid = false;
-    }
-
-    if (paymentId == null) {
+    if (selectedState == null ||
+        selectedDistrict == null ||
+        pinCodeController.text.isEmpty ||
+        fullNameController.text.isEmpty ||
+        mobileController.text.isEmpty ||
+        chasisController.text.isEmpty ||
+        registrationController.text.isEmpty ||
+        selectedSlot == null ||
+        paymentId == null ||
+        selectedVehicleType == null) {
       isValid = false;
     }
 
@@ -482,6 +465,7 @@ class PucApplicationState extends State<PucApplication> {
         ),
       );
     }
+
     return isValid;
   }
 
@@ -500,24 +484,24 @@ class PucApplicationState extends State<PucApplication> {
         'receiptId': receiptId,
         'slot_no': slot_no,
         'slot_id': slot_id,
+        'vehicleType': selectedVehicleType,
+        'amountPaid': paymentAmount,
         'createdAt': FieldValue.serverTimestamp(),
-        'approved':false,
+        'approved': false,
       });
 
-      print("Form saved successfully!");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Form submitted.'),
           backgroundColor: kGreen,
         ),
       );
-      return true; // ✅ Now it properly returns true
+      return true;
     } catch (error) {
       print("Failed to save form: $error");
       return false;
     }
   }
-
 
   Future<void> bookSlot() async {
     try {

@@ -16,12 +16,14 @@ class FineList extends StatelessWidget {
         children: selectedFines.entries.map((entry) {
           return ListTile(
             leading: Text(
-              entry.key,
+              entry.key.length > 25
+                ? '${entry.key.substring(0, 25)}...'
+                : entry.key,
               style: const TextStyle(
-                color: kBlack,
-                fontSize: 15.0,
-                wordSpacing: 0.01,
-                fontFamily: 'InriaSans',
+              color: kBlack,
+              fontSize: 15.0,
+              wordSpacing: 0.01,
+              fontFamily: 'InriaSans',
               ),
             ),
             trailing: Text(

@@ -64,7 +64,7 @@ class _GenerateGrievanceState extends State<GenerateGrievance> {
                       'fineno': _fineNoController.text,
                       'grievance': _grievance.text,
                       'date': FieldValue.serverTimestamp(),
-                      'reply': null,
+                      'reply': 'NA',
                       'by': userPhone
                     });
                     Navigator.pop(context);

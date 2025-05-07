@@ -26,7 +26,7 @@ class _OfficerGrievanceListState extends State<OfficerGrievanceList> {
   Stream<QuerySnapshot> getGrievance() {
     return _firestore
         .collection('grievance')
-        .where('reply', isNull: true)
+        .where('reply', isEqualTo: 'NA')
         .snapshots();
   }
 

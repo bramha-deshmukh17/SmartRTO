@@ -154,10 +154,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ...fineData['fines'].entries.map((entry) => Text(
-                      '${entry.key}: ₹${entry.value}',
-                      style: const TextStyle(fontSize: 16),
-                    )),
+                    
                     Text(
                       'Status: ${fineData['status']}',
                       style: TextStyle(

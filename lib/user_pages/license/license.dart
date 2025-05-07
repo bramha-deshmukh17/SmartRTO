@@ -193,7 +193,6 @@ class _LicenseInfoPageState extends State<LicenseInfoPage> {
                               style: const TextStyle(fontSize: 18),
                             ),
                             const SizedBox(height: 8),
-                            const SizedBox(height: 8),
                             Text(
                               "Address: ${licenseData!['permanentAddress']}",
                               style: const TextStyle(fontSize: 18),

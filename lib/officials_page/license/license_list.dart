@@ -30,25 +30,36 @@ class _LearnerLicenseListState extends State<LearnerLicenseList> {
     fetchApplicationList();
   }
 
-  Future<void> fetchApplicationList() async {
-    //fetching the application list from the firestore
+Future<void> fetchApplicationList() async {
+    // Fetching the application list from the Firestore
     if (arguments == null) return;
 
     String type = arguments?['applicationType'] == "LL"
         ? 'llapplication'
         : 'dlapplication';
-    //fetching the only non approved application list from the firestore
-    final approvedFalseSnapshot = await _firestore
+
+    // First query: examResult == true
+    final resultTrue = await _firestore
         .collection(type)
         .where('approved', isEqualTo: false)
+        .where('examResult', isEqualTo: true)
         .get();
 
-    // Use a set to track unique document IDs
+    // Second query: examResult == null
+    final resultNull = await _firestore
+        .collection(type)
+        .where('approved', isEqualTo: false)
+        .where('examResult', isNull: true)
+        .get();
+
+    // Combine both result sets
+    final allDocs = [...resultTrue.docs, ...resultNull.docs];
+
+    // Use a map to ensure uniqueness
     final uniqueDocs = <String, Map<String, dynamic>>{};
 
-    for (var doc in approvedFalseSnapshot.docs) {
+    for (var doc in allDocs) {
       uniqueDocs[doc.id] = {
-        //adding doc id to the application data for further use
         'applicationId': doc.id,
         'approved': doc['approved'],
         'examResult': doc['examResult'],
@@ -59,6 +70,7 @@ class _LearnerLicenseListState extends State<LearnerLicenseList> {
       applicationList = uniqueDocs.values.toList();
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

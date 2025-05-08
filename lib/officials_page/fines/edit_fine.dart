@@ -297,6 +297,7 @@ class _EditFineState extends State<EditFine> {
                             .update({
                           'fines': selectedFines,
                           'total': total,
+                          'status': total == 0 ? 'Paid' : fineData['status'],
                         }).then((_) {
                           print("Fine data updated successfully");
                         }).catchError((error) {

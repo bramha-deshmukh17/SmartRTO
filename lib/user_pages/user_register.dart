@@ -184,6 +184,9 @@ class _UserRegisterState extends State<UserRegister> {
           const SnackBar(
               content: Text('Failed to verify. Try after some time.')),
         );
+        setState(() {
+          loading = false;
+        });
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

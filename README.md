@@ -44,6 +44,13 @@ SmartRTO is a mobile application designed to streamline the processes related to
 4. **Configure Firebase**:
    - Set up a Firebase project and add the necessary configurations to your app.
    - Also add support for the firebase authentication, firestore and storage for both Android and iOS.
+
+5. Configure *.env*
+   - add follwing data to it
+     ```bash
+     GEMINI_API=YOUR_GRMINI_API_KEY_FROM_GOOGLE
+     RAZOR_PAY_API=YOUR_RAZORPAY_API_KEY
+     ```
         
 
 5. **Run the application**:

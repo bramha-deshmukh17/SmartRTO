@@ -43,23 +43,8 @@ SmartRTO is a mobile application designed to streamline the processes related to
 
 4. **Configure Firebase**:
    - Set up a Firebase project and add the necessary configurations to your app.
-    1. Create a flutter project in Firebase
-    2. Get started by adding Firebase to your app
-        - Here select the Flutter Icon
-        - Then Install Firebase cli and execute it and run follwing command:
-          ```bash
-          firebase login
-          ```
-        - Now configue CLI globally by running
-          ```bash
-          dart pub global activate flutterfire_cli
-          ```
-    3. Add firebase configuration files to project directory by running the command in root folder of project
-       ```bash
-       flutterfire configure --project=YOUR_PROJECT_ID
-       ```
-       - The project id will be diaplayed when you are setting up the firebase for your project
-    4. 
+   - Also add support for the firebase authentication, firestore and storage for both Android and iOS.
+        
 
 5. **Run the application**:
     ```bash

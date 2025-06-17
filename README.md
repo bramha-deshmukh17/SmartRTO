@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/logo.png" alt="SmartRTO Logo" width="120" />
+  <img src="images/logo.png" alt="SmartRTO App Preview" width="250"/>
 </p>
 
 <p align="center">
@@ -8,78 +8,113 @@
   <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart" />
 </p>
 
-# SmartRTO
+# 🚦 SmartRTO
 
-SmartRTO is a mobile application designed to streamline the processes related to road transport operations. It provides functionalities for officers to manage their profiles, handle service requests, and ensure efficient communication.
+A modern and efficient mobile application for road transport officers, built with Flutter and Firebase.
+
+---
 
 ## Table of Contents
 
+- [🛠️ Tech Stack](#tech-stack)
 - [✨ Features](#features)
-- [🛠️ Technologies Used](#technologies-used)
+- [👮‍♂️ Author](#author)
 - [⚙️ Setup Instructions](#setup-instructions)
 - [📱 Usage](#usage)
-- [🤝 Contributing](#contributing)
+- [⚙️ Deployment](#deployment)
+- [🌐 References](#references)
 - [📬 Contact](#contact)
 
-## ✨ Features
+---
 
-- User authentication (sign up, login, logout)
-- Profile management for officers
-- Fetching officer data from Firestore
-- Progress indicators for loading states
-- Support for multiple languages (if applicable)
+## <a id="tech-stack"></a>🛠️ Tech Stack
 
-## 🛠️ Technologies Used
+- **Frontend**: Flutter (Dart)
+- **Backend**: Firebase (Authentication, Firestore, Storage)
+- **APIs**: Gemini API, Razorpay API
 
-- **Flutter**: For building the UI.
-- **Firebase**: For backend services like authentication and Firestore.
-- **Dart**: Programming language used for Flutter development.
+---
 
-## ⚙️ Setup Instructions
+## <a id="features"></a>✨ Features
 
-1. **Clone the repository**:
+- 🔐 User authentication (sign up, login, logout)
+- 👤 Profile management for officers
+- 🔄 Fetching officer data from Firestore
+- ⏳ Progress indicators for loading states
+- 🌐 Support for multiple languages (if applicable)
+
+---
+
+## <a id="author"></a>👮‍♂️ Author
+
+- **Bramha Deshmukh**
+- [GitHub](https://github.com/bramha-deshmukh17)
+
+---
+
+## <a id="setup-instructions"></a>⚙️ Setup Instructions
+
+### 📝 Steps
+
+1. **Clone the repository**
+
     ```bash
     git clone https://github.com/bramha-deshmukh17/SmartRTO.git
-    ```
-
-2. **Navigate to the project directory**:
-    ```bash
     cd SmartRTO
     ```
 
-3. **Install dependencies**:
+2. **Install dependencies**
+
     ```bash
     flutter pub get
     ```
 
-4. **Configure Firebase**:
+3. **Configure Firebase**
    - Set up a Firebase project and add the necessary configurations to your app.
-   - Also add support for the firebase authentication, firestore and storage for both Android and iOS.
-
-5. Configure *.env*
-   - add follwing data to it
-     ```bash
-     GEMINI_API=YOUR_GRMINI_API_KEY_FROM_GOOGLE
-     RAZOR_PAY_API=YOUR_RAZORPAY_API_KEY
-     ```
-        
-   - Add firebase.json, google-services.json to their desired folder
+   - Add support for Firebase Authentication, Firestore, and Storage for both Android and iOS.
+   - Add `firebase.json`, `google-services.json` to their respective folders.
    - Ensure you have added the appropriate permissions in the Android and iOS configuration files.
 
-5. **Run the application**:
+4. **Configure .env**
+   - Add the following data to it:
+     ```bash
+     GEMINI_API=YOUR_GEMINI_API_KEY_FROM_GOOGLE
+     RAZOR_PAY_API=YOUR_RAZORPAY_API_KEY
+     ```
+
+5. **Run the application**
+
     ```bash
     flutter run
     ```
 
-## 📱 Usage
+---
 
-After setting up the application, you can create an account, log in, and manage your profile. The app allows you to interact with different functionalities related to road transport operations.
+## <a id="usage"></a>📱 Usage
 
-## 🤝 Contributing
+- Create an account, log in, and manage your profile.
+- Interact with different functionalities related to road transport operations.
 
-Contributions are welcome! Please fork the repository and submit a pull request for any enhancements or bug fixes.
+---
 
-## 📬 Contact
+## <a id="deployment"></a>⚙️ Deployment
 
-For questions or support, contact:<br>
-✉️ **Email:** bramha.deshmukh17@gmail.com
+- Build the app for release with `flutter build apk` or `flutter build ios`.
+- Deploy to the Google Play Store or Apple App Store as per platform guidelines.
+- Set environment variables as needed for production.
+
+---
+
+## <a id="references"></a>🌐 References
+
+- [Flutter](https://flutter.dev/)
+- [Firebase](https://firebase.google.com/)
+- [Dart](https://dart.dev/)
+- [Gemini API](https://aistudio.google.com/app/apikey)
+- [Razorpay](https://razorpay.com/)
+
+---
+
+## <a id="contact"></a>📬 Contact
+
+For any inquiries or feedback, please contact me at [bramha.deshmukh17@gmail.com](mailto:bramha.deshmukh17@gmail.com).

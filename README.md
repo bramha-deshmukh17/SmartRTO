@@ -39,7 +39,7 @@ SmartRTO is a mobile application designed to streamline the processes related to
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/SmartRTO.git
+    git clone https://github.com/bramha-deshmukh17/SmartRTO.git
     ```
 
 2. **Navigate to the project directory**:
@@ -54,6 +54,15 @@ SmartRTO is a mobile application designed to streamline the processes related to
 
 4. **Configure Firebase**:
    - Set up a Firebase project and add the necessary configurations to your app.
+   - Also add support for the firebase authentication, firestore and storage for both Android and iOS.
+
+5. Configure *.env*
+   - add follwing data to it
+     ```bash
+     GEMINI_API=YOUR_GRMINI_API_KEY_FROM_GOOGLE
+     RAZOR_PAY_API=YOUR_RAZORPAY_API_KEY
+     ```
+        
    - Add firebase.json, google-services.json to their desired folder
    - Ensure you have added the appropriate permissions in the Android and iOS configuration files.
 

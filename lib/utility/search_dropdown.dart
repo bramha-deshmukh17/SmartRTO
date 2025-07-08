@@ -2,7 +2,7 @@ import 'package:drop_down_search_field/drop_down_search_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+import '../utility/constants.dart';
 
 class SearchDropDown extends StatefulWidget {
   final dynamic dropdownSearchFieldController;

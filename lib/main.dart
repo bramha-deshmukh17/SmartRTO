@@ -18,7 +18,7 @@ import 'user_pages/profile/profile.dart';
 import 'user_pages/puc/phone_authentication.dart';
 import 'user_pages/puc/puc_application.dart';
 import 'user_pages/user_register.dart';
-import 'Utility/Constants.dart';
+import 'utility/constants.dart';
 import 'authentication/authenticate.dart';
 import 'officials_page/fines/generate_fine.dart';
 import 'officials_page/officer_login.dart';

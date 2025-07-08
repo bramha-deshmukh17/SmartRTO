@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../officials_page/officer_profile.dart';
 import '../user_pages/profile/profile.dart';
-import 'constants.dart';
+import '../utility/constants.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

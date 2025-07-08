@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+import '../utility/constants.dart';
 
 class UserInput  extends StatelessWidget {
   final String hint;

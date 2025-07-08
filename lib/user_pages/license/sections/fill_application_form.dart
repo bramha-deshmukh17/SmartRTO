@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../Utility/constants.dart';
-import '../../../Utility/custom_radio_button_group .dart';
-import '../../../Utility/user_input.dart';
+import '../../../utility/constants.dart';
+import '../../../utility/custom_radio_button_group .dart';
+import '../../../utility/user_input.dart';
 import 'formdata.dart';
 
 class FillApplicationForm extends StatefulWidget {

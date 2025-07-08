@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../utility/appbar.dart';
-import '../../Utility/constants.dart';
+import '../../utility/constants.dart';
 import '../../utility/round_button.dart';
 import '../../utility/user_input.dart';
 import 'edit_fine.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'constants.dart';
+import '../utility/constants.dart';
 
 class CustomCard extends StatelessWidget {
   final dynamic icon;

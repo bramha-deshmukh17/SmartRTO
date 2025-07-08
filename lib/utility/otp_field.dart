@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import 'constants.dart';
+import '../utility/constants.dart';
 
 class OTPField extends StatelessWidget {
   final dynamic controller;

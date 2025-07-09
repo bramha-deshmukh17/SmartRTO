@@ -45,13 +45,6 @@ A modern and efficient mobile application for road transport officers, built wit
 
 ---
 
-## <a id="author"></a>👮‍♂️ Author
-
-- **Bramha Deshmukh**
-- [GitHub](https://github.com/bramha-deshmukh17)
-
----
-
 ## <a id="setup-instructions"></a>⚙️ Setup Instructions
 
 ### 📝 Steps
@@ -114,6 +107,15 @@ A modern and efficient mobile application for road transport officers, built wit
 - [Razorpay](https://razorpay.com/)
 
 ---
+
+
+## <a id="author"></a>👮‍♂️ Author
+
+- **Bramha Deshmukh**
+- [GitHub](https://github.com/bramha-deshmukh17)
+
+---
+
 
 ## <a id="contact"></a>📬 Contact
 

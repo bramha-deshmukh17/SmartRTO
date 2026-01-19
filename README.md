@@ -119,4 +119,4 @@ A modern and efficient mobile application for road transport officers, built wit
 
 ## <a id="contact"></a>📬 Contact
 
-For any inquiries or feedback, please contact me at [bramha.deshmukh17@gmail.com](mailto:bramha.deshmukh17@gmail.com).
+For any inquiries or feedback, please contact me at [work@bramhadeshmukh.me](mailto:work@bramhadeshmukh.me).
